@@ -11,3 +11,5 @@ Conditional: Rafi Dataset II artifact; its claimed 50×50×3/16-class preprocess
 Deferred: handwritten variables/all-letter recognition, trig, graphing, C++/WASM math engine, highlighter and gesture erasure. ORT's WASM inference backend remains part of the baseline; it is separate from using C++ for the math parser.
 
 Implementers create numbered ADRs under docs/decisions/ with context, alternatives, decision, evidence, consequences and status. Record meaningful changes here; do not rewrite prior evidence to make a failed experiment appear successful.
+
+Follow-up measurement with the same generated fixture: cached-bounds grouping5000 p50/p95 26.89/29.56ms (worker path), compared with223.22/271.22ms initially. Preserve both JSON reports. Masked replay remains22.00/22.20ms and is still a release-performance limitation.

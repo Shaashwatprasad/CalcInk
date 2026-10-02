@@ -44,9 +44,25 @@ Values are **p50 / p95 milliseconds**, rounded to two decimal places. Node and b
 
 The preprocessing batches contain respectively 500, 1000 and 5000 synthetic symbols. These are whole-document batch costs, not per-symbol or inference times. Every measured rasterization uses the actual 50 × 50 RGB tensor conversion and persisted erase masks.
 
+## Cached bounds and worker grouping follow-up
+
+The optimized follow-up is preserved separately in [`local-synthetic-grouping-worker-2026-10-02.json`](../benchmark-data/local-synthetic-grouping-worker-2026-10-02.json), collected on the same hardware/browser on 2 October 2026 at 23:05 IST. Its base source commit is `e83619f6180fa6adeefdd9f6af86a4f072881d65`. The original baseline report and measurements above remain unchanged.
+
+The grouping implementation now maintains cached line bounds while appending strokes and routes erase masks once instead of repeatedly rescanning line contents. Production `src/app/recognizer.ts` sends `GROUP` requests; `src/workers/recognition.worker.ts` calls `groupEquations`. The expensive grouping calculation has therefore moved off the UI thread. The measurements below still run the grouping function directly in Node; they measure algorithm cost, not browser worker messaging or the full application latency.
+
+| Equation grouping, p50 / p95 ms | Original baseline | Cached bounds follow-up |
+| ------------------------------- | ----------------: | ----------------------: |
+| 500 strokes                     |       3.81 / 5.68 |             1.09 / 1.47 |
+| 1000 strokes                    |     10.39 / 11.04 |             2.20 / 2.23 |
+| 5000 strokes                    |   223.22 / 271.22 |       **26.89 / 29.56** |
+
+The 5000-stroke grouping p50 was about 8.3 times lower in this follow-up. Concurrent work and limited repetitions remain measurement caveats. Worker execution avoids performing this calculation in the drawing thread; this harness does not quantify structured-clone/messaging costs or prove end-to-end frame responsiveness.
+
+The same follow-up measured 5000-stroke masked replay at **22.00 / 22.20 ms** and all-symbol preprocessing at **303.70 / 332.30 ms**. Masked replay remains above a 60 Hz frame budget. The grouping optimization does not resolve that rendering limitation.
+
 ## Risks and remaining measurements
 
-The initial `groupEquations` implementation repeatedly rebuilds line bounds during every candidate comparison. Its measured 5000-stroke cost is a serious long-task risk where `src/app/recognizer.ts` invokes it on the UI thread. Cached/incremental bounds or moving grouping into the worker should be evaluated; save a separate report after changes rather than replacing the baseline measurements.
+The initial `groupEquations` implementation repeatedly rebuilt line bounds during every candidate comparison. Its measured 5000-stroke cost exposed a serious long-task risk in the original UI-thread grouping path. The follow-up above records the cached-bounds improvement and verifies that production grouping now executes in the worker. Larger documents, worker messaging and grouping latency during active inference still need measurement.
 
 Masked replay exceeds the 16.67 ms budget of a 60 Hz frame at 5000 strokes even before display completion. Scratch-layer compositing and document-wide mask scans need profiling; viewport/dirty-region rendering and mask indexing are candidate improvements.
 
