@@ -1,0 +1,16 @@
+{
+  "fixtures": "8 deterministic synthetic tensors (white, black, 6 random); not handwriting accuracy",
+  "maximumAbsoluteDeviation": 1.1920928955078125e-07,
+  "meanAbsoluteDeviation": 1.1996782799811312e-08,
+  "top1Agreement": "8/8",
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "keras": "3.15.1",
+  "tensorflow": "2.20.0",
+  "onnx": "1.19.1",
+  "onnxruntime": "1.23.2",
+  "sourceSHA256": "8ce0b567cba9677e83dde6c404b782f277c40e1f6c256e5641eae6131fa2d2a8",
+  "onnxSHA256": "2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786"
+}
