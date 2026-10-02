@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-02",
+  "runtime": "ONNX Runtime Web 1.22.0, single-threaded WASM, dedicated application worker",
+  "browser": "Chromium 149, installed Google Chrome for Testing; production Vite preview on localhost",
+  "test": "tests/e2e/recognition.spec.ts",
+  "fixtures": "Deterministic synthetic vector strokes entered through pointer actions; no mock recognizer or inference",
+  "verifiedBehaviors": [
+    "Pretrained model checksum, initialization and real warmup complete before READY",
+    "Synthetic handwritten 1+1= yields inline 2",
+    "Pixel erase and replacement yields 11+1= with inline 12",
+    "Undo restores 2; redo restores 12",
+    "Offline production reload restores persisted vector strokes and computes 12",
+    "Offline pixel erase of terminal equals retires 12",
+    "No external runtime, inference or math requests observed"
+  ],
+  "result": "Passed in supervisor production browser run: recognition test 3.7 seconds; complete four-test browser suite 7.6 seconds",
+  "evidenceSource": "Supervisor coordinated final production browser test run; no mock recognition used",
+  "limits": [
+    "Synthetic wiring fixtures are not a human handwriting validation set",
+    "No all-16-class browser accuracy or writer-diverse evaluation",
+    "Test suite duration is not an inference or drawing-performance benchmark",
+    "Hardware/OS performance reference metadata not collected for this functional test"
+  ]
+}

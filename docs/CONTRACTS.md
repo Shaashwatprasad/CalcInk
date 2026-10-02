@@ -10,6 +10,8 @@ Change event: document identity/generation, revision, transaction ID, changed/de
 
 ## Worker protocol
 
+Implemented grouping extension: GROUP includes a validated immutable InkDocument snapshot; GROUPS echoes documentId/generation/documentRevision and grouped stroke/mask/bounds data. The worker owns line and symbol grouping. The main thread retires affected projections immediately from document change metadata and only schedules new inference from GROUPS matching the latest document identity/generation/revision. Older grouping responses cannot recreate cleared/edited answers.
+
 Request envelope: protocolVersion, documentId, generation, equationId, equationRevision, requestId, modelVersion, preprocessingVersion, type. Recognize payload includes immutable stroke/mask data, bounds and grouping context. Transfer private buffer copies when transferring ownership; never detach authoritative document arrays.
 
 Response envelope echoes all identity/version fields. Payload includes symbols with bounds and top-k scores, grouping diagnostics, timing breakdown, backend and typed error/status. INIT/READY/ERROR messages have explicit schemas. Validate incoming messages at runtime. Input/output tensor names and layout come from the model manifest.

@@ -1,0 +1,94 @@
+{
+  "modelVersion": "rafi-dataset2-0f90d32-fp32-v1",
+  "preprocessingVersion": "rgb-white-baseline-v1",
+  "source": {
+    "repository": "https://github.com/rafiibnsultan/Math_Symbols_Classify",
+    "commit": "0f90d32afb1e4d8416b3d0c4adf4ce1748d86a16",
+    "artifact": "modelWeight_dataset2.h5",
+    "sha256": "8ce0b567cba9677e83dde6c404b782f277c40e1f6c256e5641eae6131fa2d2a8",
+    "bytes": 9346512,
+    "license": "LICENSE"
+  },
+  "onnx": {
+    "file": "symbols.onnx",
+    "sha256": "2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786",
+    "bytes": 9310762,
+    "opset": 17,
+    "irVersion": 9
+  },
+  "input": {
+    "name": "input",
+    "dtype": "float32",
+    "shape": [
+      1,
+      50,
+      50,
+      3
+    ],
+    "layout": "NHWC"
+  },
+  "output": {
+    "name": "probabilities",
+    "kind": "probabilities",
+    "labels": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "add",
+      "dec",
+      "div",
+      "eq",
+      "mul",
+      "sub"
+    ],
+    "canonicalLabels": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "+",
+      ".",
+      "÷",
+      "=",
+      "×",
+      "−"
+    ]
+  },
+  "preprocessing": {
+    "polarity": "black-on-white",
+    "channels": "RGB",
+    "normalization": "divide by 255",
+    "padding": "baseline-aware centered 80% fit; minimum line height 20 document units",
+    "resize": "Canvas2D linear resampling; live calibration pending"
+  },
+  "providers": {
+    "implemented": [
+      "wasm"
+    ],
+    "verified": [
+      "wasm"
+    ]
+  },
+  "verificationReports": [
+    "conversion-report.json",
+    "browser-verification.json"
+  ],
+  "acceptance": {
+    "liveHandwritingAccuracy": "unverified",
+    "allClassBrowserFixtures": "unverified",
+    "performanceTargets": "unverified"
+  }
+}
