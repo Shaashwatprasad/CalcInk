@@ -2048,7 +2048,7 @@
             "testId": "PROD-B11",
             "claim": "Retry recovers real model readiness while retaining drawn ink",
             "triggerAnchor": "page.getByRole('button', { name: 'Retry', exact: true }).click()",
-            "assertionAnchor": "expect( page.getByText('Ready for handwriting', { exact: true }), ).toBeVisible({ timeout: 60000 })"
+            "assertionAnchor": "expect(page.locator('.recognition-status i')).toHaveClass('ready', { timeout: 60000, })"
           }
         ]
       }

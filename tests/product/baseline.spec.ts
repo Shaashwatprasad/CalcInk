@@ -418,9 +418,15 @@ test('PROD-B11 @baseline real model load failure keeps drawing and Retry recover
   const original = await exportNotebook(page);
   await page.unroute('**/models/symbols.onnx');
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await expect(
-    page.getByText('Ready for handwriting', { exact: true }),
-  ).toBeVisible({ timeout: 60000 });
+  // Recovery may finish with an uncertainty message for the retained stroke.
+  // Require the completed worker state and a newly processed result instead.
+  await expect(page.locator('.recognized-lines > [data-state]')).toHaveCount(
+    1,
+    { timeout: 60000 },
+  );
+  await expect(page.locator('.recognition-status i')).toHaveClass('ready', {
+    timeout: 60000,
+  });
   expect(geometry(await exportNotebook(page))).toEqual(geometry(original));
 });
 

@@ -1,5 +1,9 @@
 # CalcInk V2 progress
 
+## Completion check follow-up
+
+Latest original-head push CI37181329622 succeeded; PR CI37181331737 failed1/41 Product cases (PROD-B11 model Retry recovery neutral-message assertion). Test-only repair now requires completed worker readiness, a processed result and retained ink; focused actual-model case, typecheck/lint and registry4/4 pass. No application changes. Independent narrow review/re-review accepted the projection-then-ready assertions and focused actual-model retest passed; hosted full-source CI is next; project features are implemented, final CI sign-off remains open. Evidence: docs/evidence/CI-recovery.
+
 ## Latest checkpoint — 4 October 2026
 
 Final V2 project/demo integration on `codex/calcink-v2`: implementation `b647011`. P0–P2 accepted earlier; P3–P7 coherent feature batch completed with bounded independent reviews/fix re-reviews. Independent final phase evidence review accepted the P3–P7 project/demo batch; P9 draft PR #5 created: https://github.com/Shaashwatprasad/CalcInk/pull/5. Published feature commit f1113ee645c5f92e5cdc6e6890c14e51374e3037 preserves the tested source; GitHub CI running at publication. See docs/reviews/V2-PHASES.md. V1 React/imperative Canvas/vector store/worker/ORT/safe-math architecture preserved.
