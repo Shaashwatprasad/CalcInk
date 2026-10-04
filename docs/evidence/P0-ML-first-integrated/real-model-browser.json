@@ -1,0 +1,277 @@
+{
+  "config": {
+    "configFile": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/playwright.config.ts",
+    "rootDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run preview -- --port 4173 --strictPort",
+      "url": "http://127.0.0.1:4173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "notebook.spec.ts",
+      "file": "notebook.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "drawing, partial erase, undo/redo, persistence and newer ink",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1636,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 41
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 120
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 183
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 112
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 8
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 195
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 111
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 114
+                    }
+                  ],
+                  "startTime": "2026-10-03T12:53:07.662Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-cb98977ceefcc0d7d3b5",
+          "file": "notebook.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "high-DPI backing store and rapid pointer up retain endpoints",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 408,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 117
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 21
+                    }
+                  ],
+                  "startTime": "2026-10-03T12:53:09.845Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-f9d473c89b8974a4ec79",
+          "file": "notebook.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "production shell reloads offline and preserves ink without external requests",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1490,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 13
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 94
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 8
+                    }
+                  ],
+                  "startTime": "2026-10-03T12:53:10.265Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-c4a06ca11b79279cdb68",
+          "file": "notebook.spec.ts",
+          "line": 92,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "recognition.spec.ts",
+      "file": "recognition.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual pretrained worker evaluates synthetic vector arithmetic and reloads offline",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 5027,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T12:53:07.662Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b5a3d5cd6db37d206f69-5fd6f49a562dd7bd79e1",
+          "file": "recognition.spec.ts",
+          "line": 11,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-03T12:53:07.437Z",
+    "duration": 5861.233,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

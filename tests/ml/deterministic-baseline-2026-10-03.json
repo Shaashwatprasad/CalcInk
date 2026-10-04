@@ -1,0 +1,495 @@
+{
+  "numTotalTestSuites": 11,
+  "numPassedTestSuites": 11,
+  "numFailedTestSuites": 0,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 39,
+  "numPassedTests": 39,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "snapshot": {
+    "added": 0,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0,
+    "didUpdate": false
+  },
+  "startTime": 1791030108677,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-001 checks actual non-LFS bytes against the pinned conversion audit",
+          "status": "passed",
+          "title": "ML-ART-001 checks actual non-LFS bytes against the pinned conversion audit",
+          "duration": 7.401499999999999,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-002 rejects incompatible manifest mutation {\"input\":{\"name\":\"wrong\"}}",
+          "status": "passed",
+          "title": "ML-ART-002 rejects incompatible manifest mutation {\"input\":{\"name\":\"wrong\"}}",
+          "duration": 0.6561670000000106,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-002 rejects incompatible manifest mutation {\"output\":{\"name\":\"probabilities\",\"kind\":\"logits\"}}",
+          "status": "passed",
+          "title": "ML-ART-002 rejects incompatible manifest mutation {\"output\":{\"name\":\"probabilities\",\"kind\":\"logits\"}}",
+          "duration": 0.1679160000000195,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-002 rejects incompatible manifest mutation {\"preprocessingVersion\":\"unknown\"}",
+          "status": "passed",
+          "title": "ML-ART-002 rejects incompatible manifest mutation {\"preprocessingVersion\":\"unknown\"}",
+          "duration": 0.134791000000007,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-002 rejects incompatible manifest mutation {\"onnx\":{\"file\":\"symbols.onnx\",\"sha256\":\"git-lfs-pointer\",\"bytes\":123}}",
+          "status": "passed",
+          "title": "ML-ART-002 rejects incompatible manifest mutation {\"onnx\":{\"file\":\"symbols.onnx\",\"sha256\":\"git-lfs-pointer\",\"bytes\":123}}",
+          "duration": 0.17145800000000122,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-ARTIFACT real checkpoint contract (not accuracy)"
+          ],
+          "fullName": "ML-ARTIFACT real checkpoint contract (not accuracy) ML-ART-003 records multiplication vocabulary separately from required variable x",
+          "status": "passed",
+          "title": "ML-ART-003 records multiplication vocabulary separately from required variable x",
+          "duration": 0.5301660000000084,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1791030108869,
+      "endTime": 1791030108878.5303,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/ml/contract.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-001 accepts empty corpus without converting it into accuracy evidence",
+          "status": "passed",
+          "title": "ML-COR-001 accepts empty corpus without converting it into accuracy evidence",
+          "duration": 1.386166000000003,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-002 validates independent stroke labels and recomputes imported bounds",
+          "status": "passed",
+          "title": "ML-COR-002 validates independent stroke labels and recomputes imported bounds",
+          "duration": 0.37649999999999295,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-003 rejects writer leakage across development and evaluation",
+          "status": "passed",
+          "title": "ML-COR-003 rejects writer leakage across development and evaluation",
+          "duration": 0.4012079999999969,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects unknown-membership",
+          "status": "passed",
+          "title": "ML-COR-004 rejects unknown-membership",
+          "duration": 0.1220830000000035,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects missing-label",
+          "status": "passed",
+          "title": "ML-COR-004 rejects missing-label",
+          "duration": 0.07874999999998522,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects duplicate-label",
+          "status": "passed",
+          "title": "ML-COR-004 rejects duplicate-label",
+          "duration": 0.08012499999998113,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects bad-ast",
+          "status": "passed",
+          "title": "ML-COR-004 rejects bad-ast",
+          "duration": 0.077541999999994,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects no-ast",
+          "status": "passed",
+          "title": "ML-COR-004 rejects no-ast",
+          "duration": 0.06858299999998962,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects duplicate-replay",
+          "status": "passed",
+          "title": "ML-COR-004 rejects duplicate-replay",
+          "duration": 0.11666699999997832,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-004 rejects synthetic",
+          "status": "passed",
+          "title": "ML-COR-004 rejects synthetic",
+          "duration": 0.06504199999997695,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-CORPUS v1 data provenance, split and annotation contracts"
+          ],
+          "fullName": "ML-CORPUS v1 data provenance, split and annotation contracts ML-COR-005 canonical serialization normalizes object key order but preserves array order",
+          "status": "passed",
+          "title": "ML-COR-005 canonical serialization normalizes object key order but preserves array order",
+          "duration": 0.13341700000000856,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-METRICS independent counts and confidence intervals"
+          ],
+          "fullName": "ML-METRICS independent counts and confidence intervals ML-MET-001 includes misses and abstentions in independent classifier denominators",
+          "status": "passed",
+          "title": "ML-MET-001 includes misses and abstentions in independent classifier denominators",
+          "duration": 0.45299999999997453,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-METRICS independent counts and confidence intervals"
+          ],
+          "fullName": "ML-METRICS independent counts and confidence intervals ML-MET-002 exact-group matching penalizes duplicate predictions and merged symbols",
+          "status": "passed",
+          "title": "ML-MET-002 exact-group matching penalizes duplicate predictions and merged symbols",
+          "duration": 0.09129100000001245,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-METRICS independent counts and confidence intervals"
+          ],
+          "fullName": "ML-METRICS independent counts and confidence intervals ML-MET-003 an equal answer cannot prove AST exact match; corrections stay separate",
+          "status": "passed",
+          "title": "ML-MET-003 an equal answer cannot prove AST exact match; corrections stay separate",
+          "duration": 0.1353330000000028,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-METRICS independent counts and confidence intervals"
+          ],
+          "fullName": "ML-METRICS independent counts and confidence intervals ML-MET-004 small perfect sample cannot establish <=1% error target",
+          "status": "passed",
+          "title": "ML-MET-004 small perfect sample cannot establish <=1% error target",
+          "duration": 0.15791699999999764,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1791030108878,
+      "endTime": 1791030108882.158,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/ml/corpus.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["ML-GROUP required preserved grouping behavior"],
+          "fullName": "ML-GROUP required preserved grouping behavior ML-GRP-001 keeps close digits when painted bounds have a positive gap at multiple scales",
+          "status": "passed",
+          "title": "ML-GRP-001 keeps close digits when painted bounds have a positive gap at multiple scales",
+          "duration": 0.838957999999991,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ML-GROUP required preserved grouping behavior"],
+          "fullName": "ML-GROUP required preserved grouping behavior ML-GRP-002 groups disconnected equals, multiply and late division dots by exact IDs",
+          "status": "passed",
+          "title": "ML-GRP-002 groups disconnected equals, multiply and late division dots by exact IDs",
+          "duration": 0.21970799999999713,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ML-GROUP required preserved grouping behavior"],
+          "fullName": "ML-GROUP required preserved grouping behavior ML-GRP-003 changing stroke arrival order cannot change symbol membership",
+          "status": "passed",
+          "title": "ML-GRP-003 changing stroke arrival order cannot change symbol membership",
+          "duration": 0.14637500000000614,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ML-GROUP required preserved grouping behavior"],
+          "fullName": "ML-GROUP required preserved grouping behavior ML-GRP-004 preserves all exact IDs and mask order across separated equations",
+          "status": "passed",
+          "title": "ML-GRP-004 preserves all exact IDs and mask order across separated equations",
+          "duration": 0.34158299999998576,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-BASELINE defect observations (these are not acceptance passes)"
+          ],
+          "fullName": "ML-BASELINE defect observations (these are not acceptance passes) ML-DEF-001 reproduces overlapping painted bounds merging distinct digits",
+          "status": "passed",
+          "title": "ML-DEF-001 reproduces overlapping painted bounds merging distinct digits",
+          "duration": 0.11970800000000281,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-BASELINE defect observations (these are not acceptance passes)"
+          ],
+          "fullName": "ML-BASELINE defect observations (these are not acceptance passes) ML-DEF-002 reproduces independent same-row equations becoming one equation",
+          "status": "passed",
+          "title": "ML-DEF-002 reproduces independent same-row equations becoming one equation",
+          "duration": 0.6482090000000085,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-BASELINE defect observations (these are not acceptance passes)"
+          ],
+          "fullName": "ML-BASELINE defect observations (these are not acceptance passes) ML-DEF-003 reproduces x assignment and variable use rejection downstream of recognition",
+          "status": "passed",
+          "title": "ML-DEF-003 reproduces x assignment and variable use rejection downstream of recognition",
+          "duration": 0.46087499999998727,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1791030108866,
+      "endTime": 1791030108869.461,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/ml/grouping-regression.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-001 checks 200 independently calculated precedence outcomes",
+          "status": "passed",
+          "title": "ML-MATH-001 checks 200 independently calculated precedence outcomes",
+          "duration": 3.6161670000000186,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-002 seeded malformed input stays bounded and never throws",
+          "status": "passed",
+          "title": "ML-MATH-002 seeded malformed input stays bounded and never throws",
+          "duration": 8.15991600000001,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-003 2/0= is undefined without an exception",
+          "status": "passed",
+          "title": "ML-MATH-003 2/0= is undefined without an exception",
+          "duration": 0.09125000000000227,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-003 2÷0= is undefined without an exception",
+          "status": "passed",
+          "title": "ML-MATH-003 2÷0= is undefined without an exception",
+          "duration": 0.030000000000001137,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-003 0÷0= is undefined without an exception",
+          "status": "passed",
+          "title": "ML-MATH-003 0÷0= is undefined without an exception",
+          "duration": 0.022334000000000742,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-003 (-2)/(0)= is undefined without an exception",
+          "status": "passed",
+          "title": "ML-MATH-003 (-2)/(0)= is undefined without an exception",
+          "duration": 0.029125000000021828,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-004 preserved parse behavior 5+ is distinct from recognition completion",
+          "status": "passed",
+          "title": "ML-MATH-004 preserved parse behavior 5+ is distinct from recognition completion",
+          "duration": 0.038916000000000395,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-004 preserved parse behavior 2× is distinct from recognition completion",
+          "status": "passed",
+          "title": "ML-MATH-004 preserved parse behavior 2× is distinct from recognition completion",
+          "duration": 0.021208000000001448,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-004 preserved parse behavior 0. is distinct from recognition completion",
+          "status": "passed",
+          "title": "ML-MATH-004 preserved parse behavior 0. is distinct from recognition completion",
+          "duration": 0.022582999999997355,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "ML-MATH independent seeded safe-math integration properties"
+          ],
+          "fullName": "ML-MATH independent seeded safe-math integration properties ML-MATH-004 preserved parse behavior 2+3 is distinct from recognition completion",
+          "status": "passed",
+          "title": "ML-MATH-004 preserved parse behavior 2+3 is distinct from recognition completion",
+          "duration": 0.031959000000000515,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1791030108856,
+      "endTime": 1791030108868.16,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/ml/math-properties.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [],
+          "fullName": "runs the actual bundled pretrained model through pinned ORT Web WASM",
+          "status": "passed",
+          "title": "runs the actual bundled pretrained model through pinned ORT Web WASM",
+          "duration": 147.60758300000003,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1791030108860,
+      "endTime": 1791030109007.6077,
+      "status": "passed",
+      "message": "",
+      "name": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/unit/recognition-real-model.test.ts"
+    }
+  ]
+}

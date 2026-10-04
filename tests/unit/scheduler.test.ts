@@ -184,7 +184,7 @@ describe('worker equation grouping scheduler', () => {
     expect(latest().projections.map((p) => p.answerText)).toEqual(['2', '4']);
   });
 
-  it('retires answers for new components anywhere within the worker line grouping tolerance', () => {
+  it('retires nearby potentially affected answers before locally regrouping a separate late mark', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a'));
     const { worker, latest } = setup(store);
@@ -192,11 +192,16 @@ describe('worker equation grouping scheduler', () => {
     finishRecognition(worker);
     expect(latest().projections[0].answerText).toBe('2');
     store.addStroke(makeStroke('dot', 163, 80, 0));
-    expect(groupEquations(store.getSnapshot())).toHaveLength(1);
+    expect(
+      groupEquations(store.getSnapshot())
+        .flatMap((g) => g.strokes.map((s) => s.id))
+        .sort(),
+    ).toEqual(['a', 'dot']);
+    expect(groupEquations(store.getSnapshot())).toHaveLength(2);
     expect(latest().projections).toEqual([]);
   });
 
-  it('retires every equation affected by cascading line merges before grouping finishes', () => {
+  it('conservatively retires potential neighbors without letting a tall outlier merge separate rows', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a', 0));
     store.addStroke(makeStroke('b', 120));
@@ -208,10 +213,44 @@ describe('worker equation grouping scheduler', () => {
     finishRecognition(worker);
     expect(latest().projections).toHaveLength(3);
     store.addStroke(makeStroke('bridge', 0, 70, 100));
-    expect(groupEquations(store.getSnapshot())).toHaveLength(1);
+    expect(
+      groupEquations(store.getSnapshot()).map((g) =>
+        g.strokes.map((s) => s.id),
+      ),
+    ).toEqual([['a'], ['bridge'], ['b'], ['c']]);
     expect(latest().projections).toEqual([]);
   });
 
+  it('annotation and highlighter commits preserve current answers and avoid unnecessary model grouping', () => {
+    const store = new InkStore();
+    store.addStroke(makeStroke('a'));
+    const { worker, latest } = setup(store);
+    finishGroups(worker);
+    finishRecognition(worker);
+    const answer = latest().projections,
+      requests = worker.grouping.length;
+    store.addObject({
+      id: 'text',
+      kind: 'text',
+      x: 10,
+      y: 100,
+      text: 'notes',
+      fontSize: 16,
+      color: '#252D38',
+      colorMode: 'auto',
+      opacity: 1,
+      strokeWidth: 2,
+      recognitionEligible: false,
+    });
+    store.addStroke({
+      ...makeStroke('highlight'),
+      kind: 'highlighter',
+      recognitionEligible: false,
+    });
+    vi.advanceTimersByTime(800);
+    expect(worker.grouping).toHaveLength(requests);
+    expect(latest().projections).toEqual(answer);
+  });
   it.each(['clear', 'replace'] as const)(
     'rejects delayed groups following %s',
     (operation) => {

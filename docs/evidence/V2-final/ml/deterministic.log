@@ -1,0 +1,5 @@
+
+> calcink@0.1.0 test
+> vitest run --reporter=json --outputFile=/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/test-results/v2-final-ml-v4/deterministic.json
+
+JSON report written to /Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/test-results/v2-final-ml-v4/deterministic.json

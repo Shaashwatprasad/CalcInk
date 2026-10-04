@@ -29,3 +29,4 @@ Begin T03, T05 and T08 in parallel once contracts are agreed. Do not wait for ML
 Milestone A: working ink and passing parser tests. Milestone B: verified model running in worker. Milestone C: complete handwriting → inline result → erase/edit recomputation. Milestone D: persistence/offline/measurement/release. Defer optional extensions until milestone D passes.
 
 For the submission window, prioritize a narrow working end-to-end vertical slice, then complete remaining eraser/history/offline and test requirements. Avoid spending the remaining schedule on a new model training project or C++ toolchain.
+

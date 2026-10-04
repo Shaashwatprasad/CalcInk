@@ -80,3 +80,4 @@ Detect essential Canvas/Pointer Events/Worker/WASM capabilities. IndexedDB loss 
 src/app, src/ink, src/document, src/render, src/recognition, src/workers, src/math, src/projection, src/persistence, src/offline, src/shared, src/metrics; public/models and public/runtime; scripts/model; tests/unit, tests/integration, tests/e2e; benchmark and benchmark-data; docs/decisions. Keep shared contracts framework-independent. The integrator owns root configuration/lockfiles.
 
 Create ADRs for Canvas2D, vector source of truth, three layers, worker boundary, model/runtime, TypeScript parser, erasure representation, offline cache and numeric display policy. Keep diagram/contract documentation aligned with actual implementation.
+

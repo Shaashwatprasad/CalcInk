@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "track": "product",
+  "createdAt": "2026-10-03T12:22:32.835Z",
+  "commit": "e5e48beb3a698282cc7e0ae14dd5f27375b89a44",
+  "sourceHash": "25414044c2ab81eb84b4e65719da3f8feaf97aca3eb2507c18a564d027129c40",
+  "finalSourceHash": "25414044c2ab81eb84b4e65719da3f8feaf97aca3eb2507c18a564d027129c40",
+  "sourceChanged": false,
+  "modelHash": "2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786",
+  "preprocessingVersion": "rgb-white-baseline-v2",
+  "environment": {
+    "node": "v26.3.0",
+    "os": "Darwin 25.6.0",
+    "architecture": "arm64",
+    "browserExecutable": "pinned Playwright Chromium",
+    "cpu": "Apple M5",
+    "memoryBytes": 25769803776
+  },
+  "seed": 0,
+  "steps": [
+    {
+      "id": "production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 7,
+      "selectedTestIds": [],
+      "log": "production-build.log"
+    },
+    {
+      "id": "real-model-browser",
+      "command": [
+        "npm",
+        "run",
+        "test:e2e",
+        "--",
+        "--reporter=json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 3,
+      "reportError": "Required machine-readable test report is missing",
+      "selectedTestIds": [],
+      "log": "real-model-browser.log"
+    },
+    {
+      "id": "product-browser",
+      "command": [
+        "npm",
+        "exec",
+        "--",
+        "playwright",
+        "test",
+        "--config=playwright.product.config.ts",
+        "--reporter=json"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 2,
+      "reportError": "Required machine-readable test report is missing",
+      "selectedTestIds": [],
+      "log": "product-browser.log"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "real-handwriting-quality",
+      "reason": "No frozen writer-disjoint labelled human corpus supplied; deterministic replay is not handwriting accuracy."
+    },
+    {
+      "id": "physical-input-devices",
+      "reason": "Physical stylus/touch and slower-device measurements require available hardware."
+    }
+  ],
+  "status": "FAIL",
+  "scope": "Available executable checks only; this report does not accept a complete V2 phase or claim human accuracy."
+}

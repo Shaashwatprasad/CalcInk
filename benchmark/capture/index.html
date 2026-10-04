@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>CalcInk human ink capture</title>
+  <style>
+    body {
+      font: 16px system-ui;
+      margin: 20px;
+      max-width: 1100px;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 450px;
+      border: 1px solid #aaa;
+      touch-action: none;
+      background: #fff;
+    }
+    label {
+      display: inline-grid;
+      margin: 8px;
+    }
+    button {
+      font: inherit;
+      padding: 8px;
+      margin: 8px;
+    }
+    pre {
+      white-space: pre-wrap;
+    }
+    input {
+      font: inherit;
+    }
+    #status {
+      min-height: 24px;
+    }
+  </style>
+  <h1>Human vector ink capture</h1>
+  <p>
+    Write naturally with your mouse, pen or touch. This tool records geometry
+    and stroke IDs; it does not recognize or invent labels. Keep evaluation
+    writers out of development tuning. Each export is a separate sample.
+  </p>
+  <label
+    >Actual device description<input
+      id="device"
+      placeholder="e.g. tablet model and stylus"
+      required
+  /></label>
+  <label
+    >Pen width<input id="width" type="number" min="1" max="20" value="3"
+  /></label>
+  <canvas id="paper" aria-label="Handwriting capture area"></canvas>
+  <button id="undo">Undo last stroke</button
+  ><button id="clear">Clear captured sample</button
+  ><button id="export">Export real ink capture</button>
+  <p id="status" role="status">Ready. No sample has been collected.</p>
+  <pre id="ids"></pre>
+  <script>
+    const paper = document.querySelector('#paper'),
+      ctx = paper.getContext('2d'),
+      device = document.querySelector('#device'),
+      status = document.querySelector('#status');
+    let strokes = [],
+      active = null,
+      pointer = null,
+      types = new Set();
+    const capturedAt = new Date().toISOString();
+    function dimensions() {
+      return { width: paper.clientWidth, height: 450 };
+    }
+    function render() {
+      const { width, height } = dimensions();
+      paper.width = Math.round(width * devicePixelRatio);
+      paper.height = Math.round(height * devicePixelRatio);
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      ctx.strokeStyle = '#000';
+      ctx.fillStyle = '#000';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      for (const s of [...strokes, ...(active ? [active] : [])]) {
+        ctx.lineWidth = s.width;
+        ctx.beginPath();
+        if (s.points.length === 1) {
+          ctx.arc(s.points[0].x, s.points[0].y, s.width / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.moveTo(s.points[0].x, s.points[0].y);
+          for (const p of s.points.slice(1)) ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        }
+      }
+      document.querySelector('#ids').textContent = strokes
+        .map((s) => `${s.id}: ${s.points.length} points`)
+        .join('\n');
+    }
+    function point(event) {
+      const rect = paper.getBoundingClientRect();
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+        timestamp: event.timeStamp,
+        pressure: event.pressure,
+      };
+    }
+    paper.addEventListener('pointerdown', (e) => {
+      if (pointer !== null || e.button !== 0) return;
+      e.preventDefault();
+      pointer = e.pointerId;
+      types.add(e.pointerType);
+      active = {
+        id: crypto.randomUUID(),
+        width: Number(document.querySelector('#width').value),
+        color: '#000000',
+        points: [point(e)],
+      };
+      paper.setPointerCapture(pointer);
+      render();
+    });
+    paper.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== pointer) return;
+      for (const sample of e.getCoalescedEvents?.() ?? [e])
+        active.points.push(point(sample));
+      render();
+    });
+    paper.addEventListener('pointerup', (e) => {
+      if (e.pointerId !== pointer) return;
+      active.points.push(point(e));
+      const xs = active.points.map((p) => p.x),
+        ys = active.points.map((p) => p.y),
+        pad = active.width / 2;
+      active.bounds = {
+        minX: Math.min(...xs) - pad,
+        minY: Math.min(...ys) - pad,
+        maxX: Math.max(...xs) + pad,
+        maxY: Math.max(...ys) + pad,
+      };
+      strokes.push(active);
+      active = null;
+      pointer = null;
+      render();
+      status.textContent = `${strokes.length} strokes. Record their IDs in the independent annotation.`;
+    });
+    for (const event of ['pointercancel', 'lostpointercapture'])
+      paper.addEventListener(event, () => {
+        active = null;
+        pointer = null;
+        render();
+      });
+    document.querySelector('#undo').onclick = () => {
+      strokes.pop();
+      render();
+    };
+    document.querySelector('#clear').onclick = () => {
+      if (
+        confirm('Clear this capture? Export it first to preserve the sample.')
+      ) {
+        strokes = [];
+        active = null;
+        pointer = null;
+        render();
+      }
+    };
+    document.querySelector('#export').onclick = () => {
+      if (!strokes.length || !device.value.trim()) {
+        status.textContent =
+          'Write real ink and enter the actual device description before exporting.';
+        return;
+      }
+      const capture = {
+        format: 'calcink-vector-capture',
+        version: 1,
+        capturedAt,
+        input: {
+          pointerType: types.size === 1 ? [...types][0] : 'mixed',
+          device: device.value,
+          browser: navigator.userAgent,
+          dpr: devicePixelRatio,
+          viewport: dimensions(),
+        },
+        document: {
+          format: 'calcink-document',
+          version: 1,
+          documentId: crypto.randomUUID(),
+          generation: 0,
+          revision: strokes.length,
+          strokes,
+          erasures: [],
+        },
+      };
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(capture, null, 2)], {
+          type: 'application/json',
+        }),
+      );
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `calcink-human-capture-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      status.textContent =
+        'Exported vector ink. Labels and writer/split metadata must be annotated independently.';
+    };
+    new ResizeObserver(render).observe(paper);
+    render();
+  </script>
+</html>

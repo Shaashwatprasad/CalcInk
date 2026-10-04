@@ -1,0 +1,15 @@
+
+> calcink@0.1.0 build
+> node scripts/prepare-assets.mjs && tsc --noEmit && vite build && node scripts/build-offline.mjs
+
+vite v7.1.4 building for production...
+transforming...
+✓ 48 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                               0.55 kB │ gzip:  0.34 kB
+dist/assets/recognition.worker-_WfFtQv6.js   66.21 kB
+dist/assets/index-BtVxneZr.css               21.24 kB │ gzip:  5.14 kB
+dist/assets/index-pxAM4pSv.js               286.45 kB │ gzip: 89.16 kB
+✓ built in 1m 24s
+Offline cache debf71399ea4d3a4: 31 same-origin assets

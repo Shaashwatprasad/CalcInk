@@ -1,5 +1,10 @@
+import { copyAnnotation } from '../document/annotations';
 import type { InkDocument, Point } from '../shared/types';
-import { pointBounds } from '../ink/geometry';
+import {
+  normalizedStrokeSemantics,
+  pointBounds,
+  validStrokeSemantics,
+} from '../ink/geometry';
 
 function point(value: unknown): value is Point {
   if (!value || typeof value !== 'object') return false;
@@ -17,7 +22,7 @@ export function validateDocument(value: unknown): InkDocument {
   const d = value as InkDocument;
   if (
     d.format !== 'calcink-document' ||
-    d.version !== 1 ||
+    (d.version !== 1 && d.version !== 2) ||
     typeof d.documentId !== 'string' ||
     !d.documentId ||
     !Number.isSafeInteger(d.generation) ||
@@ -27,9 +32,14 @@ export function validateDocument(value: unknown): InkDocument {
     !Array.isArray(d.strokes) ||
     !Array.isArray(d.erasures) ||
     d.strokes.length > 50000 ||
-    d.erasures.length > 50000
+    d.erasures.length > 50000 ||
+    (d.objects !== undefined &&
+      (!Array.isArray(d.objects) || d.objects.length > 50000))
   )
     throw new Error('Unsupported notebook format');
+  const objects = (d.objects ?? []).map(copyAnnotation);
+  if (new Set(objects.map((o) => o.id)).size !== objects.length)
+    throw new Error('Duplicate annotation ID');
   const ids = new Set<string>();
   let samples = 0;
   for (const s of d.strokes) {
@@ -45,7 +55,8 @@ export function validateDocument(value: unknown): InkDocument {
       s.width <= 0 ||
       s.width > 100 ||
       typeof s.color !== 'string' ||
-      !/^#[0-9a-f]{6}$/i.test(s.color)
+      !/^#[0-9a-f]{6}$/i.test(s.color) ||
+      !validStrokeSemantics(s)
     )
       throw new Error('Invalid stroke');
     ids.add(s.id);
@@ -72,11 +83,39 @@ export function validateDocument(value: unknown): InkDocument {
     samples += e.path.length;
   }
   if (samples > 2e6) throw new Error('Notebook is too large');
-  const validated = structuredClone(d);
-  // Bounds are derived metadata. Never trust imported values for hit tests/grouping.
-  for (const stroke of validated.strokes)
-    stroke.bounds = pointBounds(stroke.points, stroke.width / 2);
-  return validated;
+  // Copy only documented fields: no unvalidated imported properties reach workers.
+  const copyPoint = ({ x, y, timestamp, pressure }: Point): Point => ({
+    x,
+    y,
+    timestamp,
+    ...(pressure === undefined ? {} : { pressure }),
+  });
+  return {
+    format: 'calcink-document',
+    version: 2,
+    documentId: d.documentId,
+    generation: d.generation,
+    revision: d.revision,
+    objects,
+    strokes: d.strokes.map((stroke) => {
+      const points = stroke.points.map(copyPoint);
+      return {
+        id: stroke.id,
+        width: stroke.width,
+        color: stroke.color,
+        ...normalizedStrokeSemantics(stroke),
+        points,
+        // Bounds are derived metadata, never trusted from imported documents.
+        bounds: pointBounds(points, stroke.width / 2),
+      };
+    }),
+    erasures: d.erasures.map((mask) => ({
+      id: mask.id,
+      targetStrokeIds: [...mask.targetStrokeIds],
+      path: mask.path.map(copyPoint),
+      radius: mask.radius,
+    })),
+  };
 }
 
 export interface NotebookStorage {

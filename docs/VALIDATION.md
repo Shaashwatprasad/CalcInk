@@ -35,3 +35,4 @@ Benchmark 500/1000/5000-stroke documents for redraw, hit testing, undo/redo, ser
 Every R01–R12 requirement has evidence; no production mocks; verified model artifact/licenses/manifest; complete actual tests/build/CI; independent review; offline reload/edit passes; documented measured recognition/performance; clean reproducible README; architecture/ADRs match implementation; public demo works. Known limitations are explicit. Unmet accuracy targets require a recorded model decision, not silent lowering or invented metrics.
 
 A feature is done when behavior, relevant tests, type/lint/build checks, independent review and affected documentation are complete. Deployment success alone does not satisfy the release gate.
+

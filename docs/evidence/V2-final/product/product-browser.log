@@ -1,0 +1,77 @@
+
+Running 41 tests using 4 workers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1A[2K[1/41] tests/product/diagnostics.spec.ts:2:1 › PROD-D01 @baseline active replay alpha parity and long-stroke frame samples
+[1A[2K[2/41] tests/product/baseline.spec.ts:4:1 › PROD-B01 @baseline drawing width affects exported ink and reload
+[1A[2K[3/41] tests/product/navigation.spec.ts:90:1 › PROD-N01 Hand camera controls preserve world ink revision and zoom anchor with fitted bounds
+[1A[2K[4/41] tests/product/required-workflows.spec.ts:10:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V01 @v2-required pen pencil and highlighter colour and width change real ink and survive reload
+[1A[2K[5/41] tests/product/baseline.spec.ts:57:1 › PROD-B02 @baseline stroke eraser removes only the hit stroke and history restores it
+[1A[2K[6/41] tests/product/navigation.spec.ts:182:1 › PROD-N02 transformed drawing and pixel erase export exact world points masks and reversible geometry
+[1A[2K[7/41] tests/product/required-workflows.spec.ts:65:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V02 @v2-required adaptive and explicit pen presets preserve their saved identities
+[1A[2K[8/41] tests/product/baseline.spec.ts:94:1 › PROD-B03 @baseline partial erase persists a targeted mask and later ink survives
+[1A[2K[9/41] tests/product/navigation.spec.ts:241:1 › PROD-N03 trusted two-touch promotion discards pen and erase previews and pinch pan adds no history
+[1A[2K[10/41] tests/product/required-workflows.spec.ts:98:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V03 @v2-required highlighter swatches preserve arithmetic and reversible stroke history
+[1A[2K[11/41] tests/product/baseline.spec.ts:138:1 › PROD-B04 @baseline P E and history shortcuts perform their advertised operations
+[1A[2K[12/41] tests/product/baseline.spec.ts:169:1 › PROD-B05 @baseline legacy JSON import/export preserves geometry masks and exact explicit blue
+[1A[2K[13/41] tests/product/navigation.spec.ts:318:1 › PROD-N04 trusted pointer cancellation retains ordinary samples and releases camera lock
+[1A[2K[14/41] tests/product/baseline.spec.ts:198:1 › PROD-B06 @baseline malformed and unsupported imports cannot overwrite the saved notebook
+[1A[2K[15/41] tests/product/navigation.spec.ts:369:1 › PROD-N05 controlled window blur restores ordinary Pen after Space pan without phantom strokes or camera history
+[1A[2K[16/41] tests/product/navigation.spec.ts:424:1 › PROD-N06 actual model projection follows pan and anchored zoom without document revisions
+[1A[2K[17/41] tests/product/baseline.spec.ts:231:1 › PROD-B07 @baseline Help toggle and home navigation preserve the notebook
+[1A[2K[18/41] tests/product/required-workflows.spec.ts:141:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V04 @v2-required eraser mode and radius affect a persistent partial cut
+[1A[2K[19/41] tests/product/baseline.spec.ts:261:1 › PROD-B08 @baseline DPR resize preserves exported geometry and rapid endpoint
+[1A[2K[20/41] tests/product/required-workflows.spec.ts:190:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V05 @v2-required one open tool panel toggles replaces dismisses and restores focus
+[1A[2K[21/41] tests/product/navigation.spec.ts:471:1 › PROD-N07 wheel pan and Control wheel retain anchored world position and document revision
+[1A[2K[22/41] tests/product/required-workflows.spec.ts:249:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V06 @v2-required Clear cancel confirmation and undo preserve ink
+[1A[2K[23/41] tests/product/navigation.spec.ts:506:1 › PROD-N08 trusted pen and eraser gestures survive secondary two-touch navigation attempts
+[1A[2K[24/41] tests/product/baseline.spec.ts:299:1 › PROD-B09 @baseline real worker computes then equals erase retires answer and undo restores it
+[1A[2K[25/41] tests/product/required-workflows.spec.ts:286:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V07 @v2-required Hand free pan and zoom controls preserve coordinates and Space restores Pen
+[1A[2K[26/41] tests/product/required-workflows.spec.ts:350:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V08 @v2-required wheel zoom changes viewport without changing ink or history
+[1A[2K[27/41] tests/product/required-workflows.spec.ts:374:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V09 @v2-required paper choices spacing intensity infinite setting preserve ink and history
+[1A[2K[28/41] tests/product/diagnostics.spec.ts:84:1 › PROD-D02 @baseline recognition never blanks existing ink or resets unchanged projection dimensions
+[1A[2K[29/41] tests/product/baseline.spec.ts:334:1 › PROD-B10 @baseline cached offline reload allows real inference editing and saving
+[1A[2K[30/41] tests/product/required-workflows.spec.ts:428:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V10 @v2-required text shapes region arrow create annotation objects with undo
+[1A[2K[31/41] tests/product/required-workflows.spec.ts:475:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V11 @v2-required Select and Lasso move duplicate delete with reversible history
+[1A[2K[32/41] tests/product/diagnostics.spec.ts:154:1 › PROD-D03 @baseline layout waste and breakpoint availability observation
+[1A[2K[33/41] tests/product/required-workflows.spec.ts:521:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V12 @v2-required real crossing ink assignment and variable use remain distinct from multiplication
+[1A[2K[34/41] tests/product/baseline.spec.ts:378:1 › PROD-B11 @baseline real model load failure keeps drawing and Retry recovers
+[1A[2K[35/41] tests/product/baseline.spec.ts:410:1 › PROD-B12 @baseline Clear is undoable and history disabled states are truthful
+[1A[2K[36/41] tests/product/baseline.spec.ts:456:1 › PROD-B13 @baseline visible controls are declared in the action registry
+[1A[2K[37/41] tests/product/required-workflows.spec.ts:561:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V13 @v2-required notebook naming create switch and isolation preserve old ink
+[1A[2K[38/41] tests/product/baseline.spec.ts:481:1 › PROD-B14 @baseline projection renderer failure keeps ink export and useful notice
+[1A[2K[39/41] tests/product/required-workflows.spec.ts:639:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V14 @v2-required hide show copy expression and copy answer operate on computed state
+[1A[2K[40/41] tests/product/required-workflows.spec.ts:681:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V15 @v2-required conservative scratch erase is undoable and ordinary handwriting survives
+[1A[2K[41/41] tests/product/required-workflows.spec.ts:701:3 › V2 requirements (pending until implementation and exact-source reports) › PROD-V16 @v2-required responsive tools and modal clear stay reachable at every specified width
+[1A[2K  41 passed (47.4s)
+[1A[2K(node:96416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96414) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96415) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96414) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1A[2K(node:96415) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

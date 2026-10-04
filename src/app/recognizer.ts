@@ -1,4 +1,4 @@
-import { boundsIntersect } from '../ink/geometry';
+import { isRecognitionEligible, boundsIntersect } from '../ink/geometry';
 import { isGroupResult } from '../recognition/protocol';
 import {
   isRecognitionResult,
@@ -24,7 +24,13 @@ export interface RecognitionState {
 export function startRecognizer(
   store: InkStore,
   onState: (state: RecognitionState) => void,
-): () => void {
+): (() => void) & {
+  correct: (
+    equationId: string,
+    label: 'x' | '×',
+    symbolIndex?: number,
+  ) => boolean;
+} {
   const worker = new Worker(
     new URL('../workers/recognition.worker.ts', import.meta.url),
     { type: 'module' },
@@ -47,6 +53,7 @@ export function startRecognizer(
   };
   let disposed = false;
   let groupingPending = false;
+  let firstDirtyAt = 0;
   let debounce: ReturnType<typeof setTimeout> | undefined;
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let groupingTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -100,14 +107,19 @@ export function startRecognizer(
     groupingPending = true;
     emit();
     clearTimeout(debounce);
-    debounce = setTimeout(() => {
-      clearTimeout(groupingTimeout);
-      groupingTimeout = setTimeout(
-        () => fail('Equation grouping timed out. Your ink is safe.'),
-        30000,
-      );
-      worker.postMessage({ type: 'GROUP', document: store.getSnapshot() });
-    }, 220);
+    firstDirtyAt ||= performance.now();
+    debounce = setTimeout(
+      () => {
+        firstDirtyAt = 0;
+        clearTimeout(groupingTimeout);
+        groupingTimeout = setTimeout(
+          () => fail('Equation grouping timed out. Your ink is safe.'),
+          30000,
+        );
+        worker.postMessage({ type: 'GROUP', document: store.getSnapshot() });
+      },
+      Math.max(0, Math.min(220, 700 - (performance.now() - firstDirtyAt))),
+    );
   }
   function applyGroups(result: GroupResult) {
     current = store.getSnapshot();
@@ -207,6 +219,23 @@ export function startRecognizer(
   }
   const unsubscribe = store.subscribe((change) => {
     const document = store.getSnapshot();
+    const sameGeneration =
+      document.documentId === current.documentId &&
+      document.generation === current.generation;
+    const changed = new Set([
+      ...change.changedStrokeIds,
+      ...change.deletedStrokeIds,
+    ]);
+    const mathChanged = [...current.strokes, ...document.strokes].some(
+      (s) => changed.has(s.id) && isRecognitionEligible(s),
+    );
+    if (sameGeneration && !mathChanged && change.reason !== 'clear') {
+      current = document;
+      // A pending GROUP uses the document revision guard; refresh it without retiring valid math.
+      if (groupingPending) requestGrouping();
+      emit();
+      return;
+    }
     if (
       document.documentId !== current.documentId ||
       document.generation !== current.generation
@@ -268,7 +297,7 @@ export function startRecognizer(
   );
   worker.postMessage({ type: 'INIT' });
   emit();
-  return () => {
+  const stop = () => {
     disposed = true;
     unsubscribe();
     clearTimeout(debounce);
@@ -277,4 +306,11 @@ export function startRecognizer(
     worker.terminate();
     queue.reset();
   };
+  return Object.assign(stop, {
+    correct(equationId: string, label: 'x' | '×', symbolIndex?: number) {
+      const changed = projections.correct(equationId, label, symbolIndex);
+      if (changed) emit();
+      return changed;
+    },
+  });
 }

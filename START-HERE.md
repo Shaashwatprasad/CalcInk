@@ -39,3 +39,4 @@ The prior WebGPU-first recommendation is conditional on a measured benefit and s
 ## Required finish
 
 Deliver a real working arithmetic notebook, bundled pretrained model, reproducible repository, documentation and publicly accessible static demo. Prove offline reload, recognition and edit behavior using the production build. Report unmet gates honestly.
+

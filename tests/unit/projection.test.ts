@@ -169,7 +169,7 @@ describe('revision-safe equation projections', () => {
     },
     { ...result(), expression: '1'.repeat(4097) },
     { ...result(), backend: 'webgpu' },
-  ])('rejects malformed runtime message', (value) => {
+  ])('rejects malformed runtime message %#', (value) => {
     expect(isRecognitionResult(value)).toBe(false);
     store.expect(identity());
     expect(store.accept(value)).toBeUndefined();

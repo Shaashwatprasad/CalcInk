@@ -1,3 +1,4 @@
+import { chooseTool } from '../ui-tools';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 async function draw(page: Page, points: [number, number][]) {
@@ -31,7 +32,7 @@ test('drawing, partial erase, undo/redo, persistence and newer ink', async ({
     [300, 150],
   ]);
   await expect.poll(() => pixels(page, 200, 150)).toBeGreaterThan(0);
-  await page.getByRole('button', { name: 'Pixel eraser', exact: true }).click();
+  await chooseTool(page, 'Pixel eraser');
   await draw(page, [[200, 150]]);
   await expect.poll(() => pixels(page, 200, 150)).toBe(0);
   expect(await pixels(page, 140, 150)).toBeGreaterThan(0);
@@ -48,6 +49,7 @@ test('drawing, partial erase, undo/redo, persistence and newer ink', async ({
   await draw(page, [[200, 150]]);
   await expect.poll(() => pixels(page, 200, 150)).toBeGreaterThan(0);
   await page.getByRole('button', { name: 'Clear', exact: true }).click();
+  await page.getByRole('button', { name: 'Clear paper', exact: true }).click();
   await expect.poll(() => pixels(page, 140, 150)).toBe(0);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect.poll(() => pixels(page, 140, 150)).toBeGreaterThan(0);
@@ -103,7 +105,7 @@ test('production shell reloads offline and preserves ink without external reques
   await page.reload();
   await expect(page.getByText('Saved on this device')).toBeVisible();
   await expect.poll(() => pixels(page, 200, 150)).toBeGreaterThan(0);
-  await page.getByRole('button', { name: 'Pixel eraser', exact: true }).click();
+  await chooseTool(page, 'Pixel eraser');
   await draw(page, [[200, 150]]);
   await expect.poll(() => pixels(page, 200, 150)).toBe(0);
   await expect(page.getByText('Saved on this device')).toBeVisible();

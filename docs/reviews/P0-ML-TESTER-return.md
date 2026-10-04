@@ -1,0 +1,26 @@
+# P0-ML-TESTER implementer return
+
+Task: `P0-ML-TESTER`; branch `codex/calcink-v2`; source base `e5e48beb3a698282cc7e0ae14dd5f27375b89a44`. Exact working diff only, no agent Git/index/commit mutations. Supervisor owns integration and independent harness review. Full master including both appendices and required repository source contracts were read before changes.
+
+Owned changes: `tests/ml/{contract,corpus,grouping-regression,math-properties}.test.ts`, dated `tests/ml/preprocessing-baseline-2026-10-03.json`, `benchmark/corpus/{schema,metrics,browser-probe}.ts`, `benchmark/corpus/{cli,preprocess-browser,replay}.mjs`, `benchmark/corpus/empty.json`, `benchmark/capture/{index.html,import.mjs,README.md}`, `docs/ML-TECHNICAL-SPEC.md`, `docs/ML-BENCHMARK.md`, this report. No production/configuration changes.
+
+Behavior: independent artifact/hash/class/input checks; exact stroke-set operator/dot grouping; seeded 200 precedence cases and 500 malformed inputs; known spacing/same-row/x failures reproduced distinctly; real native-browser tensor invariants; strict human corpus provenance/annotation/writer-disjoint validation; canonical freezing/integrity; real capture/export and independently annotated import; real production worker + reference WASM replay; confusion/per-class/macro/top-k/grouping/AST/answer/coverage metrics and Wilson intervals. Missing corpus results are null/blocked, not fabricated. Outputs never overwrite earlier lock/report paths.
+
+Exact executed checks at first return:
+
+- `npx vitest run tests/ml --reporter=verbose`: 4 files, 38 tests pass (35 harness/preserved behavior checks, **3 defect reproductions, not acceptance passes**).
+- `npx eslint tests/ml benchmark/corpus benchmark/capture`: pass.
+- `npm run typecheck`: pass after supervisor added benchmark TS inclusion.
+- `node benchmark/corpus/cli.mjs validate benchmark/corpus/empty.json`: valid schema, **BLOCKED_WITH_EVIDENCE**, zero real samples/writers/symbols/expressions.
+- Scoped Prettier over owned paths: pass after formatting.
+- Native canonical probe command with installed Chrome: initial sandbox launch SIGABRT; escalated repeat actually ran, **FAIL 11/12**. Report retained. Same geometry at ±999000 coordinates differed by max tensor 0.180392; tall context shrank unrelated symbol253→8 dark pixels. Both cosmetic color and erasure-white checks passed.
+
+Follow-up checks: `npx vitest run tests/ml tests/unit/recognition-real-model.test.ts --reporter=json --outputFile=tests/ml/deterministic-baseline-2026-10-03.json` passed **39/39**, including the actual pretrained Node WASM test. `npx eslint tests/ml benchmark/corpus benchmark/capture` and `npm run typecheck` passed again. Native repair probe `tests/ml/preprocessing-repair-2026-10-03.json` passed **14/14**, translation and translated partial-mask maximum deviation both zero, authoritative source geometry unchanged. Old failing evidence remains retained.
+
+Independent task review of supervisor-authored `P0-PREPROCESS-CORRECTNESS`: **ACCEPTED** for the bounded coordinate repair, reviewed working diff against `e5e48be` in `src/recognition/preprocess.ts`, `src/recognition/manifest.ts`, `public/models/manifest.json` and their `drawDocument`/mask caller. Local translation copies stroke and mask samples before the small Canvas transform; no source geometry mutation, weights or unrelated math changes. Required preprocessing version is advanced to `rgb-white-baseline-v2`. Actual native tensor and target-specific-mask invariants independently reproduced above. No blocking finding for this bounded task; tall-line normalization remains a separate documented Phase 5 gap. This is agent review, not a human GitHub approval or harness self-review.
+
+Known required baseline failures remaining: overlapping painted digit bounds merge, same-row distant expressions merge, x assignment/use unknown-token and whole-line scale sensitivity. Extreme translated preprocessing mismatch is repaired and independently verified. Production browser suites must be rerun on integrated head; tester-only synthetic regression passes are not real handwriting accuracy. Capture/import/replay entrypoints are implemented; real held-out replay cannot be executed because no actual labelled writer corpus is supplied. Replay currently conservatively remains blocked for AST extraction/variable metrics and full timing, even after predictions can be produced.
+
+Contracts added: corpus v1 with attested real-vector provenance, exact label/stroke links, independent canonical AST/outcomes, explicit exclusions, writer-disjoint splits and stable freezing; numerator/denominator/nullable metrics. Production protocol unchanged. Future production schema/AST/preprocessing changes need explicit adapter/tests and fresh evidence. Synthetic validator metadata is confined to tests and is not committed as a claimed real collection.
+
+Remaining acceptance evidence: real writer samples, x/× automatic/corrected quality, all-class browser/reference numerical parity, AST/variable replay adapter, 100-repetition complete latency instrumentation, alternative model ablations, offline cache updates, frame/physical stylus/touch and slower-device/memory evidence. Mandatory tester system is implemented incrementally; full ML acceptance is **BLOCKED_WITH_EVIDENCE**. Independent review is pending the supervisor's reviewer.

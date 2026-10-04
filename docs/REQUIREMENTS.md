@@ -30,3 +30,4 @@ IndexedDB recovery, format versioning, capability detection, fault isolation, to
 ## Scope boundary
 
 Baseline handwritten vocabulary is exactly the 16 required symbols. Variables and letters are an extension requiring a separately verified recognizer and grammar; Dataset II must not be presented as recognizing all letters. Parentheses may be supported internally by the parser but handwritten parentheses, trigonometry, powers, algebra solving and graphing are not MVP recognition requirements. No training or fine-tuning is planned. The PS says training from scratch is not required/expected; do not misquote it as an absolute training prohibition.
+

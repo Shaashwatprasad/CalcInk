@@ -71,7 +71,7 @@ describe('notebook persistence', () => {
     storage.close();
   });
   it('rejects unsupported, malformed and nonfinite data', () => {
-    expect(() => validateDocument({ ...doc(), version: 2 })).toThrow();
+    expect(() => validateDocument({ ...doc(), version: 3 })).toThrow();
     expect(() =>
       validateDocument({ ...doc(), strokes: [{ points: [{ x: NaN }] }] }),
     ).toThrow();

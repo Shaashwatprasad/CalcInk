@@ -1,0 +1,185 @@
+{
+  "config": {
+    "configFile": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/playwright.product.config.ts",
+    "rootDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/product",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/test-results/p2-required-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/product",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run preview -- --port 4173 --strictPort",
+      "url": "http://127.0.0.1:4173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "required-workflows.spec.ts",
+      "file": "required-workflows.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "V2 requirements (pending until implementation and exact-source reports)",
+          "file": "required-workflows.spec.ts",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "PROD-V07 @v2-required Hand free pan and zoom controls preserve coordinates and Space restores Pen",
+              "ok": true,
+              "tags": [
+                "v2-required"
+              ],
+              "tests": [
+                {
+                  "timeout": 15000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1099,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Expect \"poll toBeGreaterThan\"",
+                          "duration": 6
+                        },
+                        {
+                          "title": "Expect \"poll toBeGreaterThan\"",
+                          "duration": 10
+                        },
+                        {
+                          "title": "Expect \"poll toBeGreaterThan\"",
+                          "duration": 109
+                        }
+                      ],
+                      "startTime": "2026-10-03T17:53:47.641Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "browser-issues",
+                          "contentType": "application/json",
+                          "body": "W10="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "aba43058d27c434e1b78-c1c24b4aa50340efa3b6",
+              "file": "required-workflows.spec.ts",
+              "line": 289,
+              "column": 3
+            },
+            {
+              "title": "PROD-V08 @v2-required wheel zoom changes viewport without changing ink or history",
+              "ok": true,
+              "tags": [
+                "v2-required"
+              ],
+              "tests": [
+                {
+                  "timeout": 15000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 481,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-03T17:53:48.990Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "browser-issues",
+                          "contentType": "application/json",
+                          "body": "W10="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "aba43058d27c434e1b78-f1eac2e9146332ede568",
+              "file": "required-workflows.spec.ts",
+              "line": 350,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-03T17:53:47.432Z",
+    "duration": 2088.792,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

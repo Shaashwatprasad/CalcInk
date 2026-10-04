@@ -1,0 +1,16 @@
+# V2 final project/demo evidence review
+
+4 October 2026. Task `V2-final-phase-evidence-review`. **P3–P7 accepted as a coherent project/demo implementation batch within the user-approved scope; P9 is a reviewable tested candidate.** This does not certify full original phase gates, production release, public deployment or hosted CI. Phase8 alternate-model empirical comparisons, writer-disjoint human/device campaigns remain explicitly deferred under that scope.
+
+Reviewer owns only this report; no source edits, delegation, builds or broad reruns. Reviewed the compact V2-final summary, fresh build record, both tracks' identity/step/count summaries, raw Product result counts, final division probe and retained failure summaries. Prior accepted bounded source reviews stand. Annotation acceptance relies on the supervisor's independent P3-OBJECTS/P3-OBJECT-RENDER reports because this reviewer authored those modules.
+
+Verified evidence agrees:
+
+- Tested implementation commit `b6470111f95517dda218cef98fd47c801ad5cb7c`; source `df843c7236852575aad08b8a93b9f07af2a58027feb09aa5ee293ff4f7cb49b6`; artifact `4da7cb972640870dbae05bcccfac4851b3ea7a503b2dc9ed24af8ffa24369867`. Both track build-verification logs match the fresh verified-build record; both reports have equal initial/final source hashes and `sourceChanged:false`.
+- Every recorded step exited0 without a report-contract error. ML recorded256 deterministic passes,4 actual-model browser passes and14 native canonical passes. Product recorded4 actual-model browser passes and41 Product passes. Independently inspected raw Product JSON:41 unique executed case titles,16 required V2 cases,41 expected passes,0 unexpected/failed,0 skipped,0 flaky; no nonpassing per-case result. Product excludes no required cases. ML's16 Product cases listed as unexecuted is correct for that separate track.
+- Final mouse-driven real-model probe uses the same source/artifact identities and records `1/1= 1` and `(1)/(1)= 1`, with no browser errors. This is synthetic real-model integration evidence, not human handwriting accuracy.
+- Earlier evidence remains under V2-final-history: first Product report FAIL and browser39 passed/2 unexpected; first fraction replay split into three equations. Repairs and fresh final results do not erase those failures.
+
+The strict inventory remains honest:84/126 meaningful action assertion links and42 uncovered assertion/permutation gaps; reports retain feature-completeness, human-quality and physical-device limitations. Four separately planned standalone controls are not claimed as implemented; README describes existing theme toggle/mobile dismissal behavior instead. The supported-layout/input permutations are not universally certified. Apple M5/Darwin25.6/Chrome155 evidence, synthetic pressure/touch/canonical checks and recorded frame stalls justify neither physical-stylus evidence nor universal60FPS. Unmapped submission/full release coverage remains outside this candidate acceptance.
+
+No evidence inconsistency or new blocker for the agreed project/demo scope. P9 candidate readiness means these tested artifacts can proceed through the applicable repository/demo publication policy; it does not assert publication, main merge or a public URL already exists.

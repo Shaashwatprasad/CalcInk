@@ -10,6 +10,7 @@ export default tseslint.config(
       'scripts/model/artifacts/**',
       'test-results/**',
       'playwright-report/**',
+      'docs/evidence/**',
     ],
   },
   js.configs.recommended,

@@ -51,3 +51,4 @@ Limit repeated repair attempts for the same failure to three before diagnosing t
 ## Stop conditions
 
 Stop a dependent task when a necessary model artifact/license cannot be verified, repository access is absent, a required human sample set is missing, or a policy-controlled action needs a decision. Complete independent local work and preserve a resumable state. Stop the overall implementation only when baseline acceptance gates pass or the remaining blockers are explicitly documented. Do not call a UI scaffold a completed application.
+

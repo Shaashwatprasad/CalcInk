@@ -28,6 +28,16 @@ const document = (strokes: Stroke[]): InkDocument => ({
   erasures: [],
 });
 describe('recognition geometry', () => {
+  it('preserves close but separate digits instead of feeding both to one symbol classifier', () => {
+    const groups = groupSymbols([
+      stroke('left', 0, 0, 20, 40),
+      stroke('right', 21, 0, 41, 40),
+    ]);
+    expect(groups.map((g) => g.strokes.map((s) => s.id))).toEqual([
+      ['left'],
+      ['right'],
+    ]);
+  });
   it('combines equals lines and division dots without consuming a neighboring digit', () => {
     const groups = groupSymbols([
       stroke('a', 0, 20, 20, 20),
@@ -158,7 +168,7 @@ describe('worker equation grouping snapshots', () => {
     );
     for (const malformed of [
       null,
-      { ...doc, version: 2 },
+      { ...doc, version: 3 },
       { ...doc, generation: -1 },
       { ...doc, revision: NaN },
       { ...doc, strokes: [null] },

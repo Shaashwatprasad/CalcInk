@@ -1,0 +1,12 @@
+✔ declared links cannot inflate meaningful action coverage or pass completeness gate (81.204542ms)
+✔ meaningful mapping requires anchors to assertions in the owning executable case (69.696708ms)
+✔ even all-green workflow reports cannot pass missing, planned or unavailable actions (136.384542ms)
+✔ stale identity and failed initial attempts cannot be counted as a passing action (201.073709ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 550.509125

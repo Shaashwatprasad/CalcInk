@@ -1,0 +1,179 @@
+{
+  "syntheticGeometry": {
+    "sameRow": [
+      {
+        "members": ["left", "right"],
+        "symbols": [["left"], ["right"]]
+      }
+    ],
+    "fraction": [
+      {
+        "members": ["numerator"],
+        "symbols": [["numerator"]]
+      },
+      {
+        "members": ["fraction-bar"],
+        "symbols": [["fraction-bar"]]
+      },
+      {
+        "members": ["denominator"],
+        "symbols": [["denominator"]]
+      }
+    ],
+    "scale": [
+      {
+        "scale": 1,
+        "groups": [
+          {
+            "members": ["upper"],
+            "symbols": [["upper"]]
+          },
+          {
+            "members": ["lower"],
+            "symbols": [["lower"]]
+          }
+        ]
+      },
+      {
+        "scale": 0.1,
+        "groups": [
+          {
+            "members": ["upper", "lower"],
+            "symbols": [["upper", "lower"]]
+          }
+        ]
+      }
+    ],
+    "touchingDigits": [["digit-a", "digit-b"]]
+  },
+  "math": {
+    "x=2": {
+      "status": "invalid",
+      "code": "unknown-token",
+      "location": 0
+    },
+    "x+6=": {
+      "status": "invalid",
+      "code": "unknown-token",
+      "location": 0
+    },
+    "2×3=": {
+      "status": "valid",
+      "value": 6,
+      "display": "6"
+    },
+    "5+": {
+      "status": "incomplete"
+    },
+    "2÷0=": {
+      "status": "undefined",
+      "reason": "division-by-zero",
+      "display": "Undefined"
+    }
+  },
+  "browser": {
+    "version": "155.0.8059.27",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "dimensions": [
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 464
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 464
+      },
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 497
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 497
+      },
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 690.3000000119209
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 690.3000000119209
+      },
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 697.1000000238419
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 697.1000000238419
+      },
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 725.6999999880791
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 725.8000000119209
+      },
+      {
+        "property": "width",
+        "value": 1098,
+        "before": 1098,
+        "className": "projection-layer",
+        "time": 729.5
+      },
+      {
+        "property": "height",
+        "value": 540,
+        "before": 540,
+        "className": "projection-layer",
+        "time": 729.5
+      }
+    ],
+    "errors": []
+  },
+  "antialias": [
+    {
+      "dpr": 1,
+      "unequalPixels": 165,
+      "maxAlphaDifference": 142,
+      "totalAlphaDifference": 4135
+    },
+    {
+      "dpr": 2,
+      "unequalPixels": 334,
+      "maxAlphaDifference": 128,
+      "totalAlphaDifference": 8249
+    }
+  ]
+}

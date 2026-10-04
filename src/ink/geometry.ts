@@ -10,6 +10,72 @@ export type InkContext =
   | CanvasRenderingContext2D
   | OffscreenCanvasRenderingContext2D;
 
+export type InkColorResolver = (stroke: Stroke) => string;
+
+/** Appearance resolves at paint time; stored explicit colors are never recolored. */
+export function resolveInkColor(
+  stroke: Stroke,
+  theme: 'light' | 'dark' = 'light',
+): string {
+  return stroke.colorMode === 'auto'
+    ? theme === 'dark'
+      ? '#E4E7EB'
+      : '#252D38'
+    : stroke.color;
+}
+
+export function validStrokeSemantics(stroke: Stroke): boolean {
+  return (
+    (stroke.kind === undefined ||
+      ['pen', 'pencil', 'highlighter'].includes(stroke.kind)) &&
+    (stroke.colorMode === undefined ||
+      ['auto', 'explicit'].includes(stroke.colorMode)) &&
+    (stroke.opacity === undefined ||
+      (Number.isFinite(stroke.opacity) &&
+        stroke.opacity >= 0 &&
+        stroke.opacity <= 1)) &&
+    (stroke.pressureEnabled === undefined ||
+      typeof stroke.pressureEnabled === 'boolean') &&
+    (stroke.recognitionEligible === undefined ||
+      typeof stroke.recognitionEligible === 'boolean')
+  );
+}
+
+export function normalizedStrokeSemantics(stroke: Stroke) {
+  if (!validStrokeSemantics(stroke))
+    throw new Error('Invalid stroke semantics');
+  return {
+    kind: stroke.kind ?? 'pen',
+    colorMode: stroke.colorMode ?? 'explicit',
+    opacity: stroke.opacity ?? 1,
+    pressureEnabled: stroke.pressureEnabled ?? false,
+    recognitionEligible:
+      stroke.kind !== 'highlighter' && (stroke.recognitionEligible ?? true),
+  };
+}
+
+export function isRecognitionEligible(stroke: Stroke): boolean {
+  return stroke.kind !== 'highlighter' && stroke.recognitionEligible !== false;
+}
+
+/** Absent pressure means no hardware signal (mouse), preserving full width.
+ * Real pen pressure 0 is valid and uses the minimum quarter-width.
+ * Each segment is a round capsule at the mean of its endpoint widths. This same
+ * discrete geometry is used in display, whole-stroke erasure and canonical ML. */
+export function pressureWidth(stroke: Stroke, point: Point): number {
+  if (
+    !stroke.pressureEnabled ||
+    stroke.kind === 'highlighter' ||
+    point.pressure === undefined
+  )
+    return stroke.width;
+  return stroke.width * (0.25 + 0.75 * point.pressure);
+}
+
+function segmentWidth(stroke: Stroke, a: Point, b: Point): number {
+  return (pressureWidth(stroke, a) + pressureWidth(stroke, b)) / 2;
+}
+
 export function pointBounds(points: readonly Point[], padding = 0): Bounds {
   if (!points.length) return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
   let minX = Infinity;
@@ -88,7 +154,7 @@ export function strokeIntersectsPath(
           path[j],
           path[Math.min(j + 1, path.length - 1)],
         ) <=
-        radius + stroke.width / 2
+        radius + segmentWidth(stroke, a, b) / 2
       )
         return true;
     }
@@ -120,16 +186,50 @@ function drawPath(
   ctx.stroke();
 }
 
-/** startIndex appends only new segments; replay and worker rasterization use index 0. */
-export function drawStroke(
+function drawStrokeGeometry(
   ctx: InkContext,
   stroke: Stroke,
   startIndex = 0,
 ): void {
+  if (!stroke.pressureEnabled || stroke.kind === 'highlighter') {
+    drawPath(ctx, stroke.points, stroke.width, startIndex);
+    return;
+  }
+  if (stroke.points.length === 1) {
+    drawPath(ctx, stroke.points, pressureWidth(stroke, stroke.points[0]));
+    return;
+  }
+  for (let i = Math.max(0, startIndex - 1); i < stroke.points.length - 1; i++) {
+    const a = stroke.points[i];
+    const b = stroke.points[i + 1];
+    drawPath(ctx, [a, b], segmentWidth(stroke, a, b));
+  }
+}
+
+/** Opaque constant-width segments may append. Pressure or translucent active
+ * ink must clear/replay its own canvas with index 0: endpoint geometry can change
+ * and alpha belongs to the entire stroke. Never clear unrelated ink here. */
+export function drawStroke(
+  ctx: InkContext,
+  stroke: Stroke,
+  startIndex = 0,
+  colorResolver: InkColorResolver = resolveInkColor,
+): void {
+  if (startIndex > 0 && stroke.pressureEnabled && stroke.kind !== 'highlighter')
+    throw new Error(
+      'Pressure ink requires clearing its active canvas and full replay with startIndex 0.',
+    );
   ctx.save();
-  ctx.strokeStyle = stroke.color;
-  ctx.fillStyle = stroke.color;
-  drawPath(ctx, stroke.points, stroke.width, startIndex);
+  const opacity = stroke.opacity ?? 1;
+  if (opacity < 1 || stroke.kind === 'highlighter') {
+    const layer = prepareLayer(ctx);
+    drawOpaqueStroke(layer, stroke, colorResolver);
+    compositeLayer(ctx, layer, opacity);
+  } else {
+    ctx.strokeStyle = colorResolver(stroke);
+    ctx.fillStyle = ctx.strokeStyle;
+    drawStrokeGeometry(ctx, stroke, startIndex);
+  }
   ctx.restore();
 }
 
@@ -160,29 +260,75 @@ function createLayer(ctx: InkContext): InkContext {
   );
 }
 
-/** Masks are applied in an isolated layer per stroke: they never erase other ink. */
+// One scratch canvas per target context; reused across strokes and replays.
+const scratchLayers = new WeakMap<InkContext, InkContext>();
+function prepareLayer(ctx: InkContext): InkContext {
+  let layer = scratchLayers.get(ctx);
+  if (!layer) {
+    layer = createLayer(ctx);
+    scratchLayers.set(ctx, layer);
+  }
+  if (layer.canvas.width !== ctx.canvas.width)
+    layer.canvas.width = ctx.canvas.width;
+  if (layer.canvas.height !== ctx.canvas.height)
+    layer.canvas.height = ctx.canvas.height;
+  layer.setTransform(1, 0, 0, 1, 0, 0);
+  layer.globalAlpha = 1;
+  layer.globalCompositeOperation = 'source-over';
+  layer.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
+  layer.setTransform(ctx.getTransform());
+  return layer;
+}
+function drawOpaqueStroke(
+  ctx: InkContext,
+  stroke: Stroke,
+  colorResolver: InkColorResolver,
+): void {
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = colorResolver(stroke);
+  ctx.fillStyle = ctx.strokeStyle;
+  drawStrokeGeometry(ctx, stroke);
+  ctx.restore();
+}
+function compositeLayer(
+  ctx: InkContext,
+  layer: InkContext,
+  opacity: number,
+): void {
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha *= opacity;
+  ctx.drawImage(layer.canvas, 0, 0);
+  ctx.restore();
+}
+
+/** Masks and translucent joins compose in one isolated layer per stroke. Paint
+ * annotations first so later highlighters never cover earlier math pen ink. */
 export function drawDocument(
   ctx: InkContext,
   document: Pick<InkDocument, 'strokes' | 'erasures'>,
+  colorResolver: InkColorResolver = resolveInkColor,
 ): void {
-  let layer: InkContext | undefined;
-  for (const stroke of document.strokes) {
+  const strokes = [
+    ...document.strokes.filter((s) => s.kind === 'highlighter'),
+    ...document.strokes.filter((s) => s.kind !== 'highlighter'),
+  ];
+  for (const stroke of strokes) {
     const erasures = document.erasures.filter((mask) =>
       mask.targetStrokeIds.includes(stroke.id),
     );
-    if (!erasures.length) {
-      drawStroke(ctx, stroke);
+    if (
+      !erasures.length &&
+      stroke.kind !== 'highlighter' &&
+      (stroke.opacity ?? 1) === 1
+    ) {
+      drawStroke(ctx, stroke, 0, colorResolver);
       continue;
     }
-    layer ??= createLayer(ctx);
-    layer.setTransform(1, 0, 0, 1, 0, 0);
-    layer.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
-    layer.setTransform(ctx.getTransform());
-    drawStroke(layer, stroke);
+    const layer = prepareLayer(ctx);
+    drawOpaqueStroke(layer, stroke, colorResolver);
     for (const mask of erasures) drawErasure(layer, mask);
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.drawImage(layer.canvas, 0, 0);
-    ctx.restore();
+    compositeLayer(ctx, layer, stroke.opacity ?? 1);
   }
 }

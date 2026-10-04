@@ -7,6 +7,7 @@ test-results
 playwright-report
 package-lock.json
 docs/reference
+docs/evidence
 
 # Preserve the imported specification pack byte-for-byte.
 AGENTS.md

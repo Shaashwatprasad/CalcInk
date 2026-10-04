@@ -1,0 +1,947 @@
+{
+  "config": {
+    "configFile": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/playwright.product.config.ts",
+    "rootDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/product",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/test-results/tracks/2026-10-03T13-02-17.937Z-product/product-browser-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/Users/shaashwatprasad/.codex/worktrees/a340/CalcInk/tests/product",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run preview -- --port 4173 --strictPort",
+      "url": "http://127.0.0.1:4173",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "baseline.spec.ts",
+      "file": "baseline.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "PROD-B01 @baseline drawing width affects exported ink and reload",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 701,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 119
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:48.194Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-ea12a747fdf259a20719",
+          "file": "baseline.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "PROD-B02 @baseline stroke eraser removes only the hit stroke and history restores it",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1007,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 183
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:49.135Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-3d721321dd151ceb9aa2",
+          "file": "baseline.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "PROD-B03 @baseline partial erase persists a targeted mask and later ink survives",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1096,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 115
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 112
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:50.152Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-2b34e0c1a0b1e3f3cdb7",
+          "file": "baseline.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "PROD-B04 @baseline P E and history shortcuts perform their advertised operations",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 652,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 3
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 114
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 150
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 5
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 5
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:51.255Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-07c42b09dbfaa0001f0f",
+          "file": "baseline.spec.ts",
+          "line": 143,
+          "column": 1
+        },
+        {
+          "title": "PROD-B05 @baseline legacy JSON import/export preserves geometry masks and exact explicit blue",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 7
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:51.913Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-89fc4be3a6ed310c71eb",
+          "file": "baseline.spec.ts",
+          "line": 174,
+          "column": 1
+        },
+        {
+          "title": "PROD-B06 @baseline malformed and unsupported imports cannot overwrite the saved notebook",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1080,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:03:52.564Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-f7e8e49681fae6ed1bfa",
+          "file": "baseline.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "PROD-B07 @baseline Help toggle and home navigation preserve the notebook",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 449,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:03:53.650Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-bd62591ae01ec86e07d9",
+          "file": "baseline.spec.ts",
+          "line": 228,
+          "column": 1
+        },
+        {
+          "title": "PROD-B08 @baseline DPR resize preserves exported geometry and rapid endpoint",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1577,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 114
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 3
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 5
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 85
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 103
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 107
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 109
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 108
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 106
+                    },
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 109
+                    },
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 106
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:54.107Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-8807913272af5c04ce64",
+          "file": "baseline.spec.ts",
+          "line": 258,
+          "column": 1
+        },
+        {
+          "title": "PROD-B09 @baseline real worker computes then equals erase retires answer and undo restores it",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2578,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 17
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:55.693Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-7bb44f1ab94f016b9ef0",
+          "file": "baseline.spec.ts",
+          "line": 296,
+          "column": 1
+        },
+        {
+          "title": "PROD-B10 @baseline cached offline reload allows real inference editing and saving",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2798,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBe\"",
+                      "duration": 113
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:03:58.277Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "network-external",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    },
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-2266ec79d2b68750f627",
+          "file": "baseline.spec.ts",
+          "line": 334,
+          "column": 1
+        },
+        {
+          "title": "PROD-B11 @baseline real model load failure keeps drawing and Retry recovers",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 882,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 112
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:04:01.081Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJraW5kIjogInJlcXVpcmVkLWFzc2V0IiwKICAgICJtZXNzYWdlIjogIjUwMyBodHRwOi8vMTI3LjAuMC4xOjQxNzMvbW9kZWxzL3N5bWJvbHMub25ueCIKICB9Cl0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-cf13330b25f92d5f87c4",
+          "file": "baseline.spec.ts",
+          "line": 381,
+          "column": 1
+        },
+        {
+          "title": "PROD-B12 @baseline Clear is undoable and history disabled states are truthful",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 574,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:04:01.969Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-15425c8b5f636c282f58",
+          "file": "baseline.spec.ts",
+          "line": 413,
+          "column": 1
+        },
+        {
+          "title": "PROD-B13 @baseline visible controls are declared in the action registry",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 388,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:04:02.548Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "discovered-controls",
+                      "contentType": "application/json",
+                      "body": "ewogICJvYnNlcnZlZCI6IFsKICAgIHsKICAgICAgInJvbGUiOiAiYnV0dG9uIiwKICAgICAgIm5hbWUiOiAiSG93IGl0IHdvcmtzIOKGlyIKICAgIH0sCiAgICB7CiAgICAgICJyb2xlIjogImJ1dHRvbiIsCiAgICAgICJuYW1lIjogIlBlbiIKICAgIH0sCiAgICB7CiAgICAgICJyb2xlIjogImJ1dHRvbiIsCiAgICAgICJuYW1lIjogIlN0cm9rZSBlcmFzZXIiCiAgICB9LAogICAgewogICAgICAicm9sZSI6ICJidXR0b24iLAogICAgICAibmFtZSI6ICJQaXhlbCBlcmFzZXIiCiAgICB9LAogICAgewogICAgICAicm9sZSI6ICJidXR0b24iLAogICAgICAibmFtZSI6ICJVbmRvIgogICAgfSwKICAgIHsKICAgICAgInJvbGUiOiAiYnV0dG9uIiwKICAgICAgIm5hbWUiOiAiUmVkbyIKICAgIH0sCiAgICB7CiAgICAgICJyb2xlIjogImJ1dHRvbiIsCiAgICAgICJuYW1lIjogIkNsZWFyIgogICAgfSwKICAgIHsKICAgICAgInJvbGUiOiAiYnV0dG9uIiwKICAgICAgIm5hbWUiOiAiRXhwb3J0IGluayIKICAgIH0sCiAgICB7CiAgICAgICJyb2xlIjogImJ1dHRvbiIsCiAgICAgICJuYW1lIjogIkltcG9ydCBpbmsiCiAgICB9LAogICAgewogICAgICAicm9sZSI6ICJidXR0b24iLAogICAgICAibmFtZSI6ICJEaXNtaXNzIG5vdGlmaWNhdGlvbiIKICAgIH0sCiAgICB7CiAgICAgICJyb2xlIjogImxpbmsiLAogICAgICAibmFtZSI6ICJDYWxjSW5rIGhvbWUiCiAgICB9LAogICAgewogICAgICAicm9sZSI6ICJzbGlkZXIiLAogICAgICAibmFtZSI6ICJTdHJva2Ugd2lkdGgiCiAgICB9CiAgXSwKICAidW5rbm93biI6IFtdCn0="
+                    },
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-dc1159795c76fab7c485",
+          "file": "baseline.spec.ts",
+          "line": 459,
+          "column": 1
+        },
+        {
+          "title": "PROD-B14 @baseline projection renderer failure keeps ink export and useful notice",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Expect \"poll toBeGreaterThan\"",
+                      "duration": 111
+                    }
+                  ],
+                  "startTime": "2026-10-03T13:04:02.947Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d2923076b323a8336a93-234bea7cb2340d06cc03",
+          "file": "baseline.spec.ts",
+          "line": 484,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "diagnostics.spec.ts",
+      "file": "diagnostics.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "PROD-D01 @baseline active replay alpha parity and long-stroke frame samples",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6610,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:03:48.192Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "active-replay-parity",
+                      "contentType": "application/json",
+                      "body": "ewogICJkcHIiOiAxLAogICJ3aWR0aCI6IDEwOTgsCiAgImhlaWdodCI6IDU0MCwKICAibWF4QWxwaGFEaWZmZXJlbmNlIjogMCwKICAiZGlmZmVyaW5nUGl4ZWxzIjogMCwKICAiYWN0aXZlUGl4ZWxzIjogMzQ1OAp9"
+                    },
+                    {
+                      "name": "long-single-stroke-frames",
+                      "contentType": "application/json",
+                      "body": "ewogICJpbnRlcnZhbHNNcyI6IFsKICAgIDYuMTMxOTk5OTc2MTU4MTQxLAogICAgMTYuNjY4MDAwMDAwMDAwMDA2LAogICAgMTYuNTk5OTk5OTk5OTk5OTk0LAogICAgMTYuNjk5OTk5OTk5OTk5OTksCiAgICAxNi43MDAwMDAwMDAwMDAwMTcsCiAgICAxNi41OTk5OTk5OTk5OTk5OTQsCiAgICAxNi42OTk5OTk5OTk5OTk5OSwKICAgIDE2LjcwMDAwMDAwMDAwMDAxNywKICAgIDE2LjY5OTk5OTk5OTk5OTk5LAogICAgMTYuNTk5OTk5OTk5OTk5OTk0LAogICAgMTYuNjk5OTk5OTk5OTk5OTksCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi42OTk5OTk5OTk5OTk5OSwKICAgIDE2LjU5OTk5OTk5OTk5OTk2NiwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjU5OTk5OTk5OTk5OTk2NiwKICAgIDE2LjY5OTk5OTk5OTk5OTk5LAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuODAwMDAwMDAwMDAwMDEsCiAgICAxNi41OTk5OTk5OTk5OTk5NjYsCiAgICAxNi42MDAwMDAwMDAwMDAwMjMsCiAgICAxNi44MDAwMDAwMDAwMDAwMSwKICAgIDE2LjU5OTk5OTk5OTk5OTk2NiwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjY5OTk5OTk5OTk5OTkzMiwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjY5OTk5OTk5OTk5OTkzMiwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2Ljc5OTk5OTk5OTk5OTk1NSwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjY5OTk5OTk5OTk5OTkzMiwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjY5OTk5OTk5OTk5OTkzMiwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjYwMDAwMDAwMDAwMDAyMywKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuODAwMDAwMDAwMDAwMDY4LAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNjk5OTk5OTk5OTk5OTMyLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNjk5OTk5OTk5OTk5OTMyLAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNzk5OTk5OTk5OTk5OTU1LAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNjk5OTk5OTk5OTk5OTMyLAogICAgMTYuNjAwMDAwMDAwMDAwMDIzLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43OTk5OTk5OTk5OTk5NTUsCiAgICAxNi42MDAwMDAwMDAwMDAxMzYsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi42MDAwMDAwMDAwMDAxMzYsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2Ljc5OTk5OTk5OTk5OTk1NSwKICAgIDE2LjYwMDAwMDAwMDAwMDEzNiwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzk5OTk5OTk5OTk5OTU1LAogICAgMTYuNjAwMDAwMDAwMDAwMTM2LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMTM2LAogICAgMTYuNzAwMDAwMDAwMDAwMDQ1LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMTM2LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2Ljc5OTk5OTk5OTk5OTk1NSwKICAgIDE2LjUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi43MDAwMDAwMDAwMDAwNDUsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2Ljc5OTk5OTk5OTk5OTk1NSwKICAgIDE2LjYwMDAwMDAwMDAwMDEzNiwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDEzNiwKICAgIDE2LjcwMDAwMDAwMDAwMDA0NSwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi44MDAwMDAwMDAwMDAxODIsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi42MDAwMDAwMDAwMDAzNjQsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjgwMDAwMDAwMDAwMDE4MiwKICAgIDE2LjUsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzk5OTk5OTk5OTk5NzI3LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjYwMDAwMDAwMDAwMDM2NCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43OTk5OTk5OTk5OTk3MjcsCiAgICAxNi42MDAwMDAwMDAwMDAzNjQsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzk5OTk5OTk5OTk5NzI3LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjcwMDAwMDAwMDAwMDI3MywKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuNzAwMDAwMDAwMDAwMjczLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi42OTk5OTk5OTk5OTk4MTgsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5OTEsCiAgICAxNi43MDAwMDAwMDAwMDAyNzMsCiAgICAxNi41OTk5OTk5OTk5OTk5MSwKICAgIDE2LjY5OTk5OTk5OTk5OTgxOCwKICAgIDE2LjU5OTk5OTk5OTk5OTkxLAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTAwLjEwMDAwMDAwMDAwMDM2LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuODAwMDAwMDAwMDAwMTgyLAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNzAwMDAwMDAwMDAwNzI4LAogICAgMTYuNTk5OTk5OTk5OTk5NDU0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNzk5OTk5OTk5OTk5MjcyLAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjk5OTk5OTk5OTk5ODE4LAogICAgMTYuNjAwMDAwMDAwMDAwMzY0LAogICAgNTAuMDk5OTk5OTk5OTk5NDU0CiAgXSwKICAiYnJvd3NlciI6ICJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBIZWFkbGVzc0Nocm9tZS8xNTUuMC4wLjAgU2FmYXJpLzUzNy4zNiIsCiAgImRwciI6IDEKfQ=="
+                    },
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "80bb835772e7bc2f1ed9-7a456bdfd30336aac1ab",
+          "file": "diagnostics.spec.ts",
+          "line": 2,
+          "column": 1
+        },
+        {
+          "title": "PROD-D02 @baseline recognition never blanks existing ink or resets unchanged projection dimensions",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:03:55.035Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "real-recognition-ink-frame-observation",
+                      "contentType": "application/json",
+                      "body": "ewogICJzYW1wbGVzIjogWwogICAgewogICAgICAidGltZSI6IDEzMDMsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxMzEyLjUsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxMzIyLjYwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxMzM4LjMwMDAwMDAxMTkyMSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDEzNTUuMTAwMDAwMDIzODQxOSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDEzNzIuNjk5OTk5OTg4MDc5LAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0sCiAgICB7CiAgICAgICJ0aW1lIjogMTM4OS4zMDAwMDAwMTE5MjEsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNDA1LjYwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNDIyLjUsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNDM5LjEwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNDU1LjkwMDAwMDAzNTc2MjgsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNDcyLAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0sCiAgICB7CiAgICAgICJ0aW1lIjogMTQ4OC4zMDAwMDAwMTE5MjEsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNTA1LjEwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNTIxLjgwMDAwMDAxMTkyMSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE1MzkuMTk5OTk5OTg4MDc5LAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0sCiAgICB7CiAgICAgICJ0aW1lIjogMTU1NS44MDAwMDAwMTE5MjEsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNTcxLjgwMDAwMDAxMTkyMSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE1ODguOTAwMDAwMDM1NzYyOCwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE2MDUuMTAwMDAwMDIzODQxOSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE2MjEuODAwMDAwMDExOTIxLAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0sCiAgICB7CiAgICAgICJ0aW1lIjogMTYzOS4zMDAwMDAwMTE5MjEsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNjU1LjEwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNjcxLjkwMDAwMDAzNTc2MjgsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNjg5LjE5OTk5OTk4ODA3OSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE3MDUuOTAwMDAwMDM1NzYyOCwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE3MjIsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNzM5LjEwMDAwMDAyMzg0MTksCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNzU0LjgwMDAwMDAxMTkyMSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE3NzIsCiAgICAgICJhbHBoYSI6IDI1NQogICAgfSwKICAgIHsKICAgICAgInRpbWUiOiAxNzg4LjE5OTk5OTk4ODA3OSwKICAgICAgImFscGhhIjogMjU1CiAgICB9LAogICAgewogICAgICAidGltZSI6IDE4MDUuMzAwMDAwMDExOTIxLAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0sCiAgICB7CiAgICAgICJ0aW1lIjogMTgyMS42MDAwMDAwMjM4NDE5LAogICAgICAiYWxwaGEiOiAyNTUKICAgIH0KICBdLAogICJ1bmNoYW5nZWREaW1lbnNpb25zIjogW10KfQ=="
+                    },
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "80bb835772e7bc2f1ed9-6721d0392a35e20210ae",
+          "file": "diagnostics.spec.ts",
+          "line": 84,
+          "column": 1
+        },
+        {
+          "title": "PROD-D03 @baseline layout waste and breakpoint availability observation",
+          "ok": true,
+          "tags": [
+            "baseline"
+          ],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 212,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-03T13:03:57.012Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "layout-and-controls-baseline-observations",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJ3aWR0aCI6IDE0NDAsCiAgICAiaGVpZ2h0IjogMTAwMCwKICAgICJwYXBlciI6IHsKICAgICAgIngiOiAxNzEsCiAgICAgICJ5IjogNDQ3Ljc1LAogICAgICAid2lkdGgiOiAxMDk4LAogICAgICAiaGVpZ2h0IjogNTQwCiAgICB9LAogICAgInBhcGVyQXJlYUZyYWN0aW9uIjogMC40MTE3NSwKICAgICJob3Jpem9udGFsT3ZlcmZsb3ciOiBmYWxzZSwKICAgICJoZWxwVmlzaWJsZSI6IHRydWUsCiAgICAiYnJvd3NlciI6ICJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBIZWFkbGVzc0Nocm9tZS8xNTUuMC4wLjAgU2FmYXJpLzUzNy4zNiIsCiAgICAiZHByIjogMQogIH0sCiAgewogICAgIndpZHRoIjogMTAyNCwKICAgICJoZWlnaHQiOiAxMDAwLAogICAgInBhcGVyIjogewogICAgICAieCI6IDQxLAogICAgICAieSI6IDQ0Ny43NSwKICAgICAgIndpZHRoIjogOTQyLAogICAgICAiaGVpZ2h0IjogNTQwCiAgICB9LAogICAgInBhcGVyQXJlYUZyYWN0aW9uIjogMC40OTY3NTc4MTI1LAogICAgImhvcml6b250YWxPdmVyZmxvdyI6IGZhbHNlLAogICAgImhlbHBWaXNpYmxlIjogdHJ1ZSwKICAgICJicm93c2VyIjogIk1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIEhlYWRsZXNzQ2hyb21lLzE1NS4wLjAuMCBTYWZhcmkvNTM3LjM2IiwKICAgICJkcHIiOiAxCiAgfSwKICB7CiAgICAid2lkdGgiOiA4MzQsCiAgICAiaGVpZ2h0IjogMTAwMCwKICAgICJwYXBlciI6IHsKICAgICAgIngiOiA0MSwKICAgICAgInkiOiA0NDcuNzUsCiAgICAgICJ3aWR0aCI6IDc1MiwKICAgICAgImhlaWdodCI6IDU0MAogICAgfSwKICAgICJwYXBlckFyZWFGcmFjdGlvbiI6IDAuNDg2OTA2NDc0ODIwMTQzOSwKICAgICJob3Jpem9udGFsT3ZlcmZsb3ciOiBmYWxzZSwKICAgICJoZWxwVmlzaWJsZSI6IHRydWUsCiAgICAiYnJvd3NlciI6ICJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBIZWFkbGVzc0Nocm9tZS8xNTUuMC4wLjAgU2FmYXJpLzUzNy4zNiIsCiAgICAiZHByIjogMQogIH0sCiAgewogICAgIndpZHRoIjogNzY4LAogICAgImhlaWdodCI6IDEwMDAsCiAgICAicGFwZXIiOiB7CiAgICAgICJ4IjogNDEsCiAgICAgICJ5IjogNDQ3Ljc1LAogICAgICAid2lkdGgiOiA2ODYsCiAgICAgICJoZWlnaHQiOiA1NDAKICAgIH0sCiAgICAicGFwZXJBcmVhRnJhY3Rpb24iOiAwLjQ4MjM0Mzc1LAogICAgImhvcml6b250YWxPdmVyZmxvdyI6IGZhbHNlLAogICAgImhlbHBWaXNpYmxlIjogdHJ1ZSwKICAgICJicm93c2VyIjogIk1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIEhlYWRsZXNzQ2hyb21lLzE1NS4wLjAuMCBTYWZhcmkvNTM3LjM2IiwKICAgICJkcHIiOiAxCiAgfSwKICB7CiAgICAid2lkdGgiOiA2MDAsCiAgICAiaGVpZ2h0IjogMTAwMCwKICAgICJwYXBlciI6IHsKICAgICAgIngiOiAxNywKICAgICAgInkiOiAzODUuMzEyNSwKICAgICAgIndpZHRoIjogNTY2LAogICAgICAiaGVpZ2h0IjogNTEwCiAgICB9LAogICAgInBhcGVyQXJlYUZyYWN0aW9uIjogMC40ODExLAogICAgImhvcml6b250YWxPdmVyZmxvdyI6IGZhbHNlLAogICAgImhlbHBWaXNpYmxlIjogZmFsc2UsCiAgICAiYnJvd3NlciI6ICJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBIZWFkbGVzc0Nocm9tZS8xNTUuMC4wLjAgU2FmYXJpLzUzNy4zNiIsCiAgICAiZHByIjogMQogIH0sCiAgewogICAgIndpZHRoIjogMzkwLAogICAgImhlaWdodCI6IDEwMDAsCiAgICAicGFwZXIiOiB7CiAgICAgICJ4IjogMTcsCiAgICAgICJ5IjogMzg1LjMxMjUsCiAgICAgICJ3aWR0aCI6IDM1NiwKICAgICAgImhlaWdodCI6IDUxMAogICAgfSwKICAgICJwYXBlckFyZWFGcmFjdGlvbiI6IDAuNDY1NTM4NDYxNTM4NDYxNSwKICAgICJob3Jpem9udGFsT3ZlcmZsb3ciOiBmYWxzZSwKICAgICJoZWxwVmlzaWJsZSI6IGZhbHNlLAogICAgImJyb3dzZXIiOiAiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgSGVhZGxlc3NDaHJvbWUvMTU1LjAuMC4wIFNhZmFyaS81MzcuMzYiLAogICAgImRwciI6IDEKICB9LAogIHsKICAgICJ3aWR0aCI6IDM2MCwKICAgICJoZWlnaHQiOiAxMDAwLAogICAgInBhcGVyIjogewogICAgICAieCI6IDE3LAogICAgICAieSI6IDM4NS4zMTI1LAogICAgICAid2lkdGgiOiAzMjYsCiAgICAgICJoZWlnaHQiOiA1MTAKICAgIH0sCiAgICAicGFwZXJBcmVhRnJhY3Rpb24iOiAwLjQ2MTgzMzMzMzMzMzMzMzMsCiAgICAiaG9yaXpvbnRhbE92ZXJmbG93IjogZmFsc2UsCiAgICAiaGVscFZpc2libGUiOiBmYWxzZSwKICAgICJicm93c2VyIjogIk1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIEhlYWRsZXNzQ2hyb21lLzE1NS4wLjAuMCBTYWZhcmkvNTM3LjM2IiwKICAgICJkcHIiOiAxCiAgfSwKICB7CiAgICAid2lkdGgiOiAzMjAsCiAgICAiaGVpZ2h0IjogMTAwMCwKICAgICJwYXBlciI6IHsKICAgICAgIngiOiAxNywKICAgICAgInkiOiAzODUuMzEyNSwKICAgICAgIndpZHRoIjogMjg2LAogICAgICAiaGVpZ2h0IjogNTEwCiAgICB9LAogICAgInBhcGVyQXJlYUZyYWN0aW9uIjogMC40NTU4MTI1LAogICAgImhvcml6b250YWxPdmVyZmxvdyI6IGZhbHNlLAogICAgImhlbHBWaXNpYmxlIjogZmFsc2UsCiAgICAiYnJvd3NlciI6ICJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV83KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBIZWFkbGVzc0Nocm9tZS8xNTUuMC4wLjAgU2FmYXJpLzUzNy4zNiIsCiAgICAiZHByIjogMQogIH0KXQ=="
+                    },
+                    {
+                      "name": "browser-issues",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "80bb835772e7bc2f1ed9-8c95300fa1b7cd80b3af",
+          "file": "diagnostics.spec.ts",
+          "line": 154,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-03T13:03:47.980Z",
+    "duration": 15521.214,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

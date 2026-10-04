@@ -64,3 +64,4 @@ INT8 is optional after FP32 passes. Compare size, supported ops/providers, accur
 - [ORT WebGPU](https://onnxruntime.ai/docs/tutorials/web/ep-webgpu.html)
 
 Lookups dated 2 October 2026. Record artifact checks separately from these website checks.
+

@@ -1,6 +1,6 @@
 {
   "modelVersion": "rafi-dataset2-0f90d32-fp32-v1",
-  "preprocessingVersion": "rgb-white-baseline-v1",
+  "preprocessingVersion": "rgb-white-local-median-v4",
   "source": {
     "repository": "https://github.com/rafiibnsultan/Math_Symbols_Classify",
     "commit": "0f90d32afb1e4d8416b3d0c4adf4ce1748d86a16",

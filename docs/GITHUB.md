@@ -29,3 +29,4 @@ Static hosting needs correct worker/WASM MIME types, HTTPS, asset/base paths, se
 ## Ongoing maintenance scope
 
 Within each active implementation session, update issues/PRs, review/CI status, docs and progress. Persistent future monitoring does not happen merely because AGENTS.md requests it; it needs an explicitly configured scheduled job or automation. Do not claim agents will keep running after a session ends. Record blockers and next task so a new session can resume reliably.
+

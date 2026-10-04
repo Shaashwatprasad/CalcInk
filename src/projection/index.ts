@@ -1,4 +1,5 @@
-import { evaluateExpression } from '../math';
+import { evaluateNotebook } from '../math';
+import type { NotebookOutcome } from '../math';
 import type {
   Bounds,
   Evaluation,
@@ -50,6 +51,10 @@ export function isJobIdentity(value: unknown): value is JobIdentity {
 function isSymbol(value: unknown): value is SymbolPrediction {
   return (
     record(value) &&
+    (value.strokeIds === undefined ||
+      (Array.isArray(value.strokeIds) &&
+        value.strokeIds.length <= 50000 &&
+        value.strokeIds.every(text))) &&
     text(value.label) &&
     score(value.score) &&
     isBounds(value.bounds) &&
@@ -83,6 +88,13 @@ export function isRecognitionResult(
     nonnegative(value.timings.preprocessingMs) &&
     nonnegative(value.timings.inferenceMs) &&
     nonnegative(value.timings.totalMs) &&
+    (value.uncertaintyReasons === undefined ||
+      (Array.isArray(value.uncertaintyReasons) &&
+        value.uncertaintyReasons.every((reason) =>
+          ['crossing', 'confidence', 'layout', 'segmentation'].includes(
+            reason as string,
+          ),
+        ))) &&
     value.backend === 'wasm'
   );
 }
@@ -105,7 +117,12 @@ export interface EquationProjection {
   equationRevision: number;
   expression: string;
   bounds: Bounds;
-  status: Evaluation['status'] | 'uncertain' | 'error';
+  status: NotebookOutcome['status'] | 'error';
+  outcome?: NotebookOutcome;
+  normalizedText?: string;
+  answerFontSize?: number;
+  symbols?: SymbolPrediction[];
+  crossingIndex?: number;
   evaluation?: Evaluation;
   equalsBounds?: Bounds;
   answerBounds?: Bounds;
@@ -118,12 +135,21 @@ export class ProjectionStore {
   private generation = -1;
   private expected = new Map<string, JobIdentity>();
   private projections = new Map<string, EquationProjection>();
+  private inputs = new Map<string, RecognitionResult>();
+  private pending = new Map<string, { bounds: Bounds; text: string }>();
+  private corrections = new Map<
+    string,
+    { revision: number; index: number; label: 'x' | '×' }
+  >();
 
   reset(documentId: string, generation: number): void {
     this.documentId = documentId;
     this.generation = generation;
     this.expected.clear();
     this.projections.clear();
+    this.inputs.clear();
+    this.pending.clear();
+    this.corrections.clear();
   }
 
   expect(job: JobIdentity): void {
@@ -145,54 +171,196 @@ export class ProjectionStore {
       modelVersion: job.modelVersion,
       preprocessingVersion: job.preprocessingVersion,
     });
+    const previous = this.inputs.get(job.equationId);
+    const full = job as RecognitionJob;
+    if (full.bounds)
+      this.pending.set(job.equationId, {
+        bounds: { ...full.bounds },
+        text: previous?.expression ?? '',
+      });
+    this.inputs.delete(job.equationId);
+    this.corrections.delete(job.equationId);
     this.projections.delete(job.equationId);
+    this.recompute();
   }
 
   retire(equationId: string): void {
     this.expected.delete(equationId);
     this.projections.delete(equationId);
+    this.inputs.delete(equationId);
+    this.pending.delete(equationId);
+    this.corrections.delete(equationId);
+    this.recompute();
   }
 
   accept(value: unknown): EquationProjection | undefined {
     if (!isRecognitionResult(value)) return undefined;
     const expected = this.expected.get(value.equationId);
     if (!expected || !sameJob(expected, value)) return undefined;
-    const projection: EquationProjection = {
-      equationId: value.equationId,
-      equationRevision: value.equationRevision,
-      expression: value.expression,
-      bounds: { ...value.bounds },
-      status: 'incomplete',
-    };
-    if (value.status !== 'recognized') projection.status = value.status;
-    else if (value.expression.trimEnd().endsWith('=')) {
-      const last = value.symbols.at(-1);
-      if (last && (last.label === '=' || last.label === 'eq')) {
-        const evaluation = evaluateExpression(value.expression);
-        projection.status = evaluation.status;
-        projection.evaluation = evaluation;
-        projection.equalsBounds = { ...last.bounds };
-        if (
-          evaluation.status === 'valid' ||
-          evaluation.status === 'undefined'
-        ) {
-          projection.answerText = evaluation.display;
-          projection.answerBounds = {
-            minX: last.bounds.maxX + 12,
-            maxX:
-              last.bounds.maxX +
-              12 +
-              Math.max(20, evaluation.display.length * 10),
-            minY: last.bounds.minY,
-            maxY: Math.max(last.bounds.maxY, last.bounds.minY + 20),
-          };
-        }
-      }
-    }
-    this.projections.set(value.equationId, projection);
-    // Consume accepted jobs, preventing a duplicate message from replacing derived state.
+    this.inputs.set(value.equationId, value);
+    this.pending.delete(value.equationId);
     this.expected.delete(value.equationId);
-    return projection;
+    this.recompute();
+    return this.projections.get(value.equationId);
+  }
+
+  /** A correction belongs to one source equation revision, never global glyph replacement. */
+  correct(equationId: string, label: 'x' | '×', symbolIndex?: number): boolean {
+    const value = this.inputs.get(equationId);
+    const index =
+      symbolIndex ?? this.projections.get(equationId)?.crossingIndex ?? -1;
+    if (
+      !value ||
+      !Number.isInteger(index) ||
+      !['×', 'x'].includes(value.symbols[index]?.label)
+    )
+      return false;
+    this.corrections.set(equationId, {
+      revision: value.equationRevision,
+      index,
+      label,
+    });
+    this.recompute();
+    return true;
+  }
+
+  private recompute(): void {
+    const values = [...this.inputs.values()].sort(
+      (a, b) => a.bounds.minY - b.bounds.minY || a.bounds.minX - b.bounds.minX,
+    );
+    const expressions = new Map<string, string>();
+    for (const value of values) {
+      const correction = this.corrections.get(value.equationId);
+      // Only the crossing in an operand position can be x; 2×3 remains multiplication.
+      const labels = value.symbols.map((s) => s.label);
+      for (let i = 0; i < labels.length; i++) {
+        if (
+          correction?.revision === value.equationRevision &&
+          correction.index === i
+        )
+          labels[i] = correction.label;
+        else if (
+          labels[i] === '×' &&
+          (i === 0 ||
+            ['+', '-', '−', '×', '*', '/', '÷', '(', '='].includes(
+              labels[i - 1],
+            ))
+        )
+          labels[i] = 'x';
+      }
+      // Structured division expressions can differ from a flat symbol concatenation.
+      const flat = value.symbols.map((s) => s.label).join('');
+      const flatCompatible =
+        value.expression.length === flat.length &&
+        [...value.expression].every(
+          (c, i) => c === flat[i] || (c === 'x' && flat[i] === '×'),
+        );
+      expressions.set(
+        value.equationId,
+        flatCompatible ? labels.join('') : value.expression,
+      );
+    }
+    const entries = [
+      ...values.map((v) => ({
+        id: v.equationId,
+        text: expressions.get(v.equationId)!,
+        state:
+          v.status === 'recognized' ||
+          (this.corrections.has(v.equationId) &&
+            v.uncertaintyReasons?.length &&
+            v.uncertaintyReasons.every((r) => r === 'crossing'))
+            ? ('recognized' as const)
+            : v.status === 'uncertain'
+              ? ('uncertain' as const)
+              : ('error' as const),
+        bounds: v.bounds,
+      })),
+      ...[...this.pending].map(([id, p]) => ({
+        id,
+        text: p.text,
+        state: 'pending' as const,
+        bounds: p.bounds,
+      })),
+    ].sort(
+      (a, b) => a.bounds.minY - b.bounds.minY || a.bounds.minX - b.bounds.minX,
+    );
+    const evaluated = evaluateNotebook(entries).entries;
+    this.projections.clear();
+    for (const value of values) {
+      const result = evaluated.find((e) => e.id === value.equationId)!;
+      const outcome = result.outcome;
+      const last = value.symbols.at(-1);
+      const equals =
+        last && (last.label === '=' || last.label === 'eq')
+          ? last.bounds
+          : undefined;
+      const bodyHeights = value.symbols
+        .filter((s) => !['=', '−', '-', '.', '÷'].includes(s.label))
+        .map((s) => s.bounds.maxY - s.bounds.minY)
+        .filter((h) => h > 0)
+        .sort((a, b) => a - b);
+      const fontSize = Math.max(
+        12,
+        Math.min(
+          128,
+          (bodyHeights[Math.floor(bodyHeights.length / 2)] ??
+            value.bounds.maxY - value.bounds.minY) * 0.95,
+        ),
+      );
+      const answer =
+        equals && (outcome.status === 'valid' || outcome.status === 'undefined')
+          ? outcome.display
+          : undefined;
+      const projection: EquationProjection = {
+        equationId: value.equationId,
+        equationRevision: value.equationRevision,
+        expression: expressions.get(value.equationId)!,
+        bounds: { ...value.bounds },
+        status: outcome.status,
+        outcome,
+        symbols: value.symbols,
+        normalizedText: result.normalizedText ?? undefined,
+        crossingIndex: (() => {
+          const candidates = value.symbols.flatMap((s, i) =>
+            ['×', 'x'].includes(s.label) ? [i] : [],
+          );
+          return (
+            candidates.find(
+              (i) =>
+                i === 0 ||
+                ['+', '-', '−', '×', '*', '/', '÷', '(', '='].includes(
+                  value.symbols[i - 1].label,
+                ),
+            ) ??
+            candidates[0] ??
+            -1
+          );
+        })(),
+        ...(outcome.status === 'valid' ||
+        outcome.status === 'undefined' ||
+        outcome.status === 'invalid' ||
+        outcome.status === 'incomplete'
+          ? { evaluation: outcome }
+          : {}),
+        ...(equals ? { equalsBounds: { ...equals } } : {}),
+        ...(answer && equals
+          ? {
+              answerText: answer,
+              answerFontSize: fontSize,
+              answerBounds: {
+                minX: equals.maxX + 12,
+                maxX:
+                  equals.maxX +
+                  12 +
+                  Math.max(20, answer.length * fontSize * 0.65),
+                minY: equals.minY,
+                maxY: Math.max(equals.maxY, equals.minY + fontSize),
+              },
+            }
+          : {}),
+      };
+      this.projections.set(value.equationId, projection);
+    }
   }
 
   get(equationId: string): EquationProjection | undefined {

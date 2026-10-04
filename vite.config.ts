@@ -4,7 +4,11 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.CALCINK_BASE ?? './',
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts'],
+    include: [
+      'tests/unit/**/*.test.ts',
+      'tests/integration/**/*.test.ts',
+      'tests/ml/**/*.test.ts',
+    ],
     environment: 'node',
   },
   build: { target: 'es2022' },

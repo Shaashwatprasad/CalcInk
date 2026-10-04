@@ -11,3 +11,4 @@ Maintain the supplied GitHub repository with meaningful issues, commits, feature
 Keep docs/PROGRESS.md, architecture/ADRs, model/license inventory, tests and README current. Record actual benchmark hardware/browser/results and limitations. Request real human handwriting samples when needed while continuing independent coding. Do not manufacture team contributions.
 
 Use the supervisor → planner → implementers → independent review/tests → repair feedback → integration/CI → presenter loop. Preserve validated lessons in docs. Give concise updates during work. Stop only when required behavior is tested and the release gate passes, or when a concrete external blocker remains after all independent work is finished. End with implemented behavior, exact validation results, repository/PR/demo links that actually exist, unresolved blockers and next action.
+
