@@ -2,7 +2,7 @@
 
 ## Latest checkpoint — 4 October 2026
 
-Final V2 project/demo integration on `codex/calcink-v2`: implementation `b647011`. P0–P2 accepted earlier; P3–P7 coherent feature batch completed with bounded independent reviews/fix re-reviews. Independent final phase evidence review accepted the P3–P7 project/demo batch; P9 candidate is ready for draft PR publication. See docs/reviews/V2-PHASES.md. V1 React/imperative Canvas/vector store/worker/ORT/safe-math architecture preserved.
+Final V2 project/demo integration on `codex/calcink-v2`: implementation `b647011`. P0–P2 accepted earlier; P3–P7 coherent feature batch completed with bounded independent reviews/fix re-reviews. Independent final phase evidence review accepted the P3–P7 project/demo batch; P9 draft PR #5 created: https://github.com/Shaashwatprasad/CalcInk/pull/5. Published feature commit f1113ee645c5f92e5cdc6e6890c14e51374e3037 preserves the tested source; GitHub CI running at publication. See docs/reviews/V2-PHASES.md. V1 React/imperative Canvas/vector store/worker/ORT/safe-math architecture preserved.
 
 Final typecheck/lint/format/build pass; ML256units+4realbrowser+14canonical and Product4realbrowser+41workflows (all16 required) PASS, zero failures/skips/flakes, same fresh source/build hashes. Slash and thin-one fraction replay both evaluate1 through the actual model. Notebook stale-snapshot overwrite, per-symbol x correction, late-equation bridging and thin fraction operands were reproduced, repaired and re-reviewed. Evidence: `docs/evidence/V2-final`; bounded reviews: `docs/reviews/V2-INTEGRATION.md` plus earlier task reports.
 
