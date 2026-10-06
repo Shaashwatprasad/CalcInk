@@ -1,3 +1,4 @@
+import { validStrokeSemantics } from '../ink/geometry';
 import type {
   GroupResult,
   InkDocument,
@@ -30,7 +31,9 @@ function points(v: unknown): boolean {
         typeof p === 'object' &&
         finite(p.x) &&
         finite(p.y) &&
-        finite(p.timestamp),
+        finite(p.timestamp) &&
+        (p.pressure === undefined ||
+          (finite(p.pressure) && p.pressure >= 0 && p.pressure <= 1)),
     )
   );
 }
@@ -47,6 +50,7 @@ function geometry(
         typeof s === 'object' &&
         typeof s.id === 'string' &&
         typeof s.color === 'string' &&
+        validStrokeSemantics(s) &&
         finite(s.width) &&
         s.width > 0 &&
         bounds(s.bounds) &&
@@ -72,7 +76,7 @@ export function isGroupingDocument(value: unknown): value is InkDocument {
   const doc = value as InkDocument;
   return (
     doc.format === 'calcink-document' &&
-    doc.version === 1 &&
+    (doc.version === 1 || doc.version === 2) &&
     typeof doc.documentId === 'string' &&
     doc.documentId.length > 0 &&
     revision(doc.generation) &&
@@ -125,7 +129,14 @@ export function isGroupResult(value: unknown): value is GroupResult {
         group.id.length > 0 &&
         revision(group.revision) &&
         bounds(group.bounds) &&
-        geometry(group, 50000),
-    )
+        geometry(group, 50000) &&
+        group.strokes.length > 0,
+    ) &&
+    new Set(
+      result.groups.flatMap((group) =>
+        group.strokes.map((stroke) => stroke.id),
+      ),
+    ).size ===
+      result.groups.reduce((count, group) => count + group.strokes.length, 0)
   );
 }

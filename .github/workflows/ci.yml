@@ -19,12 +19,24 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
-      - run: npm test
-      - run: npm run build
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: node tests/registry/check-registry.mjs
+      - name: Build current source once for both tester systems
+        env:
+          CALCINK_VERIFIED_BUILD: ${{ runner.temp }}/calcink-verified-build.json
+        run: node scripts/testing/verified-build.mjs build "$CALCINK_VERIFIED_BUILD"
+      - name: ML Implementation Tester (available deterministic and real-model gates)
+        env:
+          CALCINK_VERIFIED_BUILD: ${{ runner.temp }}/calcink-verified-build.json
+        run: npm run test:ml
+      - name: Product Interaction / Feature Tester (baseline and required V2 workflows)
+        if: always()
+        env:
+          CALCINK_PRODUCT_REQUIRED: '1'
+          CALCINK_VERIFIED_BUILD: ${{ runner.temp }}/calcink-verified-build.json
+        run: npm run test:product
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
-          name: browser-test-results
+          name: tester-reports-and-browser-evidence
           path: test-results

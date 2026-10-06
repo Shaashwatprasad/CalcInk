@@ -16,6 +16,12 @@ export interface Stroke {
   bounds: Bounds;
   width: number;
   color: string;
+  /** Missing fields retain V1's explicit-color, opaque, constant-width pen behavior. */
+  kind?: 'pen' | 'pencil' | 'highlighter';
+  colorMode?: 'auto' | 'explicit';
+  opacity?: number;
+  pressureEnabled?: boolean;
+  recognitionEligible?: boolean;
 }
 export interface Erasure {
   id: string;
@@ -23,20 +29,71 @@ export interface Erasure {
   path: Point[];
   radius: number;
 }
+export interface XY {
+  x: number;
+  y: number;
+}
+interface AnnotationStyle {
+  id: string;
+  recognitionEligible: false;
+  color: string;
+  colorMode: 'auto' | 'explicit';
+  strokeWidth: number;
+  opacity: number;
+}
+export type Annotation = AnnotationStyle &
+  (
+    | {
+        kind: 'text';
+        x: number;
+        y: number;
+        fontSize: number;
+        text: string;
+        math?: boolean;
+      }
+    | {
+        kind: 'shape';
+        shape: 'rectangle' | 'ellipse';
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }
+    | {
+        kind: 'shape';
+        shape: 'line';
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
+      }
+    | { kind: 'region'; x: number; y: number; width: number; height: number }
+    | { kind: 'arrow'; x1: number; y1: number; x2: number; y2: number }
+  );
+export interface Selection {
+  strokeIds: string[];
+  objectIds: string[];
+}
 export interface InkDocument {
   format: 'calcink-document';
-  version: 1;
+  version: 1 | 2;
   documentId: string;
   generation: number;
   revision: number;
   strokes: Stroke[];
   erasures: Erasure[];
+  /** V1 and older V2 notebooks migrate absent annotations to an empty list. */
+  objects?: Annotation[];
 }
 export type Evaluation =
   | { status: 'valid'; value: number; display: string }
   | { status: 'incomplete' }
   | { status: 'invalid'; code: string; location: number }
-  | { status: 'undefined'; reason: string; display: 'Undefined' };
+  | {
+      status: 'undefined';
+      reason: string;
+      display: 'Undefined' | 'Cannot divide by zero';
+    };
 export interface JobIdentity {
   protocolVersion: 1;
   documentId: string;
@@ -48,6 +105,8 @@ export interface JobIdentity {
   preprocessingVersion: string;
 }
 export interface SymbolPrediction {
+  /** Authoritative source strokes; absent only on legacy/test responses. */
+  strokeIds?: string[];
   label: string;
   score: number;
   bounds: Bounds;
@@ -60,6 +119,12 @@ export interface RecognitionJob extends JobIdentity {
   bounds: Bounds;
 }
 export interface RecognitionResult extends JobIdentity {
+  uncertaintyReasons?: (
+    | 'crossing'
+    | 'confidence'
+    | 'layout'
+    | 'segmentation'
+  )[];
   type: 'RESULT';
   symbols: SymbolPrediction[];
   expression: string;

@@ -1,6 +1,20 @@
 /// <reference lib="webworker" />
 import * as ort from 'onnxruntime-web/wasm';
-import { groupEquations, groupSymbols } from '../recognition/grouping';
+import {
+  estimateBodySize,
+  findFractionLayouts,
+  groupEquations,
+  symbolGroupingCandidates,
+} from '../recognition/grouping';
+import type { SymbolGroup } from '../recognition/grouping';
+import {
+  decodeFraction,
+  decodeSymbols,
+  geometricSlash,
+  plausibleExpression,
+  RecognitionCache,
+  recognitionCacheKey,
+} from '../recognition/decode';
 import { MODEL_VERSION, validateManifest } from '../recognition/manifest';
 import type { ModelManifest } from '../recognition/manifest';
 import {
@@ -10,6 +24,7 @@ import {
 import { isWorkerRequest } from '../recognition/protocol';
 import type {
   InkDocument,
+  JobIdentity,
   RecognitionJob,
   RecognitionResult,
   SymbolPrediction,
@@ -27,6 +42,7 @@ let running = false;
 let pendingDocument: InkDocument | undefined;
 let groupingTimer: ReturnType<typeof setTimeout> | undefined;
 const queue = new Map<string, RecognitionJob>();
+const predictionCache = new RecognitionCache();
 const send = (response: WorkerResponse) => scope.postMessage(response);
 const errorText = (error: unknown) =>
   error instanceof Error ? error.message : String(error);
@@ -108,46 +124,165 @@ async function initialize(): Promise<void> {
     backend: 'wasm',
   });
 }
+function identity(job: RecognitionJob): JobIdentity {
+  const {
+    protocolVersion,
+    documentId,
+    generation,
+    equationId,
+    equationRevision,
+    requestId,
+    modelVersion,
+    preprocessingVersion,
+  } = job;
+  return {
+    protocolVersion,
+    documentId,
+    generation,
+    equationId,
+    equationRevision,
+    requestId,
+    modelVersion,
+    preprocessingVersion,
+  };
+}
 async function recognize(job: RecognitionJob): Promise<RecognitionResult> {
   const start = performance.now();
   let preprocessingMs = 0,
     inferenceMs = 0;
-  const symbols: SymbolPrediction[] = [];
   if (
     job.modelVersion !== MODEL_VERSION ||
     job.preprocessingVersion !== PREPROCESSING_VERSION
   )
     throw new Error('Recognition version mismatch');
   const preprocessStart = performance.now();
-  const groups = groupSymbols(job.strokes);
+  const layouts = findFractionLayouts(job.strokes);
+  const candidates = symbolGroupingCandidates(job.strokes);
+  const bodySize = estimateBodySize(job.strokes);
   preprocessingMs += performance.now() - preprocessStart;
-  for (const group of groups) {
-    const p = performance.now();
-    const raster = rasterizeSymbol(group, job.erasures, job.bounds);
-    preprocessingMs += performance.now() - p;
-    if (!raster.visible) continue;
-    const i = performance.now();
-    const probabilities = await infer(raster.data);
-    inferenceMs += performance.now() - i;
-    const topK = probabilities
-      .map((score, index) => ({
-        label: manifest!.output.canonicalLabels[index],
-        score,
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
-    symbols.push({ ...topK[0], topK, bounds: group.bounds });
+  const masked = (group: SymbolGroup) =>
+    job.erasures.some((e) =>
+      e.targetStrokeIds.some((id) => group.strokes.some((s) => s.id === id)),
+    );
+  const classify = async (
+    groups: SymbolGroup[],
+  ): Promise<SymbolPrediction[]> => {
+    const predictions: SymbolPrediction[] = [];
+    for (const group of groups) {
+      const p = performance.now();
+      const key = recognitionCacheKey(
+        group,
+        job.erasures,
+        bodySize,
+        manifest!.onnx.sha256,
+        PREPROCESSING_VERSION,
+      );
+      let probabilities = predictionCache.get(key);
+      if (!probabilities) {
+        const raster = rasterizeSymbol(group, job.erasures, bodySize);
+        preprocessingMs += performance.now() - p;
+        if (!raster.visible) continue;
+        const i = performance.now();
+        probabilities = await infer(raster.data);
+        inferenceMs += performance.now() - i;
+        predictionCache.set(key, probabilities);
+      } else preprocessingMs += performance.now() - p;
+      const topK = probabilities
+        .map((score, index) => ({
+          label: manifest!.output.canonicalLabels[index],
+          score,
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+      predictions.push({
+        ...topK[0],
+        topK,
+        bounds: group.bounds,
+        strokeIds: [...new Set(group.strokes.map((s) => s.id))],
+      });
+    }
+    // Slash is absent from the CNN vocabulary. Use a strict stroke-geometry rule
+    // only between model-supported operands, retaining uncertainty on edited ink.
+    for (let index = 1; index < predictions.length - 1; index++) {
+      const prediction = predictions[index];
+      const group = groups.find((g) =>
+        g.strokes.every((s) => prediction.strokeIds?.includes(s.id)),
+      );
+      if (
+        group &&
+        !masked(group) &&
+        geometricSlash(group, bodySize) &&
+        /^[0-9x]$/u.test(predictions[index - 1].label) &&
+        /^[0-9x]$/u.test(predictions[index + 1].label)
+      ) {
+        predictions[index] = {
+          ...prediction,
+          label: '/',
+          score: 0.9,
+          topK: [{ label: '/', score: 0.9 }, ...prediction.topK],
+        };
+      }
+    }
+    return predictions;
+  };
+  let decoded: ReturnType<typeof decodeSymbols>;
+  if (layouts.length === 1) {
+    const layout = layouts[0];
+    const numerator = await classify(layout.numerator);
+    const denominator = await classify(layout.denominator);
+    const remainder = await classify(layout.remainder);
+    // Rasterizing the bar checks whether any input remains visible. A targeted
+    // partial erase disables confident structural interpretation of original ink.
+    const bars = await classify([layout.bar]);
+    const bar = bars[0] ?? {
+      label: '-',
+      score: 0,
+      topK: [],
+      bounds: layout.bar.bounds,
+      strokeIds: layout.bar.strokes.map((s) => s.id),
+    };
+    decoded = decodeFraction(
+      layout,
+      numerator,
+      denominator,
+      remainder,
+      {
+        ...bar,
+        label: '/',
+        topK: [{ label: '/', score: bar.score }, ...bar.topK],
+      },
+      masked(layout.bar) || !bars.length,
+    );
+  } else {
+    const primary = candidates[0];
+    decoded = decodeSymbols(await classify(primary.groups), primary.ambiguous);
+    if (layouts.length > 1) {
+      decoded.status = 'uncertain';
+      decoded.uncertaintyReasons.push('layout');
+    }
+    // Keep alternatives bounded. Syntax may change the uncertain preview, never
+    // promote competing segmentation into a confidently accepted calculation.
+    if (!plausibleExpression(decoded.expression)) {
+      for (const candidate of candidates.slice(1)) {
+        const alternative = decodeSymbols(
+          await classify(candidate.groups),
+          true,
+        );
+        if (plausibleExpression(alternative.expression)) {
+          decoded = alternative;
+          break;
+        }
+      }
+    }
   }
-  const uncertain = symbols.some(
-    (s) => s.score < 0.65 || s.score - s.topK[1].score < 0.15,
-  );
   return {
-    ...job,
+    ...identity(job),
     type: 'RESULT',
-    symbols,
-    expression: symbols.map((s) => s.label).join(''),
+    symbols: decoded.symbols,
+    expression: decoded.expression,
     bounds: job.bounds,
-    status: uncertain ? 'uncertain' : 'recognized',
+    status: decoded.status,
+    uncertaintyReasons: decoded.uncertaintyReasons,
     backend: 'wasm',
     timings: {
       preprocessingMs,
@@ -168,7 +303,8 @@ async function drain(): Promise<void> {
         send(await recognize(job));
       } catch (error) {
         send({
-          ...job,
+          ...identity(job),
+          bounds: job.bounds,
           type: 'RESULT',
           symbols: [],
           expression: '',

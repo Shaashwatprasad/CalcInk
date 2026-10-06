@@ -1,15 +1,12 @@
-# Decision ledger
+# Design decisions
 
-Accepted: TypeScript/React/Vite, Canvas2D, vector document, layered rendering, worker recognition, deterministic TypeScript math, versioned IndexedDB, offline asset cache, revision-safe projections and reviewed Git workflow.
+- Vector ink, scoped masks and immutable transactions remain authoritative; retained Canvas pixels are disposable caches. Damaged redraw clips in device pixels and queries using the same rounded world region so edge antialiasing is preserved.
+- Equation identity is independent of its complete stroke set. Cached ownership and finite nearby rectangles replace cascading, horizontally unlimited invalidation. Reconciliation decides which candidate equations actually changed.
+- Model inference stays in a worker with a real audited checkpoint. Queue/revision guards apply per equation, rather than invalidating unrelated in-flight results.
+- AST/result caches depend on canonical expression state and specific preceding variable definitions. Rebindings and pending/deleted definitions alter only affected consumers. Typed math shares this evaluator while ordinary text remains an annotation.
+- The verified Dataset II model has sixteen classes. Letter/slash classes are not fabricated in its manifest. General variable identifiers work in typed math; handwritten x uses the existing crossing correction and other handwritten names remain unsupported.
+- Division-by-zero feedback follows the latest product request: “Cannot divide by zero”, replacing the older blanket “Undefined” requirement. Nonfinite results still display “Undefined”.
+- Calculation history is derived from live equations, one stable record per equation, newest completed content first. Undo and source deletion reconcile records; reload regenerates rather than persisting derived math.
+- Source/model/runtime/font licenses, conversion evidence and reusable tests/benchmarks remain in the repository. Obsolete implementation handoffs and raw task logs are removed; prior versions remain in Git.
 
-Validated during implementation: pinned Dataset II source, exact16-class RGB50×50 NHWC preprocessing, MIT model notice, FP32 ONNX graph reconstruction/parity, actual WASM warm-up and synthetic browser arithmetic/edit/offline paths. Details in docs/MODEL-AUDIT.md and ADRs001–004. The user approved merging after checks and preparing GitHub Pages. Accuracy and release evidence remain conditional; upstream accuracy is not CalcInk accuracy.
-
-Measured lesson: initial main-thread line grouping took223ms p50 at5000 generated strokes on the declared local machine. Move grouping to the worker and validate GROUPS against current document generation/revision. Cached line bounds avoid repeated union scans. Full masked replay still exceeds one60Hz frame at5000 strokes; retain that limitation and measure before optimizing further. Browser HTTP-cache writer contention on model load was reproduced; no-store network fetches coexist with the verified service-worker Cache API.
-
-Conditional: Rafi Dataset II artifact; its claimed 50×50×3/16-class preprocessing details; ONNX conversion; WebGPU preference; optional quantization. Finalize only with recorded verification and benchmark evidence.
-
-Deferred: handwritten variables/all-letter recognition, trig, graphing, C++/WASM math engine, highlighter and gesture erasure. ORT's WASM inference backend remains part of the baseline; it is separate from using C++ for the math parser.
-
-Implementers create numbered ADRs under docs/decisions/ with context, alternatives, decision, evidence, consequences and status. Record meaningful changes here; do not rewrite prior evidence to make a failed experiment appear successful.
-
-Follow-up measurement with the same generated fixture: cached-bounds grouping5000 p50/p95 26.89/29.56ms (worker path), compared with223.22/271.22ms initially. Preserve both JSON reports. Masked replay remains22.00/22.20ms and is still a release-performance limitation.
+Technical rationale: [vector layers and erasure](decisions/002-ink.md), [safe math](decisions/003-math.md), [model/runtime](decisions/004-model.md), [incremental updates](decisions/006-incremental.md).

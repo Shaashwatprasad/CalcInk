@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "track": "ML_IMPLEMENTATION_TESTER",
+  "createdAt": "2026-10-03T09:38:01.476Z",
+  "sourceCommit": "e5e48beb3a698282cc7e0ae14dd5f27375b89a44",
+  "sourceHash": "bb881574bd50e3606358b3b7e8e4dbc928c1ea80096d068297c322bd4318669b",
+  "modelSha256": "2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786",
+  "command": "node benchmark/corpus/preprocess-browser.mjs OUTPUT",
+  "environment": {
+    "cpu": "Apple M5",
+    "logicalCpus": 10,
+    "ramBytes": 25769803776,
+    "os": "darwin",
+    "osRelease": "25.6.0",
+    "browser": "155.0.8059.27",
+    "node": "v26.3.0",
+    "dpr": 1,
+    "pointer": "synthetic vectors",
+    "concurrentWork": "not isolated"
+  },
+  "fixtureKind": "deterministic-synthetic-regression",
+  "status": "FAIL",
+  "passed": 11,
+  "failed": 1,
+  "checks": {
+    "float32ShapeRange": true,
+    "rgbChannels": true,
+    "cosmeticColorInvariant": true,
+    "worldTranslationInvariant": false,
+    "dotPreserved": true,
+    "emptyWhite": true,
+    "erasedWhite": true,
+    "nonTargetEraseInvariant": true,
+    "widthAffectsRaster": true,
+    "baselinePressureIgnored": true,
+    "antialiasingPresent": true,
+    "whitePadding": true
+  },
+  "defects": {
+    "tallEquationShrinksUnrelatedSymbol": {
+      "baselineDarkPixels": 253,
+      "tallContextDarkPixels": 8,
+      "reproduced": true
+    },
+    "erasedTransparency": {
+      "visible": false,
+      "minimum": 1,
+      "reproduced": false
+    }
+  },
+  "tensorStatistics": {
+    "minimum": 0,
+    "maximum": 1,
+    "darkPixels": 253,
+    "dotDarkPixels": 12,
+    "translatedMaximumDeviation": 0.18039216101169586
+  },
+  "note": "Synthetic geometry invariance/contract probe. Baseline renders constant width and ignores pressure; pressure-sensitive V2 must update this contract. Camera/DPR invariance follows only where the caller passes unchanged world geometry. No human handwriting accuracy is measured."
+}

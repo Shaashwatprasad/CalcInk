@@ -1,29 +1,13 @@
-# Shared contracts to implement first
+# Runtime contracts
 
-These are design requirements, not existing APIs. Supervisor finalizes TypeScript discriminated unions with implementers before parallel code begins.
+`src/shared/types.ts` defines the canonical document and worker envelopes. Documents accept versions 1 and 2 and normalize to version 2. Strokes retain pressure, brush, colour, opacity and eligibility. Erasures retain target stroke IDs, path and radius. Text annotations optionally carry `math: true`; missing/false values stay ordinary text. Import discards unrecognized fields, recomputes bounds and rejects malformed geometry, duplicate IDs and oversized documents.
 
-## Document
+Ink changes include changed/deleted IDs, old/new bounds, generation, revision and transaction ID. Source snapshots are immutable. All geometry uses document units; device pixels and camera transforms belong to renderers.
 
-InkDocument: format calcink-document; version 1; documentId; generation; revision; strokes; erasures. Stroke: id, points, bounds, width, color. Point: x, y, timestamp, optional pressure. Erasure: id, target stroke IDs, path/radius or tested mask representation. Persist document identity/generation or safely assign a new generation on recovery so old worker responses cannot match.
+GROUP carries a validated document-shaped candidate subset, retaining the real document identity/generation/revision. GROUPS echoes those fields. Initial grouping receives all eligible ink; later grouping receives cached nearby candidates. EquationTracker reconciles subset results with untouched cached groups. A stale grouping result cannot recreate cleared or edited answers.
 
-Change event: document identity/generation, revision, transaction ID, changed/deleted stroke IDs, old/new affected bounds and reason. Commands: add stroke, erase strokes, erase region, clear; undo/redo use reversible transactions. Bounds are normalized document units and account for rendered width.
+RECOGNIZE/RESULT envelopes carry protocol, document ID, generation, equation ID/revision, request ID, model version and preprocessing version. A reply applies only if every field matches the current expected job. RecognitionResult includes source-backed symbol predictions/top-k, bounds, recognized/uncertain/error state and timing. Runtime validates messages before applying identity guards. The queue runs one job at a time, preserves FIFO fairness and replaces queued work for repeated edits.
 
-## Worker protocol
+`ProjectionStore.batch` coalesces mutations. `invalidate` marks only the edited source pending and invalidates its expected job. `syncTyped` supplies canonical typed text/revisions/bounds to the same evaluator. General ASCII identifiers are case-sensitive; handwritten vocabulary is separately constrained by the audited model. Parsed ASTs and cached outcomes are derived, never persisted as authoritative ink.
 
-Implemented grouping extension: GROUP includes a validated immutable InkDocument snapshot; GROUPS echoes documentId/generation/documentRevision and grouped stroke/mask/bounds data. The worker owns line and symbol grouping. The main thread retires affected projections immediately from document change metadata and only schedules new inference from GROUPS matching the latest document identity/generation/revision. Older grouping responses cannot recreate cleared/edited answers.
-
-Request envelope: protocolVersion, documentId, generation, equationId, equationRevision, requestId, modelVersion, preprocessingVersion, type. Recognize payload includes immutable stroke/mask data, bounds and grouping context. Transfer private buffer copies when transferring ownership; never detach authoritative document arrays.
-
-Response envelope echoes all identity/version fields. Payload includes symbols with bounds and top-k scores, grouping diagnostics, timing breakdown, backend and typed error/status. INIT/READY/ERROR messages have explicit schemas. Validate incoming messages at runtime. Input/output tensor names and layout come from the model manifest.
-
-Apply a result only if document generation, equation identity/revision and request ID still match the current equation job, and expected model/preprocessing versions match. A global latest request ID would incorrectly discard valid responses from other equations. Unrelated equation edits should not invalidate still-current results unless grouping dependencies actually changed.
-
-Cancellation is cooperative: mark obsolete jobs, replace queued work and discard replies. Do not assume a synchronous model run can be interrupted. Preserve fair scheduling so one busy line cannot starve others. Worker timeout/restart increments generation or job epoch; prevent endless crash/retry loops.
-
-## Evaluation
-
-Result union: valid with numeric value/formatted display; incomplete; invalid with code/location; undefined with reason. Parse operates on canonical text/tokens plus optional source symbol spans. Projection: equation ID/revision, terminal-equals bounds, status, answer bounds/text. Clear/delete retires projection immediately.
-
-## Model manifest
-
-Store source URL and commit SHA, source artifact path/hash, exported ONNX hash/bytes, license references, architecture, conversion-tool versions/opset, input names/dtype/shape/layout, output names and class ordering, normalization/polarity/resize/padding, preprocessing version, tested providers and verification report paths. No unknown field should be guessed; explicitly record unresolved items and prevent production acceptance.
+Math outcomes distinguish valid, variable-defined, pending, incomplete, uncertain, invalid, unbound, undefined and unavailable. Undefined zero division uses the exact display “Cannot divide by zero”; nonfinite arithmetic uses “Undefined”. Inputs are bounded to 4096 characters, 512 tokens and nesting depth 64. Definitions and consumers follow spatial notebook order and bind to exact definition IDs.

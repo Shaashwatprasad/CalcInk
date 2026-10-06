@@ -22,7 +22,7 @@ export function validateManifest(value: unknown): ModelManifest {
   const m = value as ModelManifest;
   if (
     m.modelVersion !== MODEL_VERSION ||
-    m.preprocessingVersion !== 'rgb-white-baseline-v1' ||
+    m.preprocessingVersion !== 'rgb-white-local-median-v4' ||
     m.input?.name !== 'input' ||
     m.input.dtype !== 'float32' ||
     m.input.layout !== 'NHWC' ||

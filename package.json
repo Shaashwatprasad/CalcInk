@@ -15,7 +15,11 @@
     "test": "vitest run",
     "build": "node scripts/prepare-assets.mjs && tsc --noEmit && vite build && node scripts/build-offline.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:baseline": "node scripts/testing/run-track.mjs baseline",
+    "test:ml": "node scripts/testing/run-track.mjs ml",
+    "test:product": "node scripts/testing/run-track.mjs product",
+    "release:check": "node scripts/testing/run-track.mjs release"
   },
   "dependencies": {
     "react": "19.1.1",

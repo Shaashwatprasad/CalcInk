@@ -67,3 +67,31 @@ The initial `groupEquations` implementation repeatedly rebuilt line bounds durin
 Masked replay exceeds the 16.67 ms budget of a 60 Hz frame at 5000 strokes even before display completion. Scratch-layer compositing and document-wide mask scans need profiling; viewport/dirty-region rendering and mask indexing are candidate improvements.
 
 Canvas replay measures synchronous CPU command submission only. It does not force GPU/display completion, include rAF scheduling or prove actual display frame rate. No continuous pointer input during inference, physical stylus/touch testing, low-end device, worker inference, long-task trace, peak memory or heap-leak evidence is supplied by this harness. These results do **not** establish universal 60 FPS or any model accuracy claim.
+
+## Incremental recognition regression
+
+Run the development server, then measure the real on-device worker with 200 independent synthetic `1+1=` equations:
+
+```sh
+npm run dev
+node benchmark/incremental-recognition.mjs http://127.0.0.1:5173 benchmark-data/my-incremental-run.json
+```
+
+Set `CALCINK_BROWSER_EXECUTABLE` to use an installed Chromium executable. The runner uses an isolated page with source imports and the production recognizer/worker; it does not mock inference.
+
+[`incremental-recognition-2026-10-06.json`](../benchmark-data/incremental-recognition-2026-10-06.json) records an Apple M5 (10 logical CPUs, 24 GiB), arm64 macOS and headless Chrome 155 run. After bootstrapping 200 equations, partial erasure of row 100 scheduled **one** recognition job, preserved **199** existing projection references and retained **200** valid answers. Candidate grouping transferred **18 strokes / 5,231 JSON bytes**, compared with **1,200 strokes / 329,904 JSON bytes** for the prior whole-document request. One edit took 326.6 ms including the quiet-period delay and recognition.
+
+For comparison, the runner replays the former invalidation algorithm against the identical rectangles: it invalidates all 200 rows and would schedule 200 recognition jobs. The current worker counts are observed; the legacy counts are an algorithm replay, not a second deployed application run. This synthetic regression is not a handwriting accuracy dataset, a frame-time measurement or a universal latency claim.
+
+## Retained renderer and evaluator
+
+```sh
+node benchmark/evaluation.mjs BASELINE_REF benchmark-data/my-evaluation.json
+CALCINK_BROWSER_EXECUTABLE=/path/to/chrome node benchmark/render-benchmark.mjs BASELINE_REF
+```
+
+The published pre-fix baseline is `3a598928019d48737a6978cb602bf6ec532af8ab`; local measurements used `cb8ce08`, which has equivalent renderer/math source. Both commands accept another baseline ref. Fetch the selected ref before replaying a comparison.
+
+The [evaluator report](../benchmark-data/incremental-evaluation-2026-10-06.json) measures 200 recognized-result fixtures on Apple M5 / Node 26.3: one edit reduced 399 parses/evaluations to one of each, retaining 199 projection references. The [renderer report](../benchmark-data/render-retention.json) measures the same before/after 200-equation, 1,200-stroke drawing workload on Apple M5 / headless Chrome 155, DPR 2. Local edit stroke draw calls fell from 37,696 to 165, answer draw calls from 18,000 to 5, and renderer callback p95 from 6.4 ms to 0.6 ms. Frame interval p95 remained around 16.7 ms in both runs. Its 26 native pixel comparisons at DPR 1/2 match full replay exactly, including masks, alpha, pressure and fractional cameras.
+
+These later measurements supersede full replay as the normal local-edit rendering path. Dense intersecting damage may still expand to a large region, and camera/appearance changes rebuild visible content. The measurements exclude physical stylus certification and continuous model-load profiling; neither callback times nor synthetic vector checks establish universal frame rates or handwriting accuracy.

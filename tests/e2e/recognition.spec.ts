@@ -1,3 +1,4 @@
+import { chooseTool } from '../ui-tools';
 /** Deterministic synthetic vector fixtures test the real worker wiring; no accuracy claim. */
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
@@ -42,7 +43,11 @@ test('actual pretrained worker evaluates synthetic vector arithmetic and reloads
   const external: string[] = [];
   page.on('request', (r) => {
     if (
-      !r.url().startsWith('http://127.0.0.1:4173') &&
+      !r
+        .url()
+        .startsWith(
+          `http://127.0.0.1:${process.env.CALCINK_TEST_PORT ?? 4173}`,
+        ) &&
       !r.url().startsWith('data:') &&
       !r.url().startsWith('blob:')
     )
@@ -52,14 +57,25 @@ test('actual pretrained worker evaluates synthetic vector arithmetic and reloads
   await expect(page.getByText('Ready for handwriting')).toBeVisible({
     timeout: 60000,
   });
-  for (const shape of shapes) await draw(page, shape);
+  await draw(page, shapes[0]);
+  await expect(
+    page.getByRole('region', { name: 'Recognition feedback' }),
+  ).toBeVisible();
+  await expect(page.locator('.recognized-lines')).toHaveText(
+    '1 Incomplete · finish the expression with =',
+    {
+      timeout: 30000,
+    },
+  );
+  for (const shape of shapes.slice(1)) await draw(page, shape);
   await expect(page.getByText('Ready for handwriting')).toBeVisible({
     timeout: 30000,
   });
   await expect(page.locator('.recognized-lines')).toHaveText('1+1= 2', {
     timeout: 30000,
   });
-  await page.getByRole('button', { name: 'Pixel eraser', exact: true }).click();
+  await expect(page.locator('.recognized-lines')).toBeVisible();
+  await chooseTool(page, 'Pixel eraser');
   await draw(page, [
     [100, 145],
     [100, 205],
@@ -97,7 +113,7 @@ test('actual pretrained worker evaluates synthetic vector arithmetic and reloads
   await expect(page.locator('.recognized-lines')).toHaveText('11+1= 12', {
     timeout: 30000,
   });
-  await page.getByRole('button', { name: 'Pixel eraser', exact: true }).click();
+  await chooseTool(page, 'Pixel eraser');
   await draw(page, [
     [248, 169],
     [277, 169],

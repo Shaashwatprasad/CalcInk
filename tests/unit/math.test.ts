@@ -6,6 +6,10 @@ describe('deterministic arithmetic', () => {
     ['18+4×3=', '30'],
     ['18+5×3=', '33'],
     ['8÷2×2', '8'],
+    ['8÷2×4=', '16'],
+    ['0.25×4=', '1'],
+    ['.25×4=', '1'],
+    ['5.75−2.25=', '3.5'],
     ['10−3−2', '5'],
     ['−3+5', '2'],
     ['2×−3', '-6'],
@@ -63,12 +67,12 @@ describe('deterministic arithmetic', () => {
   });
 
   it.each(['7÷0=', '0/0', '7/-0', '7/(1-1)'])(
-    'displays Undefined for %s',
+    'explains division by zero for %s',
     (input) => {
       expect(evaluateExpression(input)).toEqual({
         status: 'undefined',
         reason: 'division-by-zero',
-        display: 'Undefined',
+        display: 'Cannot divide by zero',
       });
     },
   );

@@ -1,0 +1,7 @@
+{
+  "format": "calcink-labelled-corpus",
+  "version": 1,
+  "corpusId": "calcink-real-ink-pending-v1",
+  "notes": "No real writer-labelled ink has been supplied. This empty collection is not accuracy evidence. Proposed collection budgets are documented in docs/ML-BENCHMARK.md.",
+  "samples": []
+}
