@@ -135,8 +135,8 @@ test('Real model recognizes 8÷2×4= and evaluates 16', async ({ page }) => {
   await recognizeExpression(page, '8÷2×4=', '16');
 });
 
-test('Real model recognizes 0.25×4= and evaluates 1', async ({ page }) => {
-  await recognizeExpression(page, '0.25×4=', '1');
+test('Real model recognizes .25×4= and evaluates 1', async ({ page }) => {
+  await recognizeExpression(page, '.25×4=', '1');
 });
 
 test('Real model recognizes 5.75−2.25= and evaluates 3.5', async ({ page }) => {
