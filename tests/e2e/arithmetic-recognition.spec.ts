@@ -112,25 +112,33 @@ async function drawExpression(page: Page, expression: string) {
     offset += label === '.' ? 15 : 45;
   }
 }
-for (const [expression, answer] of [
-  ['8÷2×4=', '16'],
-  ['0.25×4=', '1'],
-  ['5.75−2.25=', '3.5'],
-])
-  test(`actual pretrained worker recognizes ${expression} and evaluates ${answer}`, async ({
-    page,
-  }) => {
-    await page.goto('/');
-    await expect(
-      page.getByText('Ready for handwriting', { exact: true }),
-    ).toBeVisible({ timeout: 60000 });
-    await drawExpression(page, expression);
-    await expect(page.locator('.recognized-expression')).toHaveText(
-      expression,
-      { timeout: 30000 },
-    );
-    const result = page.locator('.recognized-lines > [data-state="valid"]');
-    await expect(result.locator(':scope > span').nth(1)).toHaveText(answer, {
-      timeout: 30000,
-    });
+async function recognizeExpression(
+  page: Page,
+  expression: string,
+  answer: string,
+) {
+  await page.goto('/');
+  await expect(
+    page.getByText('Ready for handwriting', { exact: true }),
+  ).toBeVisible({ timeout: 60000 });
+  await drawExpression(page, expression);
+  await expect(page.locator('.recognized-expression')).toHaveText(expression, {
+    timeout: 30000,
   });
+  const result = page.locator('.recognized-lines > [data-state="valid"]');
+  await expect(result.locator(':scope > span').nth(1)).toHaveText(answer, {
+    timeout: 30000,
+  });
+}
+
+test('Real model recognizes 8÷2×4= and evaluates 16', async ({ page }) => {
+  await recognizeExpression(page, '8÷2×4=', '16');
+});
+
+test('Real model recognizes 0.25×4= and evaluates 1', async ({ page }) => {
+  await recognizeExpression(page, '0.25×4=', '1');
+});
+
+test('Real model recognizes 5.75−2.25= and evaluates 3.5', async ({ page }) => {
+  await recognizeExpression(page, '5.75−2.25=', '3.5');
+});
