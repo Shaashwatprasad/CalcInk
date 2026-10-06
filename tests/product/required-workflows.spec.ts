@@ -396,7 +396,7 @@ test.describe('V2 requirements (pending until implementation and exact-source re
     for (const [index, name] of [
       'Text',
       'Shapes',
-      'Box Region',
+      'Draw region',
       'Arrow',
     ].entries()) {
       await page.getByRole('button', { name, exact: true }).click();
@@ -771,7 +771,7 @@ test.describe('V2 requirements (pending until implementation and exact-source re
         'Eraser',
         'Text',
         'Shapes',
-        'Box Region',
+        'Draw region',
         'Arrow',
         'Hand',
         'Canvas settings',

@@ -69,12 +69,14 @@ export function createInkDocument(): InkDocument {
 
 function freezeDocument(document: InkDocument): InkDocument {
   for (const stroke of document.strokes) {
+    if (Object.isFrozen(stroke)) continue;
     stroke.points.forEach(Object.freeze);
     Object.freeze(stroke.points);
     Object.freeze(stroke.bounds);
     Object.freeze(stroke);
   }
   for (const mask of document.erasures) {
+    if (Object.isFrozen(mask)) continue;
     mask.path.forEach(Object.freeze);
     Object.freeze(mask.path);
     Object.freeze(mask.targetStrokeIds);
@@ -552,22 +554,31 @@ export class InkStore {
     );
     const after = new Map(current.strokes.map((stroke) => [stroke.id, stroke]));
     const maskChanges = new Set<string>();
-    for (const id of new Set([...before.keys(), ...after.keys()])) {
-      const oldMasks = previous.erasures.filter((mask) =>
-        mask.targetStrokeIds.includes(id),
-      );
-      const newMasks = current.erasures.filter((mask) =>
-        mask.targetStrokeIds.includes(id),
-      );
-      if (
-        oldMasks.length !== newMasks.length ||
-        oldMasks.some(
-          (mask, i) =>
-            mask.path !== newMasks[i].path ||
-            mask.radius !== newMasks[i].radius,
+    if (previous.erasures !== current.erasures) {
+      const indexMasks = (masks: Erasure[]) => {
+        const index = new Map<string, Erasure[]>();
+        for (const mask of masks)
+          for (const id of mask.targetStrokeIds) {
+            const values = index.get(id) ?? [];
+            values.push(mask);
+            index.set(id, values);
+          }
+        return index;
+      };
+      const oldMasks = indexMasks(previous.erasures),
+        newMasks = indexMasks(current.erasures);
+      for (const id of new Set([...oldMasks.keys(), ...newMasks.keys()])) {
+        const old = oldMasks.get(id) ?? [],
+          next = newMasks.get(id) ?? [];
+        if (
+          old.length !== next.length ||
+          old.some(
+            (mask, i) =>
+              mask.path !== next[i].path || mask.radius !== next[i].radius,
+          )
         )
-      )
-        maskChanges.add(id);
+          maskChanges.add(id);
+      }
     }
     const changedStrokeIds = current.strokes
       .filter(

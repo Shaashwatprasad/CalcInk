@@ -1,4 +1,5 @@
-import { isRecognitionEligible, boundsIntersect } from '../ink/geometry';
+import { annotationBounds } from '../document/annotations';
+import { EquationTracker } from '../recognition/tracker';
 import { isGroupResult } from '../recognition/protocol';
 import {
   isRecognitionResult,
@@ -6,9 +7,9 @@ import {
   RecognitionQueue,
 } from '../projection';
 import type { EquationProjection } from '../projection';
-import type { InkStore, InkChange } from '../document/InkStore';
+import type { InkStore } from '../document/InkStore';
 import type {
-  EquationGroupData,
+  Annotation,
   GroupResult,
   RecognitionJob,
   WorkerResponse,
@@ -40,7 +41,35 @@ export function startRecognizer(
   let current = store.getSnapshot();
   projections.reset(current.documentId, current.generation);
   const known = new Map<string, number>();
-  let groups: EquationGroupData[] = [];
+  const tracker = new EquationTracker(current);
+  const typedVersions = new Map<
+    string,
+    { object: Annotation; revision: number }
+  >();
+  const syncTyped = () => {
+    const entries = (current.objects ?? []).flatMap((object) => {
+      if (object.kind !== 'text' || !object.math) return [];
+      const previous = typedVersions.get(object.id);
+      const revision =
+        previous?.object === object
+          ? previous.revision
+          : (previous?.revision ?? 0) + 1;
+      typedVersions.set(object.id, { object, revision });
+      return [
+        {
+          id: object.id,
+          revision,
+          text: object.text,
+          bounds: annotationBounds(object),
+        },
+      ];
+    });
+    const ids = new Set(entries.map((entry) => entry.id));
+    for (const id of typedVersions.keys())
+      if (!ids.has(id)) typedVersions.delete(id);
+    projections.syncTyped(entries);
+  };
+  syncTyped();
   let versions:
     | { modelVersion: string; preprocessingVersion: string }
     | undefined;
@@ -70,9 +99,10 @@ export function startRecognizer(
     worker.terminate();
     queue.reset();
     known.clear();
-    groups = [];
+    tracker.reset(current);
     groupingPending = false;
     projections.reset(current.documentId, current.generation);
+    syncTyped();
     state = { ...state, status: 'error', message };
     clearTimeout(timeout);
     clearTimeout(groupingTimeout);
@@ -116,7 +146,7 @@ export function startRecognizer(
           () => fail('Equation grouping timed out. Your ink is safe.'),
           30000,
         );
-        worker.postMessage({ type: 'GROUP', document: store.getSnapshot() });
+        worker.postMessage({ type: 'GROUP', document: tracker.request() });
       },
       Math.max(0, Math.min(220, 700 - (performance.now() - firstDirtyAt))),
     );
@@ -132,122 +162,61 @@ export function startRecognizer(
       return;
     clearTimeout(groupingTimeout);
     groupingPending = false;
-    groups = result.groups;
-    const ids = new Set(groups.map((g) => g.id));
-    for (const id of known.keys())
-      if (!ids.has(id)) {
+    const update = tracker.apply(result);
+    if (!update) return;
+    projections.batch(() => {
+      for (const id of update.retired) {
         projections.retire(id);
         queue.retire(id);
         known.delete(id);
       }
-    for (const group of groups) {
-      if (known.get(group.id) === group.revision) continue;
-      known.set(group.id, group.revision);
-      const job: RecognitionJob = {
-        type: 'RECOGNIZE',
-        protocolVersion: 1,
-        documentId: current.documentId,
-        generation: current.generation,
-        equationId: group.id,
-        equationRevision: group.revision,
-        requestId: crypto.randomUUID(),
-        ...versions,
-        strokes: group.strokes,
-        erasures: group.erasures,
-        bounds: group.bounds,
-      };
-      projections.expect(job);
-      queue.enqueue(job);
-    }
-    pump();
-  }
-  function invalidate(change: InkChange) {
-    const affected = new Set([
-      ...change.changedStrokeIds,
-      ...change.deletedStrokeIds,
-    ]);
-    const regions = [...change.oldBounds, ...change.newBounds];
-    for (const group of groups)
-      if (group.strokes.some((s) => affected.has(s.id)))
-        regions.push(group.bounds);
-    const retired = new Set<string>();
-    // A tall replacement can cascade through neighboring lines as their union grows.
-    // Compute a conservative closure over already-known line bounds, not raw ink.
-    for (const initial of regions) {
-      let region = { ...initial };
-      let expanded = true;
-      const absorbed = new Set<string>();
-      while (expanded) {
-        expanded = false;
-        for (const group of groups) {
-          if (absorbed.has(group.id)) continue;
-          const height = Math.max(
-            24,
-            group.bounds.maxY - group.bounds.minY,
-            region.maxY - region.minY,
-          );
-          if (
-            !boundsIntersect(
-              {
-                ...group.bounds,
-                minX: -Infinity,
-                maxX: Infinity,
-                minY: group.bounds.minY - height * 0.6,
-                maxY: group.bounds.maxY + height * 0.6,
-              },
-              region,
-            )
-          )
-            continue;
-          absorbed.add(group.id);
-          retired.add(group.id);
-          expanded = true;
-          region = {
-            minX: Math.min(region.minX, group.bounds.minX),
-            minY: Math.min(region.minY, group.bounds.minY),
-            maxX: Math.max(region.maxX, group.bounds.maxX),
-            maxY: Math.max(region.maxY, group.bounds.maxY),
-          };
-        }
+      for (const group of update.changed) {
+        known.set(group.id, group.revision);
+        const job: RecognitionJob = {
+          type: 'RECOGNIZE',
+          protocolVersion: 1,
+          documentId: current.documentId,
+          generation: current.generation,
+          equationId: group.id,
+          equationRevision: group.revision,
+          requestId: crypto.randomUUID(),
+          ...versions!,
+          strokes: group.strokes,
+          erasures: group.erasures,
+          bounds: group.bounds,
+        };
+        projections.expect(job);
+        queue.enqueue(job);
       }
-    }
-    for (const id of retired) {
-      projections.retire(id);
-      queue.retire(id);
-      known.delete(id);
-    }
+    });
+    pump();
   }
   const unsubscribe = store.subscribe((change) => {
     const document = store.getSnapshot();
     const sameGeneration =
       document.documentId === current.documentId &&
       document.generation === current.generation;
-    const changed = new Set([
-      ...change.changedStrokeIds,
-      ...change.deletedStrokeIds,
-    ]);
-    const mathChanged = [...current.strokes, ...document.strokes].some(
-      (s) => changed.has(s.id) && isRecognitionEligible(s),
-    );
-    if (sameGeneration && !mathChanged && change.reason !== 'clear') {
-      current = document;
-      // A pending GROUP uses the document revision guard; refresh it without retiring valid math.
-      if (groupingPending) requestGrouping();
-      emit();
-      return;
-    }
-    if (
-      document.documentId !== current.documentId ||
-      document.generation !== current.generation
-    ) {
-      projections.reset(document.documentId, document.generation);
-      for (const id of known.keys()) queue.retire(id);
-      known.clear();
-      groups = [];
-    } else invalidate(change);
     current = document;
+    projections.batch(() => {
+      if (!sameGeneration) {
+        projections.reset(document.documentId, document.generation);
+        typedVersions.clear();
+        for (const id of known.keys()) queue.retire(id);
+        known.clear();
+        tracker.reset(document);
+      } else {
+        for (const id of tracker.change(document, change)) {
+          projections.invalidate(id);
+          queue.retire(id);
+          known.delete(id);
+        }
+      }
+      syncTyped();
+    });
     emit();
-    requestGrouping();
+    // Annotation-only changes refresh an in-flight grouping revision guard, but
+    // never retire ink answers or enqueue annotation recognition.
+    if (tracker.dirty || groupingPending) requestGrouping();
   });
   worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
     if (disposed) return;
@@ -272,6 +241,14 @@ export function startRecognizer(
     else if (isRecognitionResult(data)) {
       if (queue.complete(data)) {
         clearTimeout(timeout);
+        if (
+          data.documentId !== current.documentId ||
+          data.generation !== current.generation ||
+          known.get(data.equationId) !== data.equationRevision
+        ) {
+          pump();
+          return;
+        }
         if (data.status === 'error') {
           fail(
             data.error ??

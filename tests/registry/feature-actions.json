@@ -380,7 +380,7 @@
     },
     {
       "id": "F-REGION",
-      "title": "Box Region documented purpose",
+      "title": "Draw region documented purpose",
       "requirementIds": ["R01"],
       "source": [
         {
@@ -393,7 +393,7 @@
       "phase": 7,
       "owner": "supervisor integration / product tester",
       "implementationPaths": [],
-      "finalUiLocation": "Box Region rail / options (purpose requires final design audit)",
+      "finalUiLocation": "Draw region rail / options (purpose requires final design audit)",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
       "testIds": ["PROD-V10"],
       "scope": "required",
@@ -2958,10 +2958,10 @@
           "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
         }
       ],
-      "uiLocation": "Box Region rail / options (purpose requires final design audit)",
+      "uiLocation": "Draw region rail / options (purpose requires final design audit)",
       "locator": {
         "role": "button",
-        "name": "Box Region",
+        "name": "Draw region",
         "exact": true
       },
       "supported": {
@@ -2970,8 +2970,8 @@
         "input": ["mouse", "keyboard", "touch"]
       },
       "precondition": "Isolated loaded test notebook; necessary assets loaded when recognition is checked",
-      "trigger": "Activate Box Region",
-      "expectedVisibleOutcome": "Box Region reflects selected state and its documented visible effect",
+      "trigger": "Activate Draw region",
+      "expectedVisibleOutcome": "Draw region reflects selected state and its documented visible effect",
       "expectedEffects": {
         "document": "Select documented tool and open its options; preserve notebook",
         "tool": "Change only when selecting a tool or tool option",
@@ -2980,7 +2980,7 @@
         "persistence": "Persist authoritative document changes; failed saves must stay visible"
       },
       "cancellationErrorBehavior": "Cancel/dismiss without destructive overwrite; retain ink on failure",
-      "dependentWorkflow": "Box Region documented purpose",
+      "dependentWorkflow": "Draw region documented purpose",
       "testIds": ["PROD-V10"],
       "implementationStatus": "implemented_unverified",
       "exposedInBaseline": false,
@@ -6805,10 +6805,10 @@
           "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
         }
       ],
-      "uiLocation": "Box Region rail / options (purpose requires final design audit)",
+      "uiLocation": "Draw region rail / options (purpose requires final design audit)",
       "locator": {
         "role": "gesture",
-        "name": "Draw Box Region",
+        "name": "Draw Draw region",
         "exact": true
       },
       "supported": {
@@ -6817,8 +6817,8 @@
         "input": ["mouse", "keyboard", "touch"]
       },
       "precondition": "Isolated loaded test notebook; necessary assets loaded when recognition is checked",
-      "trigger": "Activate Draw Box Region",
-      "expectedVisibleOutcome": "Draw Box Region reflects selected state and its documented visible effect",
+      "trigger": "Activate Draw Draw region",
+      "expectedVisibleOutcome": "Draw Draw region reflects selected state and its documented visible effect",
       "expectedEffects": {
         "document": "Persist document-positioned annotation according to documented role; exclude from generic math ink",
         "tool": "Change only when selecting a tool or tool option",
@@ -6827,7 +6827,7 @@
         "persistence": "Persist authoritative document changes; failed saves must stay visible"
       },
       "cancellationErrorBehavior": "Cancel/dismiss without destructive overwrite; retain ink on failure",
-      "dependentWorkflow": "Box Region documented purpose",
+      "dependentWorkflow": "Draw region documented purpose",
       "testIds": ["PROD-V10"],
       "implementationStatus": "implemented_unverified",
       "exposedInBaseline": false,

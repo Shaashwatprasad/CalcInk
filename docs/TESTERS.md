@@ -15,4 +15,4 @@ The three `ML-DEF-*` cases reproduce known baseline defects. `PROD-D03` observes
 
 Real vector capture, independent annotation, writer-disjoint validation, freezing and real-model replay are documented in `benchmark/capture/README.md` and `docs/ML-BENCHMARK.md`. The committed empty corpus contains zero human samples and cannot be frozen/evaluated as successful quality evidence.
 
-Historical reproduction scripts and JSON in `docs/evidence/` are immutable artifacts, excluded from source lint/format rewriting. They retain their original environment paths and raw measurements; runnable supported harnesses live in `tests/`, `scripts/testing/` and `benchmark/`.
+Supported harnesses live in `tests/`, `scripts/testing/` and `benchmark/`. Reports are generated under ignored `test-results/`; compact measured results are retained in `benchmark-data/`. Old implementation handoffs and task logs were removed; their history remains available in Git.

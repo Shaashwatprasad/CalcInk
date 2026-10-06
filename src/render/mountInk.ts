@@ -1,8 +1,13 @@
 import { scratchTargets } from '../ink/scratch';
 import { InkStore } from '../document/InkStore';
-import { drawDocument, drawStroke, pointBounds } from '../ink/geometry';
+import {
+  boundsIntersect,
+  drawDocument,
+  drawStroke,
+  pointBounds,
+} from '../ink/geometry';
 import type { InkColorResolver } from '../ink/geometry';
-import type { Point, Stroke } from '../shared/types';
+import type { Bounds, Point, Stroke } from '../shared/types';
 import { screenToWorld, type ViewportStore } from '../viewport';
 
 export interface InkTool {
@@ -48,6 +53,7 @@ export function mountInk(
   let frameId = 0;
   let committedDirty = true;
   let sizeDirty = true;
+  let damage: Bounds[] = [];
   let disposed = false;
   let rect = activeCanvas.getBoundingClientRect();
   let currentDpr = 0;
@@ -118,6 +124,7 @@ export function mountInk(
     transform();
     if (changed) {
       committedDirty = true;
+      damage = [];
       if (gesture) gesture.drawnPoints = 0;
     }
     sizeDirty = false;
@@ -128,8 +135,114 @@ export function mountInk(
     if (disposed) return;
     if (sizeDirty || currentDpr !== (window.devicePixelRatio || 1)) resize();
     if (committedDirty) {
-      clear(committed!);
-      drawDocument(committed!, store.getSnapshot(), navigation?.getInkColor);
+      // The canvas retains unchanged pixels. Repaint only damaged device-pixel
+      // rectangles, clipping every intersecting stroke (including alpha/masks).
+      const camera = navigation?.viewport.getSnapshot();
+      const zoom = camera?.zoom ?? 1;
+      const offsetX = camera?.offsetX ?? 0,
+        offsetY = camera?.offsetY ?? 0;
+      const regions = damage.length
+        ? [
+            damage.reduce(
+              (region, b) => ({
+                minX: Math.min(region.minX, b.minX),
+                minY: Math.min(region.minY, b.minY),
+                maxX: Math.max(region.maxX, b.maxX),
+                maxY: Math.max(region.maxY, b.maxY),
+              }),
+              { ...damage[0] },
+            ),
+          ]
+        : [
+            {
+              minX: -offsetX / zoom,
+              minY: -offsetY / zoom,
+              maxX: (rect.width - offsetX) / zoom,
+              maxY: (rect.height - offsetY) / zoom,
+            },
+          ];
+      const doc = store.getSnapshot();
+      if (damage.length) {
+        // Canvas stroke antialiasing can differ when a round capsule is cut by
+        // the clip. Include complete intersecting geometry before repainting.
+        const region = regions[0];
+        const included = new Set<string>();
+        const margin = 3 / (currentDpr * zoom);
+        let expanded = true;
+        while (expanded) {
+          expanded = false;
+          for (const stroke of doc.strokes) {
+            if (
+              included.has(stroke.id) ||
+              !boundsIntersect(stroke.bounds, {
+                minX: region.minX - margin,
+                minY: region.minY - margin,
+                maxX: region.maxX + margin,
+                maxY: region.maxY + margin,
+              })
+            )
+              continue;
+            included.add(stroke.id);
+            const next = {
+              minX: Math.min(region.minX, stroke.bounds.minX),
+              minY: Math.min(region.minY, stroke.bounds.minY),
+              maxX: Math.max(region.maxX, stroke.bounds.maxX),
+              maxY: Math.max(region.maxY, stroke.bounds.maxY),
+            };
+            expanded ||=
+              next.minX !== region.minX ||
+              next.minY !== region.minY ||
+              next.maxX !== region.maxX ||
+              next.maxY !== region.maxY;
+            Object.assign(region, next);
+          }
+        }
+      }
+      for (const bounds of regions) {
+        const padding = 2 / (currentDpr * zoom);
+        const x = Math.max(
+          0,
+          Math.floor((bounds.minX * zoom + offsetX) * currentDpr - 2),
+        );
+        const y = Math.max(
+          0,
+          Math.floor((bounds.minY * zoom + offsetY) * currentDpr - 2),
+        );
+        const right = Math.min(
+          committedCanvas.width,
+          Math.ceil((bounds.maxX * zoom + offsetX) * currentDpr + 2),
+        );
+        const bottom = Math.min(
+          committedCanvas.height,
+          Math.ceil((bounds.maxY * zoom + offsetY) * currentDpr + 2),
+        );
+        if (right <= x || bottom <= y) continue;
+        committed!.save();
+        committed!.setTransform(1, 0, 0, 1, 0, 0);
+        committed!.clearRect(x, y, right - x, bottom - y);
+        committed!.beginPath();
+        committed!.rect(x, y, right - x, bottom - y);
+        committed!.clip();
+        transform();
+        const visible = {
+          minX: (x / currentDpr - offsetX) / zoom - padding,
+          minY: (y / currentDpr - offsetY) / zoom - padding,
+          maxX: (right / currentDpr - offsetX) / zoom + padding,
+          maxY: (bottom / currentDpr - offsetY) / zoom + padding,
+        };
+        drawDocument(
+          committed!,
+          {
+            strokes: doc.strokes.filter((stroke) =>
+              boundsIntersect(stroke.bounds, visible),
+            ),
+            erasures: doc.erasures,
+          },
+          navigation?.getInkColor,
+        );
+        committed!.restore();
+      }
+      damage = [];
       committedDirty = false;
     }
     if (!gesture) {
@@ -454,6 +567,7 @@ export function mountInk(
   };
   const appearanceChanged = (): void => {
     committedDirty = true;
+    damage = [];
     if (gesture) gesture.drawnPoints = 0;
     schedule();
   };
@@ -477,6 +591,7 @@ export function mountInk(
   const stopCamera = navigation?.viewport.subscribe(() => {
     transform();
     committedDirty = true;
+    damage = [];
     if (gesture) gesture.drawnPoints = 0;
     schedule();
   });
@@ -493,7 +608,18 @@ export function mountInk(
       if (activeCanvas.hasPointerCapture(pointerId))
         activeCanvas.releasePointerCapture(pointerId);
     }
-    committedDirty = true;
+    if (change.reason === 'clear' || change.reason === 'replace') {
+      committedDirty = true;
+      damage = [];
+    } else if (
+      change.changedStrokeIds.length ||
+      change.deletedStrokeIds.length
+    ) {
+      // Keep a pending full repaint full; combine successive document changes.
+      if (!committedDirty || damage.length)
+        damage = damage.concat(change.oldBounds, change.newBounds);
+      committedDirty = true;
+    }
     schedule();
   });
   schedule();

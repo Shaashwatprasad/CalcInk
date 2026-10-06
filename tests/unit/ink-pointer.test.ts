@@ -16,6 +16,8 @@ class TestCanvas extends EventTarget {
     save: vi.fn(),
     restore: vi.fn(),
     beginPath: vi.fn(),
+    rect: vi.fn(),
+    clip: vi.fn(),
     moveTo: vi.fn(),
     lineTo: vi.fn(),
     arc: vi.fn(),
@@ -102,6 +104,52 @@ function setup(navigation = false) {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('pointer input and rendering lifecycle', () => {
+  it('retains committed pixels, culls a large offscreen notebook, and repaints local damage only', () => {
+    const s = setup(true);
+    for (let i = 0; i < 300; i++)
+      s.store.addStroke({
+        id: `s${i}`,
+        color: '#000000',
+        width: 2,
+        points: [{ x: 20 + i * 100, y: 50, timestamp: 1 }],
+        bounds: { minX: 0, minY: 0, maxX: 0, maxY: 0 },
+      });
+    s.flush();
+    expect(s.committed.ctx.arc).toHaveBeenCalledTimes(2);
+    s.committed.ctx.arc.mockClear();
+    s.committed.ctx.clearRect.mockClear();
+    s.active.pointer('pointerdown', { clientX: 70, clientY: 100 });
+    s.flush();
+    s.active.pointer('pointermove', { clientX: 80, clientY: 100 });
+    s.flush();
+    expect(s.committed.ctx.arc).not.toHaveBeenCalled();
+    expect(s.committed.ctx.clearRect).not.toHaveBeenCalled();
+    s.active.pointer('pointerup', { clientX: 80, clientY: 100 });
+    s.flush();
+    expect(s.committed.ctx.arc).not.toHaveBeenCalled();
+    expect(s.committed.ctx.stroke).toHaveBeenCalledTimes(1);
+    const cleared = s.committed.ctx.clearRect.mock.calls[0];
+    expect(cleared[2]).toBeLessThan(s.committed.width / 4);
+    expect(cleared[3]).toBeLessThan(s.committed.height / 4);
+    // Annotation-only transactions never replay ink.
+    s.committed.ctx.clearRect.mockClear();
+    s.store.addObject({
+      id: 'note',
+      kind: 'text',
+      x: 10,
+      y: 10,
+      text: 'notes',
+      fontSize: 16,
+      color: '#000000',
+      colorMode: 'explicit',
+      strokeWidth: 2,
+      opacity: 1,
+      recognitionEligible: false,
+    });
+    s.flush();
+    expect(s.committed.ctx.clearRect).not.toHaveBeenCalled();
+    s.cleanup();
+  });
   it('records real zero stylus pressure and leaves mouse pressure absent when pressure rendering is enabled', () => {
     const { active, store, tool, cleanup } = setup(true);
     tool.pressureEnabled = true;

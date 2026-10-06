@@ -85,7 +85,11 @@ test('production shell reloads offline and preserves ink without external reques
   const external: string[] = [];
   page.on('request', (r) => {
     if (
-      !r.url().startsWith('http://127.0.0.1:4173') &&
+      !r
+        .url()
+        .startsWith(
+          `http://127.0.0.1:${process.env.CALCINK_TEST_PORT ?? 4173}`,
+        ) &&
       !r.url().startsWith('data:') &&
       !r.url().startsWith('blob:')
     )

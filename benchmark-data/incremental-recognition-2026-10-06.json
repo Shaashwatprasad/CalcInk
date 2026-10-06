@@ -1,0 +1,40 @@
+{
+  "measuredAt": "2026-10-06T10:53:46.911Z",
+  "hardware": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "logicalCpus": 10,
+    "totalMemoryBytes": 25769803776
+  },
+  "workload": "200 synthetic 1+1= rows at 60 document-unit spacing; partial erase in row100",
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+  "documentEquations": 200,
+  "bootstrap": {
+    "recognitionJobs": 200,
+    "grouping": {
+      "strokes": 1200,
+      "bytes": 329775
+    },
+    "elapsedMs": 11267.700000047684
+  },
+  "legacyAlgorithm": {
+    "invalidatedEquations": 200,
+    "recognitionJobsAfterInvalidation": 200,
+    "groupingStrokeCount": 1200,
+    "groupingJsonBytes": 329904
+  },
+  "current": {
+    "immediatelyPending": 1,
+    "recognitionJobsForEdit": 1,
+    "grouping": {
+      "strokes": 18,
+      "bytes": 5231
+    },
+    "unchangedProjectionReferences": 199,
+    "finalEquationCount": 200,
+    "validAnswers": 200,
+    "elapsedMs": 326.59999990463257
+  },
+  "limitation": "Synthetic geometry regression and one workload sample; legacy counts replay the former algorithm. Elapsed time includes debounce/model work and is not a universal latency or accuracy claim."
+}

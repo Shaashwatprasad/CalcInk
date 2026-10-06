@@ -143,7 +143,7 @@ describe('worker equation grouping scheduler', () => {
     expect(latest().projections[0].answerText).toBe('2');
   });
 
-  it('retires the affected answer immediately while preserving an unrelated equation', () => {
+  it('marks the affected answer pending immediately while preserving an unrelated equation', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a'));
     store.addStroke(makeStroke('b', 300));
@@ -153,9 +153,23 @@ describe('worker equation grouping scheduler', () => {
     finishRecognition(worker, '2+2=');
     expect(latest().projections.map((p) => p.answerText)).toEqual(['2', '4']);
     store.eraseRegion([{ x: 20, y: 120, timestamp: 3 }], 3);
-    expect(latest().projections.map((p) => p.answerText)).toEqual(['4']);
+    expect(
+      latest()
+        .projections.map((p) => p.answerText)
+        .filter(Boolean),
+    ).toEqual(['4']);
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-a')?.status,
+    ).toBe('pending');
     worker.reply(grouped(original));
-    expect(latest().projections.map((p) => p.answerText)).toEqual(['4']);
+    expect(
+      latest()
+        .projections.map((p) => p.answerText)
+        .filter(Boolean),
+    ).toEqual(['4']);
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-a')?.status,
+    ).toBe('pending');
     finishGroups(worker);
     finishRecognition(worker, '3+3=');
     expect(
@@ -175,7 +189,11 @@ describe('worker equation grouping scheduler', () => {
     const unaffected = worker.recognition[0];
     store.eraseRegion([{ x: 20, y: 320, timestamp: 3 }], 3);
     worker.reply(recognized(unaffected));
-    expect(latest().projections.map((p) => p.answerText)).toEqual(['2']);
+    expect(
+      latest()
+        .projections.map((p) => p.answerText)
+        .filter(Boolean),
+    ).toEqual(['2']);
     // The obsolete queued second equation was retired before it could run.
     expect(worker.recognition).toHaveLength(1);
     expect(latest().queued).toBe(1);
@@ -184,7 +202,7 @@ describe('worker equation grouping scheduler', () => {
     expect(latest().projections.map((p) => p.answerText)).toEqual(['2', '4']);
   });
 
-  it('retires nearby potentially affected answers before locally regrouping a separate late mark', () => {
+  it('keeps nearby unchanged answers while locally regrouping a separate late mark', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a'));
     const { worker, latest } = setup(store);
@@ -198,10 +216,17 @@ describe('worker equation grouping scheduler', () => {
         .sort(),
     ).toEqual(['a', 'dot']);
     expect(groupEquations(store.getSnapshot())).toHaveLength(2);
-    expect(latest().projections).toEqual([]);
+    const answer = latest().projections[0];
+    expect(answer.answerText).toBe('2');
+    finishGroups(worker);
+    expect(
+      latest().projections.find((p) => p.equationId === answer.equationId),
+    ).toBe(answer);
+    finishRecognition(worker, '1=');
+    expect(worker.recognition).toHaveLength(2);
   });
 
-  it('conservatively retires potential neighbors without letting a tall outlier merge separate rows', () => {
+  it('keeps separate row answers when a tall outlier does not merge their groups', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a', 0));
     store.addStroke(makeStroke('b', 120));
@@ -212,13 +237,21 @@ describe('worker equation grouping scheduler', () => {
     finishRecognition(worker);
     finishRecognition(worker);
     expect(latest().projections).toHaveLength(3);
+    const answers = latest().projections;
     store.addStroke(makeStroke('bridge', 0, 70, 100));
     expect(
       groupEquations(store.getSnapshot()).map((g) =>
         g.strokes.map((s) => s.id),
       ),
     ).toEqual([['a'], ['bridge'], ['b'], ['c']]);
-    expect(latest().projections).toEqual([]);
+    expect(latest().projections).toEqual(answers);
+    finishGroups(worker);
+    for (const answer of answers)
+      expect(
+        latest().projections.find((p) => p.equationId === answer.equationId),
+      ).toBe(answer);
+    finishRecognition(worker, '1=');
+    expect(worker.recognition).toHaveLength(4);
   });
 
   it('annotation and highlighter commits preserve current answers and avoid unnecessary model grouping', () => {
@@ -287,11 +320,110 @@ describe('worker equation grouping scheduler', () => {
     finishGroups(worker);
     expect(worker.recognition).toHaveLength(1);
     worker.reply(recognized(oldJob));
-    expect(latest().projections).toEqual([]);
+    expect(latest().projections.map((p) => p.status)).toEqual(['pending']);
+    expect(latest().projections.some((p) => p.answerText)).toBe(false);
     expect(worker.recognition).toHaveLength(2);
     expect(worker.recognition[1].documentId).toBe('new-document');
     finishRecognition(worker, '3+4=');
     expect(latest().projections[0].answerText).toBe('7');
+  });
+
+  it('edits one of 200 equations with one recognition job and stable answers for the other 199', () => {
+    const store = new InkStore({
+      format: 'calcink-document',
+      version: 2,
+      documentId: 'large',
+      generation: 0,
+      revision: 0,
+      strokes: Array.from({ length: 200 }, (_, index) =>
+        makeStroke(`row-${index}`, index * 70),
+      ),
+      erasures: [],
+    });
+    const { worker, latest } = setup(store);
+    finishGroups(worker);
+    for (let index = 0; index < 200; index++)
+      finishRecognition(worker, `${index}+1=`);
+    const answers = new Map(latest().projections.map((p) => [p.equationId, p]));
+    expect(worker.recognition).toHaveLength(200);
+    store.eraseRegion([{ x: 20, y: 7020, timestamp: 3 }], 3);
+    expect(
+      latest().projections.filter((p) => p.status === 'pending'),
+    ).toHaveLength(1);
+    const request = finishGroups(worker);
+    expect(request.document.strokes.length).toBeLessThanOrEqual(3);
+    expect(worker.recognition).toHaveLength(201);
+    finishRecognition(worker, '100+2=');
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-row-100')
+        ?.answerText,
+    ).toBe('102');
+    for (const projection of latest().projections)
+      if (projection.equationId !== 'equation-row-100')
+        expect(projection).toBe(answers.get(projection.equationId));
+    expect(latest().projections).toHaveLength(200);
+    expect(worker.recognition).toHaveLength(201);
+  });
+
+  it('coalesces rapid edits, rejects stale results, and keeps a stable equation identity', () => {
+    const store = new InkStore();
+    store.addStroke(makeStroke('a'));
+    const { worker, latest } = setup(store);
+    finishGroups(worker);
+    const obsolete = worker.recognition[0];
+    store.addStroke(makeStroke('b', 100, 50));
+    finishGroups(worker);
+    store.addStroke(makeStroke('c', 100, 90));
+    finishGroups(worker);
+    expect(worker.recognition).toHaveLength(1);
+    worker.reply(recognized(obsolete, '999='));
+    expect(worker.recognition).toHaveLength(2);
+    expect(worker.recognition[1].equationId).toBe(obsolete.equationId);
+    expect(worker.recognition[1].equationRevision).toBeGreaterThan(
+      obsolete.equationRevision,
+    );
+    expect(worker.recognition[1].strokes.map((s) => s.id)).toEqual([
+      'a',
+      'b',
+      'c',
+    ]);
+    expect(latest().projections.some((p) => p.answerText)).toBe(false);
+    finishRecognition(worker, '3=');
+    expect(latest().projections[0].answerText).toBe('3');
+  });
+
+  it('preserves typed math when the worker fails and continues typed editing without recognition', () => {
+    const { store, worker, latest } = setup();
+    store.addObject({
+      id: 'typed',
+      kind: 'text',
+      x: 10,
+      y: 100,
+      text: '8÷2×4=',
+      math: true,
+      fontSize: 16,
+      color: '#252D38',
+      colorMode: 'auto',
+      opacity: 1,
+      strokeWidth: 2,
+      recognitionEligible: false,
+    });
+    expect(latest().projections[0].answerText).toBe('16');
+    worker.reply({ type: 'ERROR', error: 'Model unavailable' });
+    expect(latest().status).toBe('error');
+    expect(latest().projections[0].answerText).toBe('16');
+    const object = store.getSnapshot().objects![0];
+    store.updateObject('typed', {
+      ...object,
+      kind: 'text',
+      x: 10,
+      y: 100,
+      fontSize: 16,
+      math: true,
+      text: '0.25×4=',
+    });
+    expect(latest().projections[0].answerText).toBe('1');
+    expect(worker.recognition).toHaveLength(0);
   });
 
   it('reports grouping timeout while preserving ink and stops work when disposed', () => {

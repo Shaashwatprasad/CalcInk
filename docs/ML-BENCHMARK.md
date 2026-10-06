@@ -13,7 +13,7 @@ CALCINK_BROWSER_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Googl
 node benchmark/corpus/cli.mjs validate benchmark/corpus/empty.json
 ```
 
-The supervisor's `npm run test:ml` runs accumulated deterministic tests, builds production and executes actual baseline real-model browser E2E. The canonical browser probe is a separate track step with meaningful failure exit. Defect-observation tests are tagged `ML-DEF-*`: they assert reproducibility of current bad behavior, **not acceptance**, and must be excluded from acceptance-pass counts. Once a defect is repaired, retain its dated evidence and replace the live reproduction assertion with the required behavior plus re-review.
+`npm run test:ml` runs accumulated deterministic tests, builds production and executes actual baseline real-model browser E2E. The canonical browser probe is a separate track step with meaningful failure exit. Defect-observation tests are tagged `ML-DEF-*`: they assert reproducibility of current bad behavior, **not acceptance**, and must be excluded from acceptance-pass counts. Once a defect is repaired, retain its dated evidence and replace the live reproduction assertion with the required behavior plus re-review.
 
 | Evidence                                          | Kind and actual result                                                 | Scope/limits                                                                                                                               |
 | ------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |

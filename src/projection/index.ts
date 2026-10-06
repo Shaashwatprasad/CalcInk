@@ -1,5 +1,5 @@
-import { evaluateNotebook } from '../math';
-import type { NotebookOutcome } from '../math';
+import { NotebookEvaluator } from '../math';
+import type { NotebookOutcome, NotebookResult } from '../math';
 import type {
   Bounds,
   Evaluation,
@@ -129,6 +129,13 @@ export interface EquationProjection {
   answerText?: string;
 }
 
+export interface TypedMathEntry {
+  id: string;
+  revision: number;
+  text: string;
+  bounds: Bounds;
+}
+
 /** Per-equation request guards; answers are derived state and never modify ink. */
 export class ProjectionStore {
   private documentId = '';
@@ -136,6 +143,18 @@ export class ProjectionStore {
   private expected = new Map<string, JobIdentity>();
   private projections = new Map<string, EquationProjection>();
   private inputs = new Map<string, RecognitionResult>();
+  private evaluator = new NotebookEvaluator();
+  private typed = new Map<string, TypedMathEntry>();
+  private projectionSources = new Map<
+    string,
+    { source: unknown; result: NotebookResult }
+  >();
+  private expressionCache = new Map<
+    string,
+    { source: RecognitionResult; correction: unknown; text: string }
+  >();
+  private batchDepth = 0;
+  private dirty = false;
   private pending = new Map<string, { bounds: Bounds; text: string }>();
   private corrections = new Map<
     string,
@@ -150,6 +169,11 @@ export class ProjectionStore {
     this.inputs.clear();
     this.pending.clear();
     this.corrections.clear();
+    this.typed.clear();
+    this.evaluator.clear();
+    this.projectionSources.clear();
+    this.expressionCache.clear();
+    this.dirty = false;
   }
 
   expect(job: JobIdentity): void {
@@ -173,15 +197,19 @@ export class ProjectionStore {
     });
     const previous = this.inputs.get(job.equationId);
     const full = job as RecognitionJob;
-    if (full.bounds)
+    const bounds = full.bounds ?? previous?.bounds;
+    if (bounds)
       this.pending.set(job.equationId, {
-        bounds: { ...full.bounds },
-        text: previous?.expression ?? '',
+        bounds: { ...bounds },
+        text:
+          this.projections.get(job.equationId)?.expression ??
+          previous?.expression ??
+          this.pending.get(job.equationId)?.text ??
+          '',
       });
     this.inputs.delete(job.equationId);
     this.corrections.delete(job.equationId);
-    this.projections.delete(job.equationId);
-    this.recompute();
+    this.changed();
   }
 
   retire(equationId: string): void {
@@ -190,7 +218,7 @@ export class ProjectionStore {
     this.inputs.delete(equationId);
     this.pending.delete(equationId);
     this.corrections.delete(equationId);
-    this.recompute();
+    this.changed();
   }
 
   accept(value: unknown): EquationProjection | undefined {
@@ -200,7 +228,7 @@ export class ProjectionStore {
     this.inputs.set(value.equationId, value);
     this.pending.delete(value.equationId);
     this.expected.delete(value.equationId);
-    this.recompute();
+    this.changed();
     return this.projections.get(value.equationId);
   }
 
@@ -220,17 +248,86 @@ export class ProjectionStore {
       index,
       label,
     });
-    this.recompute();
+    this.changed();
     return true;
   }
 
+  /** Cancel a stale active job immediately; preserve the last source for dependencies. */
+  invalidate(equationId: string): void {
+    const value = this.inputs.get(equationId);
+    const existing = this.pending.get(equationId);
+    this.expected.delete(equationId);
+    if (!value && !existing) return;
+    if (value)
+      this.pending.set(equationId, {
+        bounds: value.bounds,
+        text: this.projections.get(equationId)?.expression ?? value.expression,
+      });
+    this.inputs.delete(equationId);
+    this.corrections.delete(equationId);
+    this.changed();
+  }
+
+  /** Replace typed sources together, sharing notebook order and the same cached evaluator. */
+  syncTyped(entries: readonly TypedMathEntry[]): void {
+    const ids = new Set(entries.map((entry) => entry.id));
+    let changed = false;
+    for (const id of this.typed.keys())
+      if (!ids.has(id)) {
+        this.typed.delete(id);
+        changed = true;
+      }
+    for (const entry of entries) {
+      const old = this.typed.get(entry.id);
+      if (
+        old &&
+        old.text === entry.text &&
+        old.revision === entry.revision &&
+        old.bounds.minX === entry.bounds.minX &&
+        old.bounds.minY === entry.bounds.minY &&
+        old.bounds.maxX === entry.bounds.maxX &&
+        old.bounds.maxY === entry.bounds.maxY
+      )
+        continue;
+      this.typed.set(entry.id, { ...entry, bounds: { ...entry.bounds } });
+      changed = true;
+    }
+    if (changed) this.changed();
+  }
+
+  batch(callback: () => void): void {
+    this.batchDepth++;
+    try {
+      callback();
+    } finally {
+      this.batchDepth--;
+      if (!this.batchDepth && this.dirty) {
+        this.dirty = false;
+        this.recompute();
+      }
+    }
+  }
+  get metrics(): { parseCount: number; evaluationCount: number } {
+    return this.evaluator.metrics;
+  }
+  resetMetrics(): void {
+    this.evaluator.resetMetrics();
+  }
+  private changed(): void {
+    if (this.batchDepth) this.dirty = true;
+    else this.recompute();
+  }
+
   private recompute(): void {
-    const values = [...this.inputs.values()].sort(
-      (a, b) => a.bounds.minY - b.bounds.minY || a.bounds.minX - b.bounds.minX,
-    );
+    const values = [...this.inputs.values()];
     const expressions = new Map<string, string>();
     for (const value of values) {
       const correction = this.corrections.get(value.equationId);
+      const cached = this.expressionCache.get(value.equationId);
+      if (cached?.source === value && cached.correction === correction) {
+        expressions.set(value.equationId, cached.text);
+        continue;
+      }
       // Only the crossing in an operand position can be x; 2×3 remains multiplication.
       const labels = value.symbols.map((s) => s.label);
       for (let i = 0; i < labels.length; i++) {
@@ -255,10 +352,13 @@ export class ProjectionStore {
         [...value.expression].every(
           (c, i) => c === flat[i] || (c === 'x' && flat[i] === '×'),
         );
-      expressions.set(
-        value.equationId,
-        flatCompatible ? labels.join('') : value.expression,
-      );
+      const text = flatCompatible ? labels.join('') : value.expression;
+      expressions.set(value.equationId, text);
+      this.expressionCache.set(value.equationId, {
+        source: value,
+        correction,
+        text,
+      });
     }
     const entries = [
       ...values.map((v) => ({
@@ -275,6 +375,12 @@ export class ProjectionStore {
               : ('error' as const),
         bounds: v.bounds,
       })),
+      ...[...this.typed.values()].map((entry) => ({
+        id: entry.id,
+        text: entry.text,
+        state: 'recognized' as const,
+        bounds: entry.bounds,
+      })),
       ...[...this.pending].map(([id, p]) => ({
         id,
         text: p.text,
@@ -282,12 +388,27 @@ export class ProjectionStore {
         bounds: p.bounds,
       })),
     ].sort(
-      (a, b) => a.bounds.minY - b.bounds.minY || a.bounds.minX - b.bounds.minX,
+      (a, b) =>
+        a.bounds.minY - b.bounds.minY ||
+        a.bounds.minX - b.bounds.minX ||
+        a.id.localeCompare(b.id),
     );
-    const evaluated = evaluateNotebook(entries).entries;
-    this.projections.clear();
+    const evaluated = new Map(
+      this.evaluator
+        .evaluate(entries)
+        .entries.map((result) => [result.id, result]),
+    );
+    const ids = new Set(entries.map((entry) => entry.id));
+    for (const id of this.projections.keys())
+      if (!ids.has(id)) this.projections.delete(id);
+    for (const id of this.projectionSources.keys())
+      if (!ids.has(id)) this.projectionSources.delete(id);
+    for (const id of this.expressionCache.keys())
+      if (!this.inputs.has(id)) this.expressionCache.delete(id);
     for (const value of values) {
-      const result = evaluated.find((e) => e.id === value.equationId)!;
+      const result = evaluated.get(value.equationId)!;
+      const previous = this.projectionSources.get(value.equationId);
+      if (previous?.source === value && previous.result === result) continue;
       const outcome = result.outcome;
       const last = value.symbols.at(-1);
       const equals =
@@ -360,6 +481,80 @@ export class ProjectionStore {
           : {}),
       };
       this.projections.set(value.equationId, projection);
+      this.projectionSources.set(value.equationId, { source: value, result });
+    }
+    for (const entry of this.typed.values()) {
+      const result = evaluated.get(entry.id)!;
+      const previous = this.projectionSources.get(entry.id);
+      if (previous?.source === entry && previous.result === result) continue;
+      const outcome = result.outcome;
+      const answer =
+        outcome.status === 'valid' || outcome.status === 'undefined'
+          ? outcome.display
+          : undefined;
+      const lines = entry.text.split('\n');
+      const fontSize = Math.max(
+        12,
+        Math.min(
+          128,
+          (entry.bounds.maxY - entry.bounds.minY) / (lines.length * 1.25),
+        ),
+      );
+      const completedLines = entry.text.trimEnd().split('\n');
+      const lastLine = completedLines.at(-1) ?? '';
+      const equals = lastLine.endsWith('=')
+        ? {
+            minX:
+              entry.bounds.minX + Math.max(0, lastLine.length - 1) * fontSize,
+            maxX: entry.bounds.minX + lastLine.length * fontSize,
+            minY:
+              entry.bounds.minY + (completedLines.length - 1) * fontSize * 1.25,
+            maxY:
+              entry.bounds.minY +
+              (completedLines.length - 1) * fontSize * 1.25 +
+              fontSize,
+          }
+        : undefined;
+      this.projections.set(entry.id, {
+        equationId: entry.id,
+        equationRevision: entry.revision,
+        expression: entry.text,
+        bounds: entry.bounds,
+        status: outcome.status,
+        outcome,
+        normalizedText: result.normalizedText ?? undefined,
+        ...(equals ? { equalsBounds: equals } : {}),
+        ...(answer && equals
+          ? {
+              answerText: answer,
+              answerFontSize: fontSize,
+              answerBounds: {
+                minX: equals.maxX + 12,
+                maxX:
+                  equals.maxX +
+                  12 +
+                  Math.max(20, answer.length * fontSize * 0.65),
+                minY: equals.minY,
+                maxY: equals.maxY,
+              },
+            }
+          : {}),
+      });
+      this.projectionSources.set(entry.id, { source: entry, result });
+    }
+    for (const [id, entry] of this.pending) {
+      const result = evaluated.get(id)!;
+      const previous = this.projectionSources.get(id);
+      if (previous?.source === entry && previous.result === result) continue;
+      this.projections.set(id, {
+        equationId: id,
+        equationRevision: this.expected.get(id)?.equationRevision ?? 0,
+        expression: entry.text,
+        bounds: entry.bounds,
+        status: 'pending',
+        outcome: result.outcome,
+      });
+      this.projectionSources.set(id, { source: entry, result });
     }
   }
 

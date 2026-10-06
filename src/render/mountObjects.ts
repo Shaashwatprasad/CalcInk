@@ -7,7 +7,7 @@ import {
   transformAnnotation,
   validCoordinate,
 } from '../document/annotations';
-import { drawDocument } from '../ink/geometry';
+import { boundsIntersect, drawDocument, pointBounds } from '../ink/geometry';
 import type { Annotation, Bounds, Selection, XY } from '../shared/types';
 import { screenToWorld, type ViewportStore } from '../viewport';
 
@@ -25,6 +25,7 @@ export interface ObjectsRenderer {
   dispose(): void;
   getSelection(): Selection;
   setSelection(selection: Selection): void;
+  editSelection(): boolean;
 }
 type TextAnnotation = Extract<Annotation, { kind: 'text' }>;
 interface Options {
@@ -76,6 +77,10 @@ export function mountObjects(options: Options): ObjectsRenderer {
     disposed = false,
     dpr = 0;
   let rect = canvas.getBoundingClientRect();
+  let paintedObjects: readonly Annotation[] = [];
+  let paintedOverlay: Bounds | undefined;
+  let paintedCamera = '';
+  let paintedTheme = '';
   let space = false;
   let pan: { pointerId: number; point: XY } | undefined;
   const touches = new Map<number, XY>();
@@ -244,22 +249,19 @@ export function mountObjects(options: Options): ObjectsRenderer {
     dpr = window.devicePixelRatio || 1;
     const width = Math.max(1, Math.round(rect.width * dpr)),
       height = Math.max(1, Math.round(rect.height * dpr));
+    let full = canvas.width !== width || canvas.height !== height;
     if (canvas.width !== width) canvas.width = width;
     if (canvas.height !== height) canvas.height = height;
-    ctx!.setTransform(1, 0, 0, 1, 0, 0);
-    ctx!.clearRect(0, 0, width, height);
     const camera = viewport.getSnapshot();
-    ctx!.setTransform(
-      dpr * camera.zoom,
-      0,
-      0,
-      dpr * camera.zoom,
-      dpr * camera.offsetX,
-      dpr * camera.offsetY,
-    );
+    const cameraKey = `${dpr}:${camera.zoom}:${camera.offsetX}:${camera.offsetY}:${width}:${height}`;
+    const theme = options.getTheme();
+    full ||= cameraKey !== paintedCamera || theme !== paintedTheme;
+    paintedCamera = cameraKey;
+    paintedTheme = theme;
     const doc = store.getSnapshot();
     let objects = doc.objects ?? [];
     let selectedBounds = bounds();
+    let ghost: (() => void) | undefined;
     if (gesture?.kind === 'move' || gesture?.kind === 'resize') {
       const p = parameters(gesture);
       try {
@@ -285,25 +287,153 @@ export function mountObjects(options: Options): ObjectsRenderer {
         gesture.selection.strokeIds.length &&
         (p.scale !== 1 || p.delta.x !== 0 || p.delta.y !== 0)
       ) {
-        ctx!.save();
-        ctx!.globalAlpha = 0.35;
-        ctx!.translate(p.delta.x + p.anchor.x, p.delta.y + p.anchor.y);
-        ctx!.scale(p.scale, p.scale);
-        ctx!.translate(-p.anchor.x, -p.anchor.y);
-        drawDocument(
-          ctx!,
-          {
-            strokes: doc.strokes.filter((s) =>
-              gesture!.selection.strokeIds.includes(s.id),
-            ),
-            erasures: doc.erasures,
-          },
-          () => '#5275AE',
-        );
-        ctx!.restore();
+        ghost = () => {
+          ctx!.save();
+          ctx!.globalAlpha = 0.35;
+          ctx!.translate(p.delta.x + p.anchor.x, p.delta.y + p.anchor.y);
+          ctx!.scale(p.scale, p.scale);
+          ctx!.translate(-p.anchor.x, -p.anchor.y);
+          drawDocument(
+            ctx!,
+            {
+              strokes: doc.strokes.filter((s) =>
+                gesture!.selection.strokeIds.includes(s.id),
+              ),
+              erasures: doc.erasures,
+            },
+            () => '#5275AE',
+          );
+          ctx!.restore();
+        };
       }
     }
-    drawAnnotations(ctx!, objects, options.getTheme());
+    const mode = options.getTool().mode;
+    const overlayBoxes: Bounds[] = [];
+    if (gesture?.kind === 'lasso')
+      overlayBoxes.push(
+        pointBounds(gesture.path.map((p) => ({ ...p, timestamp: 0 }))),
+      );
+    else if (selectedBounds && (mode === 'select' || mode === 'lasso'))
+      overlayBoxes.push(selectedBounds);
+    if (gesture?.kind === 'create')
+      overlayBoxes.push(annotationBounds(created(gesture)));
+    if (ghost && selectedBounds) overlayBoxes.push(selectedBounds);
+    const union = (boxes: Bounds[]): Bounds | undefined =>
+      boxes.reduce<Bounds | undefined>(
+        (result, b) =>
+          result
+            ? {
+                minX: Math.min(result.minX, b.minX),
+                minY: Math.min(result.minY, b.minY),
+                maxX: Math.max(result.maxX, b.maxX),
+                maxY: Math.max(result.maxY, b.maxY),
+              }
+            : { ...b },
+        undefined,
+      );
+    const overlay = union(overlayBoxes);
+    const damage: Bounds[] = [];
+    const oldById = new Map(paintedObjects.map((o) => [o.id, o]));
+    for (const o of objects) {
+      const old = oldById.get(o.id);
+      if (old !== o) {
+        damage.push(annotationBounds(o));
+        if (old) damage.push(annotationBounds(old));
+      }
+      oldById.delete(o.id);
+    }
+    for (const old of oldById.values()) damage.push(annotationBounds(old));
+    if (paintedOverlay) damage.push(paintedOverlay);
+    if (overlay) damage.push(overlay);
+    paintedObjects = objects;
+    paintedOverlay = overlay;
+    const visible: Bounds = {
+      minX: -camera.offsetX / camera.zoom,
+      minY: -camera.offsetY / camera.zoom,
+      maxX: (rect.width - camera.offsetX) / camera.zoom,
+      maxY: (rect.height - camera.offsetY) / camera.zoom,
+    };
+    const region = full ? visible : union(damage);
+    if (!region) return;
+    if (!full) {
+      const included = new Set<string>();
+      const margin = 9 / camera.zoom;
+      let expanded = true;
+      while (expanded) {
+        expanded = false;
+        for (const object of objects) {
+          if (included.has(object.id)) continue;
+          const b = annotationBounds(object);
+          if (
+            !boundsIntersect(b, {
+              minX: region.minX - margin,
+              minY: region.minY - margin,
+              maxX: region.maxX + margin,
+              maxY: region.maxY + margin,
+            })
+          )
+            continue;
+          included.add(object.id);
+          const next = union([region, b])!;
+          expanded ||=
+            next.minX !== region.minX ||
+            next.minY !== region.minY ||
+            next.maxX !== region.maxX ||
+            next.maxY !== region.maxY;
+          Object.assign(region, next);
+        }
+      }
+    }
+    // Include screen-sized handles, dashes, glyph overhang and antialiasing.
+    const margin = 8 * dpr;
+    const x = Math.max(
+      0,
+      Math.floor((region.minX * camera.zoom + camera.offsetX) * dpr - margin),
+    );
+    const y = Math.max(
+      0,
+      Math.floor((region.minY * camera.zoom + camera.offsetY) * dpr - margin),
+    );
+    const right = Math.min(
+      width,
+      Math.ceil((region.maxX * camera.zoom + camera.offsetX) * dpr + margin),
+    );
+    const bottom = Math.min(
+      height,
+      Math.ceil((region.maxY * camera.zoom + camera.offsetY) * dpr + margin),
+    );
+    if (right <= x || bottom <= y) return;
+    ctx!.save();
+    ctx!.setTransform(1, 0, 0, 1, 0, 0);
+    ctx!.clearRect(x, y, right - x, bottom - y);
+    ctx!.beginPath();
+    ctx!.rect(x, y, right - x, bottom - y);
+    ctx!.clip();
+    ctx!.setTransform(
+      dpr * camera.zoom,
+      0,
+      0,
+      dpr * camera.zoom,
+      dpr * camera.offsetX,
+      dpr * camera.offsetY,
+    );
+    const padding = 8 / camera.zoom;
+    const painted = {
+      minX: (x / dpr - camera.offsetX) / camera.zoom - padding,
+      minY: (y / dpr - camera.offsetY) / camera.zoom - padding,
+      maxX: (right / dpr - camera.offsetX) / camera.zoom + padding,
+      maxY: (bottom / dpr - camera.offsetY) / camera.zoom + padding,
+    };
+    ghost?.();
+    drawAnnotations(
+      ctx!,
+      objects.filter(
+        (o) =>
+          boundsIntersect(annotationBounds(o), painted) &&
+          boundsIntersect(annotationBounds(o), visible),
+      ),
+      theme,
+    );
     if (gesture?.kind === 'create')
       drawAnnotations(ctx!, [created(gesture)], options.getTheme());
     ctx!.save();
@@ -337,6 +467,7 @@ export function mountObjects(options: Options): ObjectsRenderer {
         ctx!.strokeRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
       }
     }
+    ctx!.restore();
     ctx!.restore();
   }
   function release(id: number) {
@@ -395,10 +526,10 @@ export function mountObjects(options: Options): ObjectsRenderer {
       const tool = { ...options.getTool() };
       if (tool.mode === 'text') {
         touches.delete(event.pointerId);
-        const hit = selectAtPoint(store.getSnapshot(), start).objectIds.at(-1);
-        const o = store
-          .getSnapshot()
-          .objects?.find((o) => o.id === hit && o.kind === 'text');
+        const hits = selectAtPoint(store.getSnapshot(), start).objectIds;
+        const o = [...(store.getSnapshot().objects ?? [])]
+          .reverse()
+          .find((o) => o.kind === 'text' && hits.includes(o.id));
         options.onText(start, o?.kind === 'text' ? o : undefined);
         return;
       }
@@ -414,7 +545,15 @@ export function mountObjects(options: Options): ObjectsRenderer {
         tool,
         path: [start],
       };
-      if (tool.mode === 'select') {
+      if (
+        tool.mode === 'select' ||
+        (tool.mode === 'lasso' &&
+          b &&
+          start.x >= b.minX - 7 / viewport.getSnapshot().zoom &&
+          start.x <= b.maxX + 7 / viewport.getSnapshot().zoom &&
+          start.y >= b.minY - 7 / viewport.getSnapshot().zoom &&
+          start.y <= b.maxY + 7 / viewport.getSnapshot().zoom)
+      ) {
         const handle = b
           ? corners(b).findIndex(
               (p) =>
@@ -705,6 +844,12 @@ export function mountObjects(options: Options): ObjectsRenderer {
     invalidate();
   });
   const stopCamera = viewport.subscribe(invalidate);
+  const fonts = typeof document === 'undefined' ? undefined : document.fonts;
+  const fontChanged = () => {
+    paintedCamera = '';
+    invalidate();
+  };
+  fonts?.addEventListener('loadingdone', fontChanged);
   canvas.addEventListener('pointerdown', down);
   canvas.addEventListener('pointermove', move);
   canvas.addEventListener('pointerup', up);
@@ -722,6 +867,16 @@ export function mountObjects(options: Options): ObjectsRenderer {
     invalidate,
     getSelection: () => cloneSelection(selection),
     setSelection,
+    editSelection() {
+      if (selection.strokeIds.length || selection.objectIds.length !== 1)
+        return false;
+      const o = store
+        .getSnapshot()
+        .objects?.find((o) => o.id === selection.objectIds[0]);
+      if (o?.kind !== 'text') return false;
+      options.onText({ x: o.x, y: o.y }, o);
+      return true;
+    },
     dispose() {
       if (disposed) return;
       disposed = true;
@@ -730,6 +885,7 @@ export function mountObjects(options: Options): ObjectsRenderer {
       observer?.disconnect();
       unsubscribe();
       stopCamera();
+      fonts?.removeEventListener('loadingdone', fontChanged);
       canvas.removeEventListener('pointerdown', down);
       canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerup', up);

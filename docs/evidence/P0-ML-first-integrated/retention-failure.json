@@ -1,4 +1,0 @@
-{
-  "status": "REJECTED_EVIDENCE",
-  "reason": "Playwright default output cleanup deleted deterministic.json/log and production-build.log; aggregate PASS is not accepted. Fixed per-step output directory, fresh affected tracks required."
-}

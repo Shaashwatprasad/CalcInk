@@ -109,6 +109,23 @@ describe('local equation grouping', () => {
     expect(groups[0].erasures[0].targetStrokeIds).toEqual(['num']);
     expect(groups[1].erasures[0].targetStrokeIds).toEqual(['other']);
   });
+  it('does not mistake plus crossbars in neighboring complete equations for fraction bars', () => {
+    const rows = Array.from({ length: 200 }, (_, row) => {
+      const y = row * 60;
+      return [
+        stroke(`left-${row}`, 10, y, 0, 50),
+        stroke(`plus-h-${row}`, 55, y + 25, 30, 0),
+        stroke(`plus-v-${row}`, 70, y + 10, 0, 30),
+        stroke(`right-${row}`, 125, y, 0, 50),
+        stroke(`eq-a-${row}`, 160, y + 19, 25, 0),
+        stroke(`eq-b-${row}`, 160, y + 32, 25, 0),
+      ];
+    }).flat();
+    expect(findFractionLayouts(rows)).toEqual([]);
+    const groups = groupEquations(document(rows));
+    expect(groups).toHaveLength(200);
+    expect(groups.every((group) => group.strokes.length === 6)).toBe(true);
+  });
   it('accepts thin tall one operands above and below a fraction bar', () => {
     const ink = [
       stroke('num-one', 139, 99, 2, 52),
@@ -150,6 +167,24 @@ describe('local equation grouping', () => {
     ];
     expect(groupSymbols(ink)[0].strokes).toHaveLength(3);
     expect(findFractionLayouts(ink)).toEqual([]);
+  });
+  it('preserves decimal components with slightly overlapping painted digit bounds and keeps division dots grouped', () => {
+    const ink = [
+      stroke('digit', 0, 0),
+      stroke('dot', 19, 38, 3, 3),
+      stroke('right-digit', 21, 0),
+    ];
+    expect(groupSymbols(ink).map((g) => g.strokes.map((s) => s.id))).toEqual([
+      ['digit'],
+      ['dot'],
+      ['right-digit'],
+    ]);
+    const division = [
+      stroke('bar', 0, 20, 30, 2),
+      stroke('top', 14, 7, 3, 3),
+      stroke('bottom', 14, 33, 3, 3),
+    ];
+    expect(groupSymbols(division)).toHaveLength(1);
   });
   it('bounds touching-digit split alternatives and preserves exact source membership', () => {
     const ink = [

@@ -8,7 +8,7 @@ export const MATH_LIMITS = {
 } as const;
 export type ArithmeticAst =
   | { type: 'number'; value: number }
-  | { type: 'identifier'; name: 'x' }
+  | { type: 'identifier'; name: string }
   | { type: 'unary'; operator: '+' | '-'; operand: ArithmeticAst }
   | {
       type: 'binary';
@@ -18,12 +18,17 @@ export type ArithmeticAst =
     };
 export type MathAst =
   | ArithmeticAst
-  | { type: 'assignment'; name: 'x'; value: ArithmeticAst };
-export type MathEnvironment = Readonly<{ x?: number }>;
+  | { type: 'assignment'; name: string; value: ArithmeticAst };
+export type MathEnvironment = Readonly<Record<string, number | undefined>>;
 export type MathEvaluation =
   | Evaluation
-  | { status: 'unbound'; name: 'x' }
-  | { status: 'variable-defined'; name: 'x'; value: number; display: string };
+  | { status: 'unbound'; name: string }
+  | {
+      status: 'variable-defined';
+      name: string;
+      value: number;
+      display: string;
+    };
 export type ParseOutcome =
   | Extract<Evaluation, { status: 'invalid' | 'incomplete' }>
   | {
@@ -31,10 +36,10 @@ export type ParseOutcome =
       ast: MathAst;
       normalizedText: string;
       terminalEquals: boolean;
-      dependencies: 'x'[];
+      dependencies: string[];
     };
 type Token = {
-  kind: 'number' | 'x' | '=' | '+' | '-' | '*' | '/' | '(' | ')';
+  kind: 'number' | 'identifier' | '=' | '+' | '-' | '*' | '/' | '(' | ')';
   location: number;
   value?: number;
   spelling: string;
@@ -91,12 +96,22 @@ function tokenize(text: string, variables: boolean): Token[] {
       });
       continue;
     }
+    if (variables && /[A-Za-z_]/u.test(character)) {
+      const location = index++;
+      while (index < text.length && /[A-Za-z0-9_]/u.test(text[index])) index++;
+      tokens.push({
+        kind: 'identifier',
+        location,
+        spelling: text.slice(location, index),
+      });
+      continue;
+    }
     const canonical =
       ({ '×': '*', '÷': '/', '−': '-' } as Record<string, string>)[character] ??
       character;
     if (
       !['+', '-', '*', '/', '(', ')'].includes(canonical) &&
-      !(variables && (canonical === 'x' || canonical === '='))
+      !(variables && canonical === '=')
     )
       invalid('unknown-token', index);
     tokens.push({
@@ -124,7 +139,7 @@ export function parseMath(text: string, variables = true): ParseOutcome {
     const tokens = tokenize(text, variables);
     let index = 0;
     const assignment =
-      variables && tokens[0]?.kind === 'x' && tokens[1]?.kind === '=';
+      variables && tokens[0]?.kind === 'identifier' && tokens[1]?.kind === '=';
     if (assignment) index = 2;
     const primary = (depth: number): ArithmeticAst => {
       const token = tokens[index];
@@ -142,9 +157,9 @@ export function parseMath(text: string, variables = true): ParseOutcome {
         index++;
         return { type: 'number', value: token.value! };
       }
-      if (token.kind === 'x') {
+      if (token.kind === 'identifier') {
         index++;
-        return { type: 'identifier', name: 'x' };
+        return { type: 'identifier', name: token.spelling };
       }
       if (token.kind === '(') {
         index++;
@@ -194,7 +209,7 @@ export function parseMath(text: string, variables = true): ParseOutcome {
     }
     if (tokens[index]) invalid('unexpected-token', tokens[index].location);
     const ast: MathAst = assignment
-      ? { type: 'assignment', name: 'x', value }
+      ? { type: 'assignment', name: tokens[0].spelling, value }
       : value;
     return {
       status: 'parsed',
@@ -213,26 +228,26 @@ export function parseMath(text: string, variables = true): ParseOutcome {
 }
 
 /** Iterative AST walk preserves long flat V1 expressions and bounds external AST work. */
-function dependenciesOf(ast: MathAst): 'x'[] {
+function dependenciesOf(ast: MathAst): string[] {
   const pending: MathAst[] = [ast];
-  let count = 0,
-    depends = false;
+  let count = 0;
+  const names = new Set<string>();
   while (pending.length) {
     if (++count > MATH_LIMITS.tokens) invalid('too-many-tokens', 0);
     const node = pending.pop()!;
-    if (node.type === 'identifier') depends = true;
+    if (node.type === 'identifier') names.add(node.name);
     else if (node.type === 'assignment') pending.push(node.value);
     else if (node.type === 'unary') pending.push(node.operand);
     else if (node.type === 'binary') pending.push(node.left, node.right);
   }
-  return depends ? ['x'] : [];
+  return [...names].sort();
 }
 export function evaluateAST(
   ast: MathAst,
   environment: MathEnvironment = {},
 ): MathEvaluation {
   try {
-    if (ast.type === 'assignment' && dependenciesOf(ast).length)
+    if (ast.type === 'assignment' && dependenciesOf(ast).includes(ast.name))
       return { status: 'invalid', code: 'cyclic-definition', location: 0 };
     const root = ast.type === 'assignment' ? ast.value : ast;
     const stack: { node: ArithmeticAst; finish: boolean }[] = [
@@ -251,9 +266,12 @@ export function evaluateAST(
         invalid('too-many-tokens', 0);
       if (node.type === 'number') values.push(finite(node.value));
       else if (node.type === 'identifier') {
-        if (!Object.hasOwn(environment, 'x') || environment.x === undefined)
-          return { status: 'unbound', name: 'x' };
-        values.push(finite(environment.x));
+        if (
+          !Object.hasOwn(environment, node.name) ||
+          environment[node.name] === undefined
+        )
+          return { status: 'unbound', name: node.name };
+        values.push(finite(environment[node.name]!));
       } else if (!finish) {
         stack.push({ node, finish: true });
         if (node.type === 'unary')
@@ -288,12 +306,15 @@ export function evaluateAST(
       return {
         status: 'undefined',
         reason: undefinedReason,
-        display: 'Undefined',
+        display:
+          undefinedReason === 'division-by-zero'
+            ? 'Cannot divide by zero'
+            : 'Undefined',
       };
     const value = values[0],
       display = formatNumber(value);
     return ast.type === 'assignment'
-      ? { status: 'variable-defined', name: 'x', value, display }
+      ? { status: 'variable-defined', name: ast.name, value, display }
       : { status: 'valid', value, display };
   } catch (error) {
     if (error instanceof SyntaxFailure) return error.outcome;
@@ -329,7 +350,9 @@ export interface NotebookResult {
   outcome: NotebookOutcome;
   ast: MathAst | null;
   normalizedText: string | null;
-  dependencies: 'x'[];
+  dependencies: string[];
+  /** The concrete preceding definitions this expression reads. */
+  bindings: Record<string, string | null>;
   context: {
     x: number | null;
     definitionId: string | null;
@@ -338,73 +361,183 @@ export interface NotebookResult {
     blockedBy: string | null;
   };
 }
-/** Caller supplies deterministic reading order. Every call rebuilds the notebook environment. */
-export function evaluateNotebook(entries: readonly NotebookEntry[]): {
+export interface NotebookEvaluation {
   entries: NotebookResult[];
-  environment: { x?: number };
+  environment: Record<string, number | undefined>;
   definitionId: string | null;
-} {
-  const environment: { x?: number } = {};
-  let definitionId: string | null = null,
-    blockedBy: string | null = null;
-  const results: NotebookResult[] = [];
-  for (const entry of entries) {
-    const potentialDefinition =
-      /^\s*x\s*=/u.test(entry.text) ||
-      (entry.state !== 'recognized' &&
-        (/^\s*x\s*$/u.test(entry.text) || !entry.text.trim()));
-    const before = {
-      x: environment.x ?? null,
-      definitionId,
-      definesX: potentialDefinition,
-      invalidatesX: false,
-      blockedBy,
+}
+type Binding = { id: string; value?: number; blocked: boolean; key: number };
+type CachedEntry = {
+  text: string;
+  parsed: ParseOutcome | null;
+  key: string;
+  result: NotebookResult;
+  version: number;
+};
+
+/** Reading-order reconciliation is cheap; parsing and AST execution are cached per source.
+ * Dependency keys identify the concrete preceding definition, including its own inputs.
+ * A later redefinition therefore shields its consumers from edits to earlier definitions.
+ */
+export class NotebookEvaluator {
+  private cache = new Map<string, CachedEntry>();
+  private version = 0;
+  private parseCount = 0;
+  private evaluationCount = 0;
+  get metrics(): { parseCount: number; evaluationCount: number } {
+    return {
+      parseCount: this.parseCount,
+      evaluationCount: this.evaluationCount,
     };
-    const parsed = entry.state === 'recognized' ? parseMath(entry.text) : null;
-    const definesX =
-      potentialDefinition ||
-      (parsed?.status === 'parsed' && parsed.ast.type === 'assignment');
-    let outcome: NotebookOutcome;
-    if (definesX) {
-      delete environment.x;
-      definitionId = null;
-      blockedBy = entry.state === 'recognized' ? null : entry.id;
-      before.invalidatesX = true;
-    }
-    if (entry.state !== 'recognized')
-      outcome =
-        entry.state === 'pending'
-          ? { status: 'pending' }
-          : entry.state === 'uncertain'
-            ? { status: 'uncertain' }
-            : { status: 'unavailable', reason: 'recognition-error' };
-    else if (!parsed || parsed.status !== 'parsed')
-      outcome = parsed ?? { status: 'incomplete' };
-    else if (parsed.ast.type !== 'assignment' && !parsed.terminalEquals)
-      outcome = { status: 'incomplete' };
-    else if (!definesX && parsed.dependencies.length && blockedBy)
-      outcome = {
-        status: 'pending',
-        reason: 'definition-not-current',
-        definitionId: blockedBy,
-      };
-    else {
-      outcome = evaluateAST(parsed.ast, environment);
-      if (outcome.status === 'variable-defined') {
-        environment.x = outcome.value;
-        definitionId = entry.id;
-        blockedBy = null;
-      }
-    }
-    results.push({
-      id: entry.id,
-      outcome,
-      ast: parsed?.status === 'parsed' ? parsed.ast : null,
-      normalizedText:
-        parsed?.status === 'parsed' ? parsed.normalizedText : null,
-      dependencies: parsed?.status === 'parsed' ? parsed.dependencies : [],
-      context: { ...before, definesX },
-    });
   }
-  return { entries: results, environment, definitionId };
+  resetMetrics(): void {
+    this.parseCount = 0;
+    this.evaluationCount = 0;
+  }
+  clear(): void {
+    this.cache.clear();
+    this.resetMetrics();
+  }
+
+  evaluate(entries: readonly NotebookEntry[]): NotebookEvaluation {
+    const bindings = new Map<string, Binding>();
+    let unknownBlocker: string | null = null;
+    const results: NotebookResult[] = [];
+    const currentIds = new Set<string>();
+    for (const entry of entries) {
+      currentIds.add(entry.id);
+      const cached = this.cache.get(entry.id);
+      let parsed = cached?.text === entry.text ? cached.parsed : null;
+      if (entry.state === 'recognized' && !parsed) {
+        parsed = parseMath(entry.text);
+        this.parseCount++;
+      }
+      const definitionName =
+        /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=/u.exec(entry.text)?.[1] ??
+        (entry.state !== 'recognized'
+          ? (/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*$/u.exec(entry.text)?.[1] ?? null)
+          : null);
+      const dependencies =
+        parsed?.status === 'parsed' ? parsed.dependencies : [];
+      const reads = dependencies.map((name) => {
+        const binding = bindings.get(name);
+        return [
+          name,
+          binding?.id ?? null,
+          binding?.key ?? null,
+          binding?.value ?? null,
+          binding?.blocked ? binding.id : binding ? null : unknownBlocker,
+        ];
+      });
+      const key = JSON.stringify([entry.text, entry.state, reads]);
+      const blocked =
+        dependencies
+          .map((name) => {
+            const binding = bindings.get(name);
+            return binding?.blocked
+              ? binding.id
+              : binding
+                ? null
+                : unknownBlocker;
+          })
+          .find((id) => id !== null) ?? null;
+      let result: NotebookResult;
+      if (cached?.key === key) result = cached.result;
+      else {
+        let outcome: NotebookOutcome;
+        if (entry.state !== 'recognized')
+          outcome =
+            entry.state === 'pending'
+              ? { status: 'pending' }
+              : entry.state === 'uncertain'
+                ? { status: 'uncertain' }
+                : { status: 'unavailable', reason: 'recognition-error' };
+        else if (!parsed || parsed.status !== 'parsed')
+          outcome = parsed ?? { status: 'incomplete' };
+        else if (parsed.ast.type !== 'assignment' && !parsed.terminalEquals)
+          outcome = { status: 'incomplete' };
+        else if (
+          blocked &&
+          !(
+            parsed.ast.type === 'assignment' &&
+            dependencies.includes(parsed.ast.name)
+          )
+        )
+          outcome = {
+            status: 'pending',
+            reason: 'definition-not-current',
+            definitionId: blocked,
+          };
+        else {
+          const environment: Record<string, number | undefined> =
+            Object.create(null);
+          for (const name of dependencies)
+            environment[name] = bindings.get(name)?.value;
+          this.evaluationCount++;
+          outcome = evaluateAST(parsed.ast, environment);
+        }
+        const x = dependencies.includes('x') ? bindings.get('x') : undefined;
+        result = {
+          id: entry.id,
+          outcome,
+          ast: parsed?.status === 'parsed' ? parsed.ast : null,
+          normalizedText:
+            parsed?.status === 'parsed' ? parsed.normalizedText : null,
+          dependencies,
+          bindings: Object.fromEntries(
+            dependencies.map((name) => [name, bindings.get(name)?.id ?? null]),
+          ),
+          context: {
+            x: x?.value ?? null,
+            definitionId: x?.id ?? null,
+            definesX: definitionName === 'x',
+            invalidatesX: definitionName === 'x',
+            blockedBy: blocked,
+          },
+        };
+      }
+      const version = cached?.key === key ? cached.version : ++this.version;
+      this.cache.set(entry.id, {
+        text: entry.text,
+        parsed,
+        key,
+        result,
+        version,
+      });
+      if (definitionName) {
+        const outcome = result.outcome;
+        bindings.set(definitionName, {
+          id: entry.id,
+          key: version,
+          value:
+            outcome.status === 'variable-defined' ? outcome.value : undefined,
+          blocked: entry.state !== 'recognized' || outcome.status === 'pending',
+        });
+      } else if (entry.state !== 'recognized' && !entry.text.trim()) {
+        unknownBlocker = entry.id;
+        for (const [name] of bindings)
+          bindings.set(name, { id: entry.id, key: version, blocked: true });
+      }
+      results.push(result);
+    }
+    for (const id of this.cache.keys())
+      if (!currentIds.has(id)) this.cache.delete(id);
+    const environment = Object.fromEntries(
+      [...bindings]
+        .filter(([, b]) => b.value !== undefined)
+        .map(([name, b]) => [name, b.value]),
+    );
+    const x = bindings.get('x');
+    return {
+      entries: results,
+      environment,
+      definitionId: x?.value !== undefined ? x.id : null,
+    };
+  }
+}
+/** Stateless compatibility API; long-lived callers should retain NotebookEvaluator. */
+export function evaluateNotebook(
+  entries: readonly NotebookEntry[],
+): NotebookEvaluation {
+  return new NotebookEvaluator().evaluate(entries);
 }

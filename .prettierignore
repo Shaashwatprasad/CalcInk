@@ -9,14 +9,3 @@ package-lock.json
 docs/reference
 docs/evidence
 
-# Preserve the imported specification pack byte-for-byte.
-AGENTS.md
-START-HERE.md
-prompts/KICKOFF.md
-docs/REQUIREMENTS.md
-docs/ARCHITECTURE.md
-docs/MODEL-DECISION.md
-docs/AGENT-LOOP.md
-docs/BACKLOG.md
-docs/VALIDATION.md
-docs/GITHUB.md

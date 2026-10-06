@@ -8,15 +8,7 @@ export function sourceIdentity() {
     { encoding: 'utf8' },
   )
     .split('\0')
-    .filter(
-      (p) =>
-        p &&
-        !p.startsWith('docs/evidence/') &&
-        !p.startsWith('docs/reviews/') &&
-        !p.startsWith('docs/tasks/') &&
-        p !== 'docs/PROGRESS.md' &&
-        existsSync(p),
-    )
+    .filter((p) => p && p !== 'docs/PROGRESS.md' && existsSync(p))
     .sort();
   const hash = createHash('sha256');
   for (const path of paths) {

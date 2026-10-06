@@ -21,6 +21,7 @@ class Canvas extends EventTarget {
     lineTo: vi.fn(),
     closePath: vi.fn(),
     rect: vi.fn(),
+    clip: vi.fn(),
     ellipse: vi.fn(),
     stroke: vi.fn(),
     fillRect: vi.fn(),
@@ -73,7 +74,8 @@ function setup() {
     devicePixelRatio: 2,
   });
   vi.stubGlobal('window', windowTarget);
-  vi.stubGlobal('document', { activeElement: null });
+  const fonts = new EventTarget();
+  vi.stubGlobal('document', { activeElement: null, fonts });
   let id = 0;
   const frames = new Map<number, FrameRequestCallback>();
   vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
@@ -131,6 +133,7 @@ function setup() {
     onText,
     onError,
     windowTarget,
+    fonts,
     key,
   };
 }
@@ -409,6 +412,101 @@ describe('annotation pointer router', () => {
     ).toEqual([20, 90]);
     expect(s.api.getSelection().objectIds).toEqual(['left', 'right']);
     s.api.dispose();
+  });
+  it('keeps lasso selection movable and resizable until a new outside lasso starts', () => {
+    const s = setup();
+    s.store.addObject(shape());
+    s.tool.mode = 'lasso';
+    s.canvas.pointer('pointerdown', 0, 0);
+    s.canvas.pointer('pointermove', 40, 0);
+    s.canvas.pointer('pointermove', 40, 30);
+    s.canvas.pointer('pointermove', 0, 30);
+    s.canvas.pointer('pointerup', 0, 0);
+    expect(s.api.getSelection().objectIds).toEqual(['box']);
+    s.canvas.pointer('pointerdown', 20, 15);
+    s.canvas.pointer('pointerup', 40, 35);
+    expect(s.store.getSnapshot().objects![0]).toMatchObject({ x: 30, y: 30 });
+    s.store.undo();
+    s.canvas.pointer('pointerdown', 31, 21);
+    s.canvas.pointer('pointerup', 53, 33);
+    expect(s.store.getSnapshot().objects![0]).toMatchObject({
+      width: 40,
+      height: 20,
+    });
+    s.store.undo();
+    expect(s.store.getSnapshot().objects![0]).toEqual(shape());
+    s.canvas.pointer('pointerdown', 200, 200);
+    s.canvas.pointer('pointerup', 200, 200);
+    expect(s.api.getSelection().objectIds).toEqual([]);
+    s.api.dispose();
+  });
+  it('edits text beneath overlapping shapes and exposes selected-text editing', () => {
+    const s = setup();
+    s.store.addObject({
+      ...shape('note'),
+      kind: 'text',
+      x: 10,
+      y: 10,
+      text: 'math note',
+      fontSize: 16,
+    });
+    s.store.addObject(shape('cover'));
+    s.tool.mode = 'text';
+    s.canvas.pointer('pointerdown', 20, 15);
+    expect(s.onText).toHaveBeenLastCalledWith(
+      { x: 20, y: 15 },
+      expect.objectContaining({ id: 'note', kind: 'text' }),
+    );
+    s.api.setSelection({ strokeIds: [], objectIds: ['cover'] });
+    expect(s.api.editSelection()).toBe(false);
+    s.api.setSelection({ strokeIds: [], objectIds: ['note'] });
+    expect(s.api.editSelection()).toBe(true);
+    expect(s.onText).toHaveBeenLastCalledWith(
+      { x: 10, y: 10 },
+      expect.objectContaining({ id: 'note' }),
+    );
+    s.api.dispose();
+  });
+  it('retains annotation pixels and culls unaffected objects during local edits', () => {
+    const s = setup();
+    const right = shape('right');
+    s.store.addObject(shape());
+    s.store.addObject({ ...right, x: 350 } as Annotation);
+    s.store.addObject({ ...right, id: 'outside', x: 2000 } as Annotation);
+    s.tool.mode = 'inactive';
+    s.flush();
+    expect(s.canvas.ctx.stroke).toHaveBeenCalledTimes(2);
+    s.canvas.ctx.stroke.mockClear();
+    s.canvas.ctx.clearRect.mockClear();
+    s.api.invalidate();
+    s.flush();
+    expect(s.canvas.ctx.clearRect).not.toHaveBeenCalled();
+    s.store.updateObject('box', { ...shape(), x: 20 } as Annotation);
+    s.flush();
+    expect(s.canvas.ctx.stroke).toHaveBeenCalledTimes(1);
+    const cleared = s.canvas.ctx.clearRect.mock.calls[0];
+    expect(cleared[2]).toBeLessThan(s.canvas.width / 4);
+    s.api.dispose();
+  });
+  it('repaints retained text when the local font loads and removes its listener on disposal', () => {
+    const s = setup();
+    s.store.addObject({
+      ...shape('note'),
+      kind: 'text',
+      x: 10,
+      y: 10,
+      text: 'notes',
+      fontSize: 16,
+    });
+    s.tool.mode = 'inactive';
+    s.flush();
+    expect(s.canvas.ctx.fillText).toHaveBeenCalledTimes(1);
+    s.fonts.dispatchEvent(new Event('loadingdone'));
+    s.flush();
+    expect(s.canvas.ctx.fillText).toHaveBeenCalledTimes(2);
+    s.api.dispose();
+    s.fonts.dispatchEvent(new Event('loadingdone'));
+    expect(s.frames.size).toBe(0);
   });
   it('restricts destructive shortcuts to canvas focus and supports duplicate/delete undo', () => {
     const s = setup();

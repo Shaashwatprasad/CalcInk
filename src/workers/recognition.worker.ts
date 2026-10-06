@@ -24,6 +24,7 @@ import {
 import { isWorkerRequest } from '../recognition/protocol';
 import type {
   InkDocument,
+  JobIdentity,
   RecognitionJob,
   RecognitionResult,
   SymbolPrediction,
@@ -122,6 +123,28 @@ async function initialize(): Promise<void> {
     preprocessingVersion: PREPROCESSING_VERSION,
     backend: 'wasm',
   });
+}
+function identity(job: RecognitionJob): JobIdentity {
+  const {
+    protocolVersion,
+    documentId,
+    generation,
+    equationId,
+    equationRevision,
+    requestId,
+    modelVersion,
+    preprocessingVersion,
+  } = job;
+  return {
+    protocolVersion,
+    documentId,
+    generation,
+    equationId,
+    equationRevision,
+    requestId,
+    modelVersion,
+    preprocessingVersion,
+  };
 }
 async function recognize(job: RecognitionJob): Promise<RecognitionResult> {
   const start = performance.now();
@@ -253,7 +276,7 @@ async function recognize(job: RecognitionJob): Promise<RecognitionResult> {
     }
   }
   return {
-    ...job,
+    ...identity(job),
     type: 'RESULT',
     symbols: decoded.symbols,
     expression: decoded.expression,
@@ -280,7 +303,8 @@ async function drain(): Promise<void> {
         send(await recognize(job));
       } catch (error) {
         send({
-          ...job,
+          ...identity(job),
+          bounds: job.bounds,
           type: 'RESULT',
           symbols: [],
           expression: '',

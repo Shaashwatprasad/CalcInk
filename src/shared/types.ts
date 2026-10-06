@@ -43,7 +43,14 @@ interface AnnotationStyle {
 }
 export type Annotation = AnnotationStyle &
   (
-    | { kind: 'text'; x: number; y: number; fontSize: number; text: string }
+    | {
+        kind: 'text';
+        x: number;
+        y: number;
+        fontSize: number;
+        text: string;
+        math?: boolean;
+      }
     | {
         kind: 'shape';
         shape: 'rectangle' | 'ellipse';
@@ -82,7 +89,11 @@ export type Evaluation =
   | { status: 'valid'; value: number; display: string }
   | { status: 'incomplete' }
   | { status: 'invalid'; code: string; location: number }
-  | { status: 'undefined'; reason: string; display: 'Undefined' };
+  | {
+      status: 'undefined';
+      reason: string;
+      display: 'Undefined' | 'Cannot divide by zero';
+    };
 export interface JobIdentity {
   protocolVersion: 1;
   documentId: string;

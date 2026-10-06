@@ -14,6 +14,7 @@ import { validateDocument } from '../persistence/document';
 import { prepareOffline } from '../offline/register';
 import { startRecognizer } from './recognizer';
 import type { RecognitionState } from './recognizer';
+import { CalculationHistory } from '../projection/history';
 import { monitorFrames } from '../metrics/frames';
 import type { FrameMetrics } from '../metrics/frames';
 import { resolveInkColor } from '../ink/geometry';
@@ -173,6 +174,7 @@ export function App() {
     point: XY;
     existing?: Extract<Annotation, { kind: 'text' }>;
     text: string;
+    math: boolean;
   }>();
   const [allTools, setAllTools] = useState(false);
   const [showResults, setShowResults] = useState(true);
@@ -263,6 +265,19 @@ export function App() {
   const [notebookBusy, setNotebookBusy] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Opening notebook…');
   const [recognition, setRecognition] = useState(initialState);
+  const [calculationHistory] = useState(() => new CalculationHistory());
+  const calculations = calculationHistory.update(
+    document.documentId,
+    recognition.projections,
+  );
+  const [feedbackTab, setFeedbackTab] = useState<'current' | 'history'>(
+    'current',
+  );
+  const [historyLimit, setHistoryLimit] = useState(5);
+  useEffect(() => {
+    setHistoryLimit(5);
+    setFeedbackTab('current');
+  }, [document.documentId]);
   const [retry, setRetry] = useState(0);
   const projectionsRef = useRef(recognition.projections);
   projectionsRef.current = recognition.projections;
@@ -328,7 +343,12 @@ export function App() {
         getPanMode: () => panModeRef.current,
         onSelection: setSelection,
         onText: (point, existing) =>
-          setTextEditor({ point, existing, text: existing?.text ?? '' }),
+          setTextEditor({
+            point,
+            existing,
+            text: existing?.text ?? '',
+            math: existing?.math ?? false,
+          }),
         onError: setNotice,
       });
       objectRenderer.current = renderer;
@@ -510,7 +530,7 @@ export function App() {
     const text = textEditor.text.trim();
     if (text) {
       const object: Extract<Annotation, { kind: 'text' }> = textEditor.existing
-        ? { ...textEditor.existing, text }
+        ? { ...textEditor.existing, text, math: textEditor.math }
         : {
             id: crypto.randomUUID(),
             kind: 'text',
@@ -520,6 +540,7 @@ export function App() {
             x: textEditor.point.x,
             y: textEditor.point.y,
             text,
+            math: textEditor.math,
           };
       try {
         if (textEditor.existing) store.updateObject(object.id, object);
@@ -530,6 +551,11 @@ export function App() {
         );
         return;
       }
+    } else if (textEditor.existing) {
+      store.deleteSelection({
+        strokeIds: [],
+        objectIds: [textEditor.existing.id],
+      });
     }
     setTextEditor(undefined);
     objectsCanvas.current?.focus({ preventScroll: true });
@@ -574,9 +600,17 @@ export function App() {
           </span>
           CalcInk<span className="brand-tag">THINK ON PAPER</span>
         </a>
+        <NotebookControls
+          store={store}
+          onStatus={setSaveStatus}
+          onNotice={setNotice}
+          onReady={() => setLoaded(true)}
+          onBusy={setNotebookBusy}
+        />
         <div className="header-actions">
           <button
             className="icon-button"
+            title="Undo (⌘/Ctrl+Z)"
             aria-label="Undo"
             disabled={!store.canUndo}
             onClick={() => store.undo()}
@@ -585,6 +619,7 @@ export function App() {
           </button>
           <button
             className="icon-button"
+            title="Redo (⌘/Ctrl+Shift+Z)"
             aria-label="Redo"
             disabled={!store.canRedo}
             onClick={() => store.redo()}
@@ -594,6 +629,7 @@ export function App() {
           <button
             className="icon-button"
             ref={clearTrigger}
+            title="Clear paper"
             aria-label="Clear"
             disabled={!document.strokes.length && !document.objects?.length}
             onClick={() => {
@@ -671,6 +707,11 @@ export function App() {
                 <button
                   key={mode}
                   className={`tool-button extended-tool ${objectMode === mode ? 'selected' : ''}`}
+                  title={
+                    mode === 'select'
+                      ? 'Select and move objects'
+                      : 'Lasso: encircle, then drag or resize'
+                  }
                   aria-label={mode === 'select' ? 'Select' : 'Lasso'}
                   aria-pressed={objectMode === mode}
                   onClick={(e) => chooseObject(mode, e.currentTarget)}
@@ -690,6 +731,7 @@ export function App() {
               </button>
               <button
                 className={`tool-button ${objectMode === 'inactive' && tool.mode.endsWith('eraser') ? 'selected' : ''}`}
+                title="Eraser (E): whole stroke or partial"
                 aria-label="Eraser"
                 aria-pressed={
                   objectMode === 'inactive' && tool.mode.endsWith('eraser')
@@ -722,7 +764,7 @@ export function App() {
                     {
                       text: 'Text',
                       shape: 'Shapes',
-                      region: 'Box Region',
+                      region: 'Draw region',
                       arrow: 'Arrow',
                     }[mode]
                   }
@@ -901,9 +943,7 @@ export function App() {
                     </label>
                   )}
                   {objectMode === 'region' && (
-                    <span>
-                      Group a working area without adding calculator ink.
-                    </span>
+                    <span>Draw a dashed boundary around a working area.</span>
                   )}
                 </>
               )}
@@ -953,15 +993,6 @@ export function App() {
               ...paperStyle(paper, camera.zoom),
             }}
           >
-            <div className="paper-label">
-              <NotebookControls
-                store={store}
-                onStatus={setSaveStatus}
-                onNotice={setNotice}
-                onReady={() => setLoaded(true)}
-                onBusy={setNotebookBusy}
-              />
-            </div>
             {!document.strokes.length && !document.objects?.length && (
               <div className="empty-hint">
                 <span className="hint-arrow">↙</span>
@@ -995,6 +1026,19 @@ export function App() {
             {selection.strokeIds.length + selection.objectIds.length > 0 &&
               (objectMode === 'select' || objectMode === 'lasso') && (
                 <div className="selection-actions">
+                  {selection.objectIds.length === 1 &&
+                    !selection.strokeIds.length &&
+                    document.objects?.some(
+                      (o) =>
+                        o.id === selection.objectIds[0] && o.kind === 'text',
+                    ) && (
+                      <button
+                        aria-label="Edit text"
+                        onClick={() => objectRenderer.current?.editSelection()}
+                      >
+                        Edit
+                      </button>
+                    )}
                   <button
                     aria-label="Duplicate selection"
                     onClick={() =>
@@ -1086,8 +1130,54 @@ export function App() {
             className="recognition-feedback"
             aria-label="Recognition feedback"
           >
-            <div className="recognized-lines" aria-live="polite">
-              {recognition.projections.map((p) => (
+            <div
+              className="calculation-tabs"
+              role="tablist"
+              aria-label="Calculations"
+            >
+              <button
+                role="tab"
+                aria-selected={feedbackTab === 'current'}
+                onClick={() => setFeedbackTab('current')}
+              >
+                Current
+              </button>
+              <button
+                role="tab"
+                aria-selected={feedbackTab === 'history'}
+                onClick={() => setFeedbackTab('history')}
+              >
+                History ({calculations.records.length})
+              </button>
+            </div>
+            {feedbackTab === 'history' && (
+              <div
+                className="calculation-history"
+                role="tabpanel"
+                aria-label="Calculation history"
+              >
+                {calculations.records.slice(0, historyLimit).map((record) => (
+                  <div key={record.id} data-record-id={record.id}>
+                    <span>{record.expression}</span>{' '}
+                    <strong>{record.answer}</strong>
+                  </div>
+                ))}
+                {!calculations.records.length && (
+                  <span>No completed calculations.</span>
+                )}
+                {calculations.records.length > historyLimit && (
+                  <button onClick={() => setHistoryLimit((n) => n + 5)}>
+                    Show older calculations
+                  </button>
+                )}
+              </div>
+            )}
+            <div
+              className="recognized-lines"
+              aria-live="polite"
+              hidden={feedbackTab !== 'current'}
+            >
+              {(calculations.current ? [calculations.current] : []).map((p) => (
                 <div key={p.equationId} data-state={p.status}>
                   <span className="recognized-expression">
                     {p.expression || 'No visible symbols'}
@@ -1097,13 +1187,15 @@ export function App() {
                       (p.status === 'variable-defined'
                         ? 'Defined in this notebook'
                         : p.status === 'unbound'
-                          ? 'x is not defined in this notebook'
+                          ? `${p.outcome?.status === 'unbound' ? p.outcome.name : 'Variable'} is not defined in this notebook`
                           : p.status === 'uncertain'
                             ? 'Uncertain handwriting · rewrite or choose a crossing'
                             : p.status === 'invalid'
                               ? 'Invalid syntax · check the expression'
                               : p.status === 'undefined'
-                                ? 'Undefined arithmetic'
+                                ? p.evaluation?.status === 'undefined'
+                                  ? p.evaluation.display
+                                  : 'Undefined arithmetic'
                                 : p.status === 'pending'
                                   ? 'Recognizing…'
                                   : p.status === 'error' ||
@@ -1111,9 +1203,6 @@ export function App() {
                                     ? 'Recognition unavailable · retry'
                                     : 'Incomplete · finish the expression with =')}
                   </span>
-                  {p.normalizedText && p.normalizedText !== p.expression && (
-                    <small className="normalization">{p.normalizedText}</small>
-                  )}
                   {(p.symbols ?? []).map(
                     (symbol, index) =>
                       ['×', 'x'].includes(symbol.label) && (
@@ -1170,18 +1259,18 @@ export function App() {
                 aria-label="Copy expression"
                 onClick={() => {
                   void navigator.clipboard
-                    .writeText(recognition.projections.at(-1)?.expression ?? '')
+                    .writeText(calculations.current?.expression ?? '')
                     .catch(() => setNotice('Clipboard unavailable'));
                 }}
               >
                 Copy expression
               </button>
               <button
-                disabled={!recognition.projections.at(-1)?.answerText}
+                disabled={!calculations.current?.answerText}
                 aria-label="Copy answer"
                 onClick={() => {
                   void navigator.clipboard
-                    .writeText(recognition.projections.at(-1)?.answerText ?? '')
+                    .writeText(calculations.current?.answerText ?? '')
                     .catch(() => setNotice('Clipboard unavailable'));
                 }}
               >
@@ -1230,7 +1319,7 @@ export function App() {
               if (e.key === 'Tab') {
                 const nodes = [
                   ...e.currentTarget.querySelectorAll<HTMLElement>(
-                    'textarea,button',
+                    'textarea,input,button',
                   ),
                 ];
                 const i = nodes.indexOf(
@@ -1259,6 +1348,20 @@ export function App() {
                 }
               />
             </label>
+            <label className="typed-math-toggle">
+              <input
+                type="checkbox"
+                checked={textEditor.math}
+                onChange={(e) =>
+                  setTextEditor({ ...textEditor, math: e.target.checked })
+                }
+              />
+              Calculate as math
+            </label>
+            <p className="editor-help">
+              For math, use a final = or a definition such as total=5. Ordinary
+              text stays an annotation.
+            </p>
             <button type="button" onClick={() => setTextEditor(undefined)}>
               Cancel
             </button>

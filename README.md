@@ -1,17 +1,54 @@
 # CalcInk
 
-A browser notebook for handwritten arithmetic. React/TypeScript/Vite controls sit above an imperative, layered Canvas2D ink engine. A dedicated worker runs a bundled pretrained CNN through ONNX Runtime Web WASM. Arithmetic runs through a bounded TypeScript parser; no remote inference or executable math strings.
+CalcInk is a private, on-device notebook for handwritten arithmetic. Write an expression ending in `=` to place its answer beside the ink. Editing an equation updates that answer and any dependent calculations; unrelated answers stay visible.
 
-## Run locally
+Pen, pencil and highlighter support colour, width and optional pressure. Whole-stroke and partial erasers, undo/redo, lasso selection, movement, resizing, duplication and deletion preserve the vector document. Add ordinary text, shapes, arrows and dashed regions; **Edit** changes selected text. Enable **Calculate as math** in the text editor to calculate typed expressions or define named variables such as `total=3.5`. Current shows the active calculation; History lists five completed calculations first, with older records accessible.
 
-Use Node.js 22.18 or newer:
+Pan and zoom move ink, annotations and answers together. Notebook names, switching, import/export, themes and paper patterns are available. Notebooks save in IndexedDB on this device; export JSON for a portable backup. Clear is undoable. Undo history contains up to 100 transactions per session. Calculation history is derived from current equations, one record per equation; editing updates that record, deleting removes it, and reload regenerates it.
+
+## Local setup
+
+Use Node.js 22.18 or newer and npm. A current Chromium browser with Canvas2D, Pointer Events, workers, WASM and worker OffscreenCanvas supports recognition.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Production and checks:
+Open the localhost URL printed by Vite. To run the production application:
+
+```sh
+npm run build
+npm run preview
+```
+
+The pretrained model is committed at `public/models/symbols.onnx`, with its manifest, license and conversion evidence. The build copies matching ONNX Runtime Web 1.22.0 WASM/module files from the pinned dependency into `public/runtime/`; no separate model download or Python installation is needed to run CalcInk. Reconstructing the model is optional and documented in [scripts/model/README.md](scripts/model/README.md).
+
+Production builds generate a versioned same-origin offline cache. Serve over localhost or HTTPS, load once, and wait for **Offline ready** before disconnecting and reloading. That badge requires cached assets and a runnable model. Development does not install the service worker.
+
+## Recognition and math
+
+Recognition uses [Rafi Ibn Sultan’s Dataset II CNN](https://github.com/rafiibnsultan/Math_Symbols_Classify/tree/0f90d32afb1e4d8416b3d0c4adf4ce1748d86a16), pinned at `0f90d32`. The FP32 ONNX model accepts RGB float32 NHWC `[1,50,50,3]`, black ink on white divided by 255, and returns 16 softmax classes: `0–9`, `+`, `.`, `÷`, `=`, `×`, `−`. Its SHA-256 is `2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786`. Runtime checks the manifest, artifact hash and warm-up output before announcing readiness. See the [model audit](docs/MODEL-AUDIT.md).
+
+All production recognition and calculation run locally. A dedicated worker performs grouping, mask-aware rasterization, preprocessing and inference using single-threaded WASM. There are no production cloud inference or math calls.
+
+Write separated symbols of similar size. Slash and simple stacked fractions use geometry outside the model’s class vocabulary. Crossing ink can represent `x` in operand positions, with a revision-bound **Variable x / Multiply ×** correction. The model has no general letter classes: arbitrary handwritten variable names remain unsupported. Typed math supports case-sensitive identifiers such as `price`, `rate2` and `_subtotal`. Definitions apply to later equations in spatial notebook order, with later definitions rebinding subsequent consumers. Self-referential definitions are rejected.
+
+The bounded parser supports decimals, unary signs, parentheses and the four basic operations with normal precedence and left associativity. Math strings are never executed as code. JavaScript binary floating point is displayed to twelve significant digits. Division by zero shows **Cannot divide by zero**; incomplete, malformed or uncertain input withholds its answer. Nested handwritten fractions, handwritten parentheses, touching glyphs and unrestricted letter handwriting remain limitations. Confidence thresholds are uncertainty guards, not calibrated accuracy estimates; no writer-diverse accuracy claim is made.
+
+## Architecture
+
+- `src/document` stores immutable vectors, targeted erasure masks, annotations and reversible transactions. Text marked as math is canonical source; computed answers are derived.
+- `src/render` owns committed ink, active ink, answer and annotation canvases. Drawing uses animation frames outside React’s render loop. Retained pixels, clipped damaged areas and viewport culling avoid replaying the entire page for a local edit.
+- `src/recognition` tracks stable equation identities, revisions and stroke ownership. Change events select cached nearby candidates; reconciliation preserves unchanged groups. Bootstrap groups the document once; later worker requests contain only candidate vectors and masks.
+- `src/workers` runs the verified classifier. Queued jobs coalesce per equation; identity, generation, revision, request and model/preprocessing versions reject stale replies. A bounded symbol cache includes vector, mask and model/preprocessing identity.
+- `src/math` caches parsed ASTs and outcomes. Dependencies bind to specific preceding definitions. Changed expressions evaluate fully; consumers reuse their AST and reevaluate when their dependency context changes.
+- `src/projection` maintains stable answer objects, local pending states, diagnostics, corrections and calculation history.
+- `src/persistence`, `src/offline` and `src/viewport` handle serialized IndexedDB saves, offline assets and shared camera transforms. `src/app` supplies React controls; `src/metrics` supplies optional frame observations.
+
+Dependencies are React 19.1.1, ONNX Runtime Web 1.22.0 and the pinned Vite/TypeScript toolchain. [Architecture and contracts](docs/ARCHITECTURE.md), [design decisions](docs/DECISIONS.md), tests under `tests/`, and reusable measurements under `benchmark/` provide more detail. Model/runtime/font notices remain in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+
+## Checks and troubleshooting
 
 ```sh
 npm run typecheck
@@ -21,37 +58,13 @@ npm test
 npm run build
 npx playwright install chromium
 npm run test:e2e
-npm run preview
+CALCINK_PRODUCT_REQUIRED=1 npx playwright test --config playwright.product.config.ts
 ```
 
-The build copies matching ORT 1.22.0 WASM/module assets from the pinned dependency into the static output and generates a content-versioned, same-origin offline cache. Production requires localhost or HTTPS. Wait for **Offline ready** before disconnecting and reloading; that badge requires verified asset caching and actual model warm-up. Development does not install a service worker.
+`npm run test:ml` and `npm run test:product` retain machine-readable reports under ignored `test-results/`. [Validation](docs/VALIDATION.md) distinguishes regression evidence from handwriting accuracy and physical-device measurements. Open `?debug=true` to inspect queue, revision, worker duration and frame interval observations.
 
-## Notebook controls
+If recognition fails, **Retry** recreates the worker; drawing and typed math remain available. If no answer appears, check Current for recognized text and pending/uncertain/syntax feedback. Large separated symbols help; export failing ink with its intended expression to reproduce a recognition problem. If storage fails, export before closing. If offline reload fails, reconnect and wait for Offline ready; confirm the model and matching `.wasm`/`.mjs` assets are served from the same origin with correct MIME types.
 
-Write large, separated symbols and put each equation on a separate line. Recognition supports the pretrained model's 16 classes: digits, +, −, ×, ÷, decimal point, and equals. A confidently recognized terminal equals projects the result inline. Definitions such as x=2 feed later equations such as x+6=; edits retire stale dependent answers. Geometric slash and single fraction layouts feed the same safe math parser; unsupported nested layouts abstain. Results can be hidden or copied. Uncertain expressions withhold answers. Drawing stays available if recognition fails; **Retry** recreates its worker.
+For GitHub Pages, the existing manual workflow builds with `CALCINK_BASE=/CalcInk/`. Other static hosts can serve `dist/` with the default relative base. Hosting must preserve worker/runtime paths and service-worker scope.
 
-If no answer appears, check **Recognition feedback** below the notebook: it shows the model's recognized symbols and whether the expression is incomplete, invalid or uncertain. Start with `1 + 1 =`, using separated symbols of similar height. Variable x is interpreted from crossing ink in operand positions; use the per-symbol Variable x / Multiply × correction when needed. General letters remain outside this model's vocabulary. If symbols are misread, use **Export ink** and retain the intended expression alongside the JSON so the exact failure can be reproduced; synthetic fixtures do not establish accuracy on your handwriting. A loading/error status indicates a runtime problem rather than a completed recognition result.
-
-Use Pen options for Pen, Pencil or Highlighter, colour, width and pressure. Eraser options offer whole-stroke or partial erasure and radius. Select/Lasso support move, corner resize, duplicate and delete. Text, Shapes, Box Region and Arrow create persistent annotations excluded from recognition. Hand controls pan/zoom; Canvas controls paper patterns and finite/infinite paper. Theme changes adaptive ink while explicit colours retain their identity. Undo/redo and confirmed Clear preserve reversible history. Clear is undoable. Pixel erasures target only strokes present during the erasing gesture, persist across reloads, and do not affect later ink. History retains 100 transactions in memory; current vectors and masks persist in IndexedDB. Name, create, open and delete notebooks stored on this device. Import replaces the active notebook and resets history; export first to retain another copy. Export JSON also provides real handwriting samples for validation. Answers are regenerated, never saved as authoritative ink.
-
-Keyboard: P for pen, E for pixel eraser, Ctrl/⌘+Z to undo, Shift+Ctrl/⌘+Z or Ctrl/⌘+Y to redo. The canvas uses pointer capture and CSS document coordinates, with high-DPI backing stores. The debug view at `?debug=true` reports queue/stroke/revision data, worker duration, bounded frame interval percentiles and long tasks.
-
-## Model and architecture
-
-Pretrained checkpoint: [Rafi Ibn Sultan's Math_Symbols_Classify Dataset II](https://github.com/rafiibnsultan/Math_Symbols_Classify/tree/0f90d32afb1e4d8416b3d0c4adf4ce1748d86a16), under its bundled MIT notice. The six-convolution CNN accepts NHWC RGB float32 50×50 pixels, black ink on white, divided by 255, and outputs 16 softmax probabilities. The FP32 ONNX asset is committed, 9,310,762 bytes, SHA-256 `2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786`. Production checks its manifest/hash before loading.
-
-[Model audit](docs/MODEL-AUDIT.md) records architecture/class/preprocessing evidence, training-data provenance limits and actual numerical parity. [Reproduction instructions](scripts/model/README.md) describe conversion; Python is build-time only. [Third-party notices](THIRD_PARTY_LICENSES.md) distinguish model/runtime terms from this repository's Apache-2.0 source license. No model training or fine-tuning was performed.
-
-[Architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), [ADRs](docs/decisions), [validation gates](docs/VALIDATION.md), and [progress](docs/PROGRESS.md) document the implementation. Source requirements are archived at `docs/reference/Software-Dev-Bootcamp.pdf`.
-
-Numbers use JavaScript binary floating point, displayed to twelve significant digits. Leading/trailing decimals `.5` and `5.` are accepted. Unary signs, precedence and parentheses are supported internally; handwritten parentheses are outside the model vocabulary. Division by zero/nonfinite arithmetic displays Undefined. Incomplete or malformed expressions withhold old answers.
-
-## Status and limitations
-
-This is a V2 project/demo implementation retaining the V1 architecture. Current verification and remaining gates are recorded in docs/PROGRESS.md and docs/evidence; project checks do not establish production certification. Synthetic conversion/runtime/vector fixtures prove specific contracts and are not a handwriting accuracy dataset. Actual writer-diverse samples, all-class accuracy, the required 18+4×3 edit scenario, representative physical-input/frame-time and memory measurements, and cache-update verification remain release gates. Touching digits can merge; segmentation and confidence thresholds need live validation. OffscreenCanvas in workers is required for recognition. WASM is the implemented provider; WebGPU comparison remains pending. No human contribution history is invented by agent work.
-
-## GitHub Pages
-
-The manual **Prepare and deploy GitHub Pages** workflow builds with `CALCINK_BASE=/CalcInk/`. Enable Pages with GitHub Actions as its source when account/repository hosting is eligible, then dispatch after release validation. The private repository may require a suitable GitHub plan for Pages. No public demo URL is claimed until deployment succeeds. Other static hosts can use the default relative build base; all runtime/model assets must retain same-origin paths, correct MIME types, and service-worker scope.
-
-User approved merging a reviewed candidate after passing checks and preparing GitHub Pages. CI runs pinned installation, type/lint/format/unit/build checks and production browser tests. Review is independently performed by agents and does not represent a human GitHub approval.
+Source is [Apache-2.0](LICENSE). The model ships its [MIT notice](public/models/LICENSE); ONNX Runtime and bundled fonts retain their separate notices and attribution.

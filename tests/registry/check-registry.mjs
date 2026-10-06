@@ -168,15 +168,7 @@ const paths = execFileSync(
   { encoding: 'utf8' },
 )
   .split('\0')
-  .filter(
-    (path) =>
-      path &&
-      !path.startsWith('docs/evidence/') &&
-      !path.startsWith('docs/reviews/') &&
-      !path.startsWith('docs/tasks/') &&
-      path !== 'docs/PROGRESS.md' &&
-      existsSync(path),
-  )
+  .filter((path) => path && path !== 'docs/PROGRESS.md' && existsSync(path))
   .sort();
 const source = createHash('sha256');
 for (const path of paths) {

@@ -71,7 +71,8 @@ describe('revision-safe equation projections', () => {
     store.accept(result());
     const replacement = identity({ equationRevision: 2, requestId: 'new' });
     store.expect(replacement);
-    expect(store.get('line-a')).toBeUndefined();
+    expect(store.get('line-a')?.status).toBe('pending');
+    expect(store.get('line-a')?.answerText).toBeUndefined();
     expect(store.accept(result())).toBeUndefined();
     expect(
       store.accept(result({ ...replacement, expression: '18+5×3=' })),
@@ -135,7 +136,7 @@ describe('revision-safe equation projections', () => {
     store.expect(identity());
     expect(store.accept(result({ expression: '7/0=' }))).toMatchObject({
       status: 'undefined',
-      answerText: 'Undefined',
+      answerText: 'Cannot divide by zero',
     });
     store.expect(identity({ requestId: 'syntax' }));
     expect(

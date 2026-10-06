@@ -77,6 +77,20 @@ export function findFractionLayouts(strokes: Stroke[]): FractionLayout[] {
   const size = estimateBodySize(eligible);
   const layouts: FractionLayout[] = [];
   for (const bar of eligible.filter((s) => isHorizontalBar(s, size))) {
+    // A plus crossbar can sit between vertically adjacent equations. Its own
+    // crossing stem rules out a fraction before distant rows become operands.
+    if (
+      eligible.some(
+        (stroke) =>
+          stroke.id !== bar.id &&
+          height(stroke.bounds) >= size * 0.35 &&
+          centerX(stroke.bounds) >= bar.bounds.minX &&
+          centerX(stroke.bounds) <= bar.bounds.maxX &&
+          stroke.bounds.minY < bar.bounds.minY &&
+          stroke.bounds.maxY > bar.bounds.maxY,
+      )
+    )
+      continue;
     const above: Stroke[] = [],
       below: Stroke[] = [];
     for (const stroke of eligible) {
@@ -227,6 +241,38 @@ export function groupEquations(document: InkDocument): EquationGroup[] {
       };
     });
 }
+/** A tiny baseline component at the edge of a body remains available to the
+ * decimal class even when painted bounds overlap slightly. Division dots stay
+ * with their horizontal bar. This separates ink; it does not assign labels. */
+function decimalBoundary(
+  a: SymbolGroup,
+  stroke: Stroke,
+  size: number,
+): boolean {
+  const tiny = (b: Bounds) =>
+    width(b) <= size * 0.18 && height(b) <= size * 0.18;
+  const nearBaseline = (dot: Bounds, body: Bounds) =>
+    centerY(dot) >= body.maxY - size * 0.25 &&
+    centerY(dot) <= body.maxY + size * 0.15;
+  if (
+    a.strokes.some((s) => isHorizontalBar(s, size)) ||
+    isHorizontalBar(stroke, size)
+  )
+    return false;
+  const left = a.bounds,
+    right = stroke.bounds;
+  return (
+    (tiny(right) &&
+      height(left) >= size * 0.5 &&
+      centerX(right) >= left.maxX - size * 0.15 &&
+      nearBaseline(right, left)) ||
+    (a.strokes.length === 1 &&
+      tiny(left) &&
+      height(right) >= size * 0.5 &&
+      centerX(left) <= right.minX + size * 0.15 &&
+      nearBaseline(left, right))
+  );
+}
 /** Horizontal overlap plus vertical locality retains multi-stroke operators.
  * Fraction rows are grouped separately by findFractionLayouts before inference. */
 export function groupSymbols(strokes: Stroke[]): SymbolGroup[] {
@@ -241,6 +287,7 @@ export function groupSymbols(strokes: Stroke[]): SymbolGroup[] {
     if (
       previous &&
       stroke.bounds.minX <= previous.bounds.maxX &&
+      !decimalBoundary(previous, stroke, size) &&
       gap(
         previous.bounds.minY,
         previous.bounds.maxY,

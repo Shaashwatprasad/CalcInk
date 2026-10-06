@@ -8,7 +8,17 @@ it('coalesces result updates, retires answer pixels and keeps unchanged backing 
   let width = 1,
     height = 1;
   const writes: string[] = [];
-  const ctx = { setTransform: vi.fn(), clearRect: vi.fn(), fillText: vi.fn() };
+  const ctx = {
+    setTransform: vi.fn(),
+    clearRect: vi.fn(),
+    fillText: vi.fn(),
+    save: vi.fn(),
+    restore: vi.fn(),
+    beginPath: vi.fn(),
+    rect: vi.fn(),
+    clip: vi.fn(),
+    measureText: vi.fn(() => ({ width: 8 })),
+  };
   const canvas = {
     get width() {
       return width;
@@ -68,6 +78,10 @@ it('coalesces result updates, retires answer pixels and keeps unchanged backing 
   callback!(1);
   expect(ctx.fillText).toHaveBeenLastCalledWith('2', 10, 15, 82);
   expect(writes).toEqual(['width', 'height']);
+  renderer.invalidate();
+  callback!(2);
+  expect(ctx.fillText).toHaveBeenCalledTimes(1);
+  expect(ctx.clearRect).toHaveBeenCalledTimes(2);
   projections = [];
   renderer.invalidate();
   callback!(2);

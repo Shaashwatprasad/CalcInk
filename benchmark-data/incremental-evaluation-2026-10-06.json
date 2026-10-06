@@ -1,0 +1,38 @@
+{
+  "workload": "200 independent cached recognition-result fixtures, expect+accept each; edit line-100 with revision 2",
+  "baseline": "cb8ce08",
+  "environment": {
+    "runtime": "v26.3.0",
+    "platform": "darwin",
+    "release": "25.6.0",
+    "arch": "arm64",
+    "cpu": "Apple M5"
+  },
+  "before": {
+    "initializationCounts": {
+      "parseCount": 40000,
+      "evaluationCount": 40000
+    },
+    "editCounts": {
+      "parseCount": 399,
+      "evaluationCount": 399
+    },
+    "unchangedReferenceCount": 0,
+    "initializationMs": 70.513875,
+    "editMs": 1.0612499999999727
+  },
+  "after": {
+    "initializationCounts": {
+      "parseCount": 200,
+      "evaluationCount": 200
+    },
+    "editCounts": {
+      "parseCount": 1,
+      "evaluationCount": 1
+    },
+    "unchangedReferenceCount": 199,
+    "initializationMs": 15.865334000000018,
+    "editMs": 0.20150000000001
+  },
+  "limitation": "Node measurement of projection/parser/evaluator only; fixtures do not benchmark model inference, grouping, drawing or browser frames. Single-run times are observations, not performance guarantees."
+}

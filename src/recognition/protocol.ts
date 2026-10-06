@@ -129,7 +129,14 @@ export function isGroupResult(value: unknown): value is GroupResult {
         group.id.length > 0 &&
         revision(group.revision) &&
         bounds(group.bounds) &&
-        geometry(group, 50000),
-    )
+        geometry(group, 50000) &&
+        group.strokes.length > 0,
+    ) &&
+    new Set(
+      result.groups.flatMap((group) =>
+        group.strokes.map((stroke) => stroke.id),
+      ),
+    ).size ===
+      result.groups.reduce((count, group) => count + group.strokes.length, 0)
   );
 }

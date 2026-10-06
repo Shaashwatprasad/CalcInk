@@ -354,7 +354,14 @@ test('PROD-B10 @baseline cached offline reload allows real inference editing and
 }, info) => {
   const remote: string[] = [];
   page.on('request', (request) => {
-    if (!/^(?:http:\/\/127\.0\.0\.1:4173|blob:|data:)/u.test(request.url()))
+    if (
+      !request
+        .url()
+        .startsWith(
+          `http://127.0.0.1:${process.env.CALCINK_TEST_PORT ?? 4173}`,
+        ) &&
+      !/^(?:blob:|data:)/u.test(request.url())
+    )
       remote.push(request.url());
   });
   await openNotebook(page);

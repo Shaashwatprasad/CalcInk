@@ -66,7 +66,8 @@ export function copyAnnotation(value: unknown): Annotation {
       !size(o.fontSize, 4, 512) ||
       typeof o.text !== 'string' ||
       o.text.length > MAX_TEXT_LENGTH ||
-      !o.text.trim()
+      !o.text.trim() ||
+      (o.math !== undefined && typeof o.math !== 'boolean')
     )
       throw new Error('Invalid text annotation');
     return {
@@ -76,6 +77,7 @@ export function copyAnnotation(value: unknown): Annotation {
       y: o.y,
       fontSize: o.fontSize,
       text: o.text,
+      ...(o.math === undefined ? {} : { math: o.math }),
     };
   }
   if (o.kind === 'arrow' || (o.kind === 'shape' && o.shape === 'line')) {
