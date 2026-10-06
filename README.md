@@ -58,7 +58,7 @@ npm test
 npm run build
 npx playwright install chromium
 npm run test:e2e
-CALCINK_PRODUCT_REQUIRED=1 npx playwright test --config playwright.product.config.ts
+CALCINK_PRODUCT_REQUIRED=1 npx playwright test --config playwright.product.config.ts --workers=1
 ```
 
 `npm run test:ml` and `npm run test:product` retain machine-readable reports under ignored `test-results/`. [Validation](docs/VALIDATION.md) distinguishes regression evidence from handwriting accuracy and physical-device measurements. Open `?debug=true` to inspect queue, revision, worker duration and frame interval observations.
