@@ -1,5 +1,5 @@
-import type { InkDocument, Stroke } from '../src/shared/types';
-import { pointBounds } from '../src/ink/geometry';
+import type { InkDocument, Stroke } from '../../src/shared/types';
+import { pointBounds } from '../../src/ink/geometry';
 
 /** Deterministic machine-generated wave polylines, never handwriting/accuracy fixtures. */
 export function syntheticDocument(count: number, masked = false): InkDocument {

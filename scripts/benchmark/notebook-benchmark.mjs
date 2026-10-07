@@ -1,5 +1,5 @@
 /** Full application synthetic workload, including real recognition and autosave.
- * Run against a production preview: node benchmark/notebook-benchmark.mjs URL report.json
+ * Run against a production preview: node scripts/benchmark/notebook-benchmark.mjs URL report.json
  */
 import { chromium } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';

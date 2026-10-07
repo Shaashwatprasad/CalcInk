@@ -31,7 +31,7 @@ describe('tester child-report contract', () => {
     ];
     expect(validateDeterministicInventory(report, inventory)).toBeUndefined();
     const required = canonicalCaseInventory(
-      'benchmark/corpus/browser-probe.ts',
+      'scripts/benchmark/corpus/browser-probe.ts',
     );
     expect(required.length).toBeGreaterThan(10);
     expect(

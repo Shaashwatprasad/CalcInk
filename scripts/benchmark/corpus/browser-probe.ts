@@ -1,7 +1,7 @@
-import { rasterizeSymbol } from '../../src/recognition/preprocess';
-import { pointBounds } from '../../src/ink/geometry';
-import { unionBounds } from '../../src/recognition/grouping';
-import type { Bounds, Erasure, Stroke } from '../../src/shared/types';
+import { rasterizeSymbol } from '../../../src/recognition/preprocess';
+import { pointBounds } from '../../../src/ink/geometry';
+import { unionBounds } from '../../../src/recognition/grouping';
+import type { Bounds, Erasure, Stroke } from '../../../src/shared/types';
 
 const stroke = (
   id: string,

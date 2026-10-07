@@ -12,10 +12,8 @@
 - The verified Dataset II model has sixteen classes. Letter/slash classes are not fabricated in its manifest. General variable identifiers work in typed math; handwritten x uses the existing crossing correction and other handwritten names remain unsupported.
 - Division-by-zero feedback follows the latest product request: “Cannot divide by zero”, replacing the older blanket “Undefined” requirement. Nonfinite results still display “Undefined”.
 - Calculation history is derived from live equations, one stable record per equation, newest completed content first. Undo and source deletion reconcile records; reload regenerates rather than persisting derived math.
-- Source/model/runtime/font licenses, conversion evidence and reusable tests/benchmarks remain in the repository. Obsolete implementation handoffs and raw task logs are removed; prior versions remain in Git.
+- Source/model/runtime/font licenses, conversion evidence and reusable tests/benchmarks remain in the repository. Technical rationale and measured evidence are retained; temporary development notes remain in Git history.
 
 Technical rationale: [vector layers and erasure](decisions/002-ink.md), [safe math](decisions/003-math.md), [model/runtime](decisions/004-model.md), [incremental updates](decisions/006-incremental.md).
 
-## README presentation — 7 October 2026
-
-Use a compact project overview: feature table, reproducible setup commands, one architecture diagram, a short model/limitations section, and license links. Keep detailed evidence in existing documentation. Verify the current remote branch before publication when a chat opens an older worktree; a specification-only checkout does not establish the current repository implementation state. No application architecture changed.
+Repository organization: [layout and distribution](decisions/008-repository-layout.md).

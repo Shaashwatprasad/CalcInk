@@ -5,9 +5,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-// node benchmark/evaluation.mjs [baseline-ref] [output-json]
+// node scripts/benchmark/evaluation.mjs [baseline-ref] [output-json]
 // Recognition-result fixtures measure math/projection work, excluding inference.
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../..',
+);
 const baselineRef =
   process.argv[2] ?? process.env.CALCINK_BASELINE_REF ?? 'cb8ce08';
 const temporary = await mkdtemp(path.join(os.tmpdir(), 'calcink-evaluation-'));

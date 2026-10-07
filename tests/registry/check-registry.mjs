@@ -157,7 +157,7 @@ for (const feature of registry.features) {
       errors.push(`${feature.id}: absent executable test ${id}`);
 }
 
-// Identity follows the supervisor track runner: include uncommitted/new source,
+// Identity follows the test track runner: include uncommitted/new source,
 // exclude generated evidence/review/progress files. An uncommitted hash is never a commit.
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], {
   encoding: 'utf8',

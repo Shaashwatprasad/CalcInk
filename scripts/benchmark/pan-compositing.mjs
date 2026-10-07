@@ -1,12 +1,12 @@
 /** Native browser regression + synthetic pan workload. Run from repo root:
- * node benchmark/pan-compositing.mjs [original-ref, default bdcd47c]
+ * node scripts/benchmark/pan-compositing.mjs [original-ref, default bdcd47c]
  * CALCINK_BROWSER_EXECUTABLE optionally selects a local Chromium executable.
  * Timing is descriptive; pixel parity and scratch pixel budgets are assertions.
  */
 import { build } from 'esbuild';
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir, cpus, platform, release, totalmem } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -780,7 +780,8 @@ try {
     reports,
     browserErrors,
   };
-  const file = resolve(root, 'benchmark-data/pan-compositing.json');
+  await mkdir(resolve(root, 'benchmark-results'), { recursive: true });
+  const file = resolve(root, 'benchmark-results/pan-compositing.json');
   await writeFile(file, `${JSON.stringify(report, null, 2)}\n`);
   if (browserErrors.length)
     throw new Error(`Browser errors: ${browserErrors.join('; ')}`);

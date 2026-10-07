@@ -5,7 +5,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { cpus, totalmem, platform, release } from 'node:os';
 const probe = await build({
-  entryPoints: ['benchmark/corpus/browser-probe.ts'],
+  entryPoints: ['scripts/benchmark/corpus/browser-probe.ts'],
   bundle: true,
   platform: 'browser',
   format: 'iife',
@@ -35,7 +35,7 @@ try {
       .update(probe.outputFiles[0].text)
       .digest('hex'),
     modelSha256: createHash('sha256').update(model).digest('hex'),
-    command: 'node benchmark/corpus/preprocess-browser.mjs OUTPUT',
+    command: 'node scripts/benchmark/corpus/preprocess-browser.mjs OUTPUT',
     environment: {
       cpu: cpus()[0]?.model,
       logicalCpus: cpus().length,

@@ -1,6 +1,6 @@
-import { drawDocument } from '../src/ink/geometry';
-import { groupEquations, groupSymbols } from '../src/recognition/grouping';
-import { rasterizeSymbol } from '../src/recognition/preprocess';
+import { drawDocument } from '../../src/ink/geometry';
+import { groupEquations, groupSymbols } from '../../src/recognition/grouping';
+import { rasterizeSymbol } from '../../src/recognition/preprocess';
 import { syntheticDocument, measure } from './fixtures';
 
 function runBrowserBenchmark() {

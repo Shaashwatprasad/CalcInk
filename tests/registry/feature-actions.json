@@ -83,14 +83,14 @@
       "requirementIds": ["R01", "R03", "R10"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03, R10"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 1,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/render/mountInk.ts", "src/ink/geometry.ts"],
       "finalUiLocation": "Paper canvas",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -110,14 +110,14 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/App.tsx", "src/render/mountInk.ts"],
       "finalUiLocation": "Pen options",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -137,14 +137,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Pen mode / Pencil options",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -164,14 +164,14 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Pen mode / Highlighter options",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -191,14 +191,14 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/document/InkStore.ts",
         "src/render/mountInk.ts",
@@ -222,14 +222,14 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 1,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/document/InkStore.ts", "src/app/App.tsx"],
       "finalUiLocation": "Header and keyboard",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -249,14 +249,14 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/document/InkStore.ts", "src/app/App.tsx"],
       "finalUiLocation": "Canvas settings / confirmation",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -276,14 +276,14 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Selection rail / contextual actions",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -303,14 +303,14 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Selection rail",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -330,14 +330,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Text rail / editor",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -357,14 +357,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Shapes rail / options",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -384,14 +384,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Draw region rail / options (purpose requires final design audit)",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -411,14 +411,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Arrow rail / options",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -438,14 +438,14 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "partial",
       "phase": 2,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/viewport/ViewportStore.ts",
         "src/render/mountInk.ts",
@@ -469,14 +469,14 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "partial",
       "phase": 2,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/viewport/ViewportStore.ts",
         "src/render/mountInk.ts",
@@ -500,14 +500,14 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "partial",
       "phase": 2,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/viewport/ViewportStore.ts",
         "src/render/mountInk.ts",
@@ -539,14 +539,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Tool panels and mobile sheets",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -566,14 +566,14 @@
       "requirementIds": ["R03", "R04"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03, R04"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Header theme / tool colours",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -593,14 +593,14 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 2,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/styles.css"],
       "finalUiLocation": "Canvas settings",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -620,14 +620,14 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/persistence/document.ts", "src/app/App.tsx"],
       "finalUiLocation": "Notebook menu / title",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -647,14 +647,14 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/persistence/document.ts", "src/app/App.tsx"],
       "finalUiLocation": "Canvas settings / Import ink",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -674,14 +674,14 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/App.tsx"],
       "finalUiLocation": "Canvas settings / Export ink",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -701,14 +701,14 @@
       "requirementIds": ["R05", "R06", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R05, R06, R11"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 4,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/math/index.ts", "src/projection/index.ts"],
       "finalUiLocation": "Paper inline result / recognition box",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -728,14 +728,14 @@
       "requirementIds": ["R05", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R05, R07, R11"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 4,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Recognition box / inline results",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -755,14 +755,14 @@
       "requirementIds": ["R04", "R05"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R04, R05"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 4,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Single recognition box",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -782,14 +782,14 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 4,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/App.tsx"],
       "finalUiLocation": "Focused equation contextual box",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -809,14 +809,14 @@
       "requirementIds": ["R06", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 1,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/render/mountProjection.ts",
         "src/projection/index.ts"
@@ -839,14 +839,14 @@
       "requirementIds": ["R06"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Canvas settings / recognition box actions",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -866,14 +866,14 @@
       "requirementIds": ["R04", "R08"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R04, R08"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 5,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/workers/recognition.worker.ts",
         "src/recognition"
@@ -896,14 +896,14 @@
       "requirementIds": ["R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R07"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 1,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [
         "src/app/recognizer.ts",
         "src/projection/index.ts"
@@ -926,14 +926,14 @@
       "requirementIds": ["R08", "R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R08, R09"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "implemented_unverified",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/offline/register.ts", "public/sw.js"],
       "finalUiLocation": "Header offline state",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -953,14 +953,14 @@
       "requirementIds": ["R09", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09, R11"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/recognizer.ts", "src/app/App.tsx"],
       "finalUiLocation": "Contextual recognition box / save status",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -980,14 +980,14 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/styles.css"],
       "finalUiLocation": "Desktop rail tablet sheet mobile dock",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1007,14 +1007,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 3,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/app/App.tsx"],
       "finalUiLocation": "Help rail / keyboard",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1034,14 +1034,14 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "unimplemented",
       "phase": 7,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Paper after stroke completion",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1061,14 +1061,14 @@
       "requirementIds": ["R05", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R05, R11"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 6,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/math/index.ts"],
       "finalUiLocation": "Paper / structured internal division AST",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1088,14 +1088,14 @@
       "requirementIds": ["R10"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R10"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 8,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["src/metrics/frames.ts"],
       "finalUiLocation": "Developer evidence only",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1115,14 +1115,14 @@
       "requirementIds": ["R12"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R12"
         }
       ],
       "v1Status": "Existing implementation present; fresh acceptance pending",
       "v2Status": "partial",
       "phase": 9,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": ["README.md", "THIRD_PARTY_LICENSES.md"],
       "finalUiLocation": "README / public release",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1142,14 +1142,14 @@
       "requirementIds": ["R05"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R05"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "optional_deferred",
       "phase": 9,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Optional future PlotEngine",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1169,14 +1169,14 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "optional_deferred",
       "phase": 9,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Conditional only when required or already implemented",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1196,14 +1196,14 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "v1Status": "Not implemented in inspected V1",
       "v2Status": "optional_deferred",
       "phase": 9,
-      "owner": "supervisor integration / product tester",
+      "owner": "application / product tests",
       "implementationPaths": [],
       "finalUiLocation": "Optional preferences",
       "acceptance": "Meaningful UI workflow plus exported document/visible result; pending tests do not count as passes",
@@ -1225,8 +1225,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -1286,8 +1286,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -1347,8 +1347,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -1408,8 +1408,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -1469,8 +1469,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -1530,8 +1530,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -1591,8 +1591,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Header and keyboard",
@@ -1652,8 +1652,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Header and keyboard",
@@ -1713,8 +1713,8 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "uiLocation": "Canvas settings / confirmation",
@@ -1764,8 +1764,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Canvas settings / Export ink",
@@ -1825,8 +1825,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Canvas settings / Import ink",
@@ -1886,8 +1886,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Canvas settings / Import ink",
@@ -1947,8 +1947,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -1998,8 +1998,8 @@
       "requirementIds": ["R09", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09, R11"
         }
       ],
       "uiLocation": "Contextual recognition box / save status",
@@ -2059,8 +2059,8 @@
       "requirementIds": ["R01", "R03", "R10"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03, R10"
         }
       ],
       "uiLocation": "Paper canvas",
@@ -2120,8 +2120,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -2181,8 +2181,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -2242,8 +2242,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Header and keyboard",
@@ -2303,8 +2303,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Header and keyboard",
@@ -2364,8 +2364,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Header and keyboard",
@@ -2425,8 +2425,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Desktop rail tablet sheet mobile dock",
@@ -2486,8 +2486,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",
@@ -2547,8 +2547,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail / contextual actions",
@@ -2608,8 +2608,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail",
@@ -2669,8 +2669,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -2730,8 +2730,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -2791,8 +2791,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -2852,8 +2852,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Text rail / editor",
@@ -2903,8 +2903,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Shapes rail / options",
@@ -2954,8 +2954,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Draw region rail / options (purpose requires final design audit)",
@@ -3005,8 +3005,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Arrow rail / options",
@@ -3056,8 +3056,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Hand rail / options",
@@ -3117,8 +3117,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -3178,8 +3178,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Help rail / keyboard",
@@ -3229,8 +3229,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3280,8 +3280,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3331,8 +3331,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3392,8 +3392,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3453,8 +3453,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3504,8 +3504,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen options",
@@ -3555,8 +3555,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3606,8 +3606,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3657,8 +3657,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3708,8 +3708,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3759,8 +3759,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3810,8 +3810,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3861,8 +3861,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Pen mode / Pencil options",
@@ -3922,8 +3922,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -3983,8 +3983,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4044,8 +4044,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4105,8 +4105,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4166,8 +4166,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4227,8 +4227,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4288,8 +4288,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4349,8 +4349,8 @@
       "requirementIds": ["R01", "R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R02"
         }
       ],
       "uiLocation": "Pen mode / Highlighter options",
@@ -4400,8 +4400,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -4461,8 +4461,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -4522,8 +4522,8 @@
       "requirementIds": ["R02", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02, R07"
         }
       ],
       "uiLocation": "Eraser options",
@@ -4583,8 +4583,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Hand rail / options",
@@ -4644,8 +4644,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Hand rail / options",
@@ -4705,8 +4705,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Zoom controls / Hand options",
@@ -4766,8 +4766,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Zoom controls / Hand options",
@@ -4827,8 +4827,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Zoom controls / Hand options",
@@ -4888,8 +4888,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Zoom controls / Hand options",
@@ -4949,8 +4949,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Zoom controls / Hand options",
@@ -5010,8 +5010,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5071,8 +5071,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5132,8 +5132,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5193,8 +5193,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5254,8 +5254,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5315,8 +5315,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Paper / keyboard",
@@ -5376,8 +5376,8 @@
       "requirementIds": ["R03", "R04"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03, R04"
         }
       ],
       "uiLocation": "Header theme / tool colours",
@@ -5427,8 +5427,8 @@
       "requirementIds": ["R03", "R04"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03, R04"
         }
       ],
       "uiLocation": "Header theme / tool colours",
@@ -5478,8 +5478,8 @@
       "requirementIds": ["R03", "R04"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03, R04"
         }
       ],
       "uiLocation": "Header theme / tool colours",
@@ -5529,8 +5529,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5590,8 +5590,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5651,8 +5651,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5712,8 +5712,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5773,8 +5773,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5834,8 +5834,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5885,8 +5885,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5936,8 +5936,8 @@
       "requirementIds": ["R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R03"
         }
       ],
       "uiLocation": "Canvas settings",
@@ -5987,8 +5987,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",
@@ -6048,8 +6048,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",
@@ -6109,8 +6109,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",
@@ -6170,8 +6170,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",
@@ -6221,8 +6221,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail / contextual actions",
@@ -6282,8 +6282,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail / contextual actions",
@@ -6343,8 +6343,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail / contextual actions",
@@ -6404,8 +6404,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail / contextual actions",
@@ -6455,8 +6455,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail",
@@ -6516,8 +6516,8 @@
       "requirementIds": ["R01", "R07"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R07"
         }
       ],
       "uiLocation": "Selection rail",
@@ -6567,8 +6567,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Text rail / editor",
@@ -6628,8 +6628,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Text rail / editor",
@@ -6689,8 +6689,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Text rail / editor",
@@ -6740,8 +6740,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Shapes rail / options",
@@ -6801,8 +6801,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Draw region rail / options (purpose requires final design audit)",
@@ -6862,8 +6862,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Arrow rail / options",
@@ -6923,8 +6923,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -6984,8 +6984,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7045,8 +7045,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7106,8 +7106,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7157,8 +7157,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7218,8 +7218,8 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "uiLocation": "Canvas settings / confirmation",
@@ -7279,8 +7279,8 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "uiLocation": "Canvas settings / confirmation",
@@ -7340,8 +7340,8 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "uiLocation": "Canvas settings / confirmation",
@@ -7391,8 +7391,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Desktop rail tablet sheet mobile dock",
@@ -7452,8 +7452,8 @@
       "requirementIds": ["R01", "R03"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01, R03"
         }
       ],
       "uiLocation": "Desktop rail tablet sheet mobile dock",
@@ -7503,8 +7503,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7554,8 +7554,8 @@
       "requirementIds": ["R01"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R01"
         }
       ],
       "uiLocation": "Tool panels and mobile sheets",
@@ -7605,8 +7605,8 @@
       "requirementIds": ["R06"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06"
         }
       ],
       "uiLocation": "Canvas settings / recognition box actions",
@@ -7666,8 +7666,8 @@
       "requirementIds": ["R06"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06"
         }
       ],
       "uiLocation": "Canvas settings / recognition box actions",
@@ -7727,8 +7727,8 @@
       "requirementIds": ["R06"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06"
         }
       ],
       "uiLocation": "Canvas settings / recognition box actions",
@@ -7788,8 +7788,8 @@
       "requirementIds": ["R04", "R05"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R04, R05"
         }
       ],
       "uiLocation": "Single recognition box",
@@ -7849,8 +7849,8 @@
       "requirementIds": ["R04", "R05"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R04, R05"
         }
       ],
       "uiLocation": "Single recognition box",
@@ -7900,8 +7900,8 @@
       "requirementIds": ["R02"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R02"
         }
       ],
       "uiLocation": "Paper after stroke completion",
@@ -7961,8 +7961,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8012,8 +8012,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8063,8 +8063,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8114,8 +8114,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8175,8 +8175,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8226,8 +8226,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8277,8 +8277,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8328,8 +8328,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8379,8 +8379,8 @@
       "requirementIds": ["R06", "R07", "R11"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R06, R07, R11"
         }
       ],
       "uiLocation": "Focused equation contextual box",
@@ -8430,8 +8430,8 @@
       "requirementIds": ["R09"],
       "source": [
         {
-          "document": "docs/reference/CalcInk-V2-Master-Implementation-Prompt.md",
-          "section": "Master §§2–9; Appendix A/B (see preservation matrix)"
+          "document": "docs/REQUIREMENTS.md",
+          "section": "R09"
         }
       ],
       "uiLocation": "Notebook menu / title",

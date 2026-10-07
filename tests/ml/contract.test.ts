@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { validateManifest } from '../../src/recognition/manifest';
 import { PREPROCESSING_VERSION } from '../../src/recognition/preprocess';
-import { BASELINE_LABELS } from '../../benchmark/corpus/schema';
+import { BASELINE_LABELS } from '../../scripts/benchmark/corpus/schema';
 
 describe('ML-ARTIFACT real checkpoint contract (not accuracy)', () => {
   it('ML-ART-001 checks actual non-LFS bytes against the pinned conversion audit', () => {

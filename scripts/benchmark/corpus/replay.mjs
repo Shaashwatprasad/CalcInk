@@ -11,7 +11,7 @@ import { cpus, totalmem, release, platform } from 'node:os';
 const [lockPath, outputPath] = process.argv.slice(2);
 if (!lockPath || !outputPath)
   throw new Error(
-    'Usage: node benchmark/corpus/replay.mjs FROZEN_CORPUS NEW_REPORT (requires npm run build)',
+    'Usage: node scripts/benchmark/corpus/replay.mjs FROZEN_CORPUS NEW_REPORT (requires npm run build)',
   );
 async function moduleFrom(entry) {
   const result = await build({
@@ -26,9 +26,9 @@ async function moduleFrom(entry) {
   );
 }
 const { validateCorpus, canonicalJson, corpusCounts, BASELINE_LABELS } =
-  await moduleFrom('benchmark/corpus/schema.ts');
+  await moduleFrom('scripts/benchmark/corpus/schema.ts');
 const { classifierMetrics, groupingMetrics, expressionMetrics } =
-  await moduleFrom('benchmark/corpus/metrics.ts');
+  await moduleFrom('scripts/benchmark/corpus/metrics.ts');
 const { evaluateExpression } = await moduleFrom('src/math/index.ts');
 const lock = JSON.parse(await readFile(lockPath, 'utf8'));
 const corpus = validateCorpus(lock.corpus);
@@ -59,7 +59,7 @@ const workerFile = (await readdir('dist/assets')).find((file) =>
 if (!workerFile)
   throw new Error('Production recognition worker missing; build first');
 const browserBundle = await build({
-  entryPoints: ['benchmark/corpus/browser-probe.ts'],
+  entryPoints: ['scripts/benchmark/corpus/browser-probe.ts'],
   bundle: true,
   platform: 'browser',
   format: 'iife',
@@ -333,7 +333,8 @@ try {
     modelSha256: manifest.onnx.sha256,
     modelVersion: manifest.modelVersion,
     preprocessingVersion: manifest.preprocessingVersion,
-    command: 'node benchmark/corpus/replay.mjs FROZEN_CORPUS NEW_REPORT',
+    command:
+      'node scripts/benchmark/corpus/replay.mjs FROZEN_CORPUS NEW_REPORT',
     environment: {
       cpu: cpus()[0]?.model,
       logicalCpus: cpus().length,

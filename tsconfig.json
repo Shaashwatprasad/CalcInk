@@ -17,8 +17,8 @@
     "tests",
     "vite.config.ts",
     "playwright.config.ts",
-    "benchmark/corpus",
-    "benchmark/capture",
+    "scripts/benchmark/corpus",
+    "scripts/benchmark/capture",
     "playwright.product.config.ts"
   ]
 }

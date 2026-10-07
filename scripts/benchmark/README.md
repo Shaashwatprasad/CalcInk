@@ -8,20 +8,20 @@ From the repository root after `npm ci`:
 
 ```sh
 npx playwright install chromium
-node benchmark/run.mjs benchmark-data/my-local-run.json
+node scripts/benchmark/run.mjs benchmark-results/my-local-run.json
 ```
 
 An existing compatible Chromium executable can be selected with `CALCINK_BROWSER_EXECUTABLE`. The recorded run used:
 
 ```sh
-CALCINK_BROWSER_EXECUTABLE='/Users/shaashwatprasad/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing' node benchmark/run.mjs
+CALCINK_BROWSER_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' node scripts/benchmark/run.mjs
 ```
 
 On a sandboxed workstation Chromium may require approval to launch. No package script/config changes are necessary. The runner writes only the requested JSON report and uses a standalone blank browser page.
 
 ## Recorded environment and method
 
-Evidence: [`local-synthetic-2026-10-02.json`](../benchmark-data/local-synthetic-2026-10-02.json), collected 2 October 2026 at 22:51 IST. Apple M5, 10 logical CPUs, 24 GiB memory, Darwin 25.6.0 arm64; Node 26.3.0; headless Chromium **153.0.8010.12**. Device pixel ratio 1, canvas 1280 × 900, no CPU throttling. Other implementation/build work may have run concurrently, so this is a local observation rather than an isolated benchmark certification. The JSON records the base commit and states explicitly that imports came from the working tree.
+Evidence: [`local-synthetic-2026-10-02.json`](../../docs/benchmarks/local-synthetic-2026-10-02.json), collected 2 October 2026 at 22:51 IST. Apple M5, 10 logical CPUs, 24 GiB memory, Darwin 25.6.0 arm64; Node 26.3.0; headless Chromium **153.0.8010.12**. Device pixel ratio 1, canvas 1280 × 900, no CPU throttling. Other implementation/build work may have run concurrently, so this is a local observation rather than an isolated benchmark certification. The JSON records the base commit and states explicitly that imports came from the working tree.
 
 Each document has 500/1000/5000 strokes, 16 points per stroke, 40 columns and row spacing 48 CSS units. The masked fixture places one partial erase mask on every 25th stroke (4%). Larger documents extend below the viewport; full replay processes their paths without culling and Canvas2D clips their pixels. Node operations use one unrecorded warm-up and seven samples; browser operations use one warm-up and five samples. p50/p95 use nearest rank, so p95 is the maximum with these small sample counts. All raw samples are retained. Preparation of a store before append and undo/redo is excluded from those timings; store recovery is measured separately.
 
@@ -46,7 +46,7 @@ The preprocessing batches contain respectively 500, 1000 and 5000 synthetic symb
 
 ## Cached bounds and worker grouping follow-up
 
-The optimized follow-up is preserved separately in [`local-synthetic-grouping-worker-2026-10-02.json`](../benchmark-data/local-synthetic-grouping-worker-2026-10-02.json), collected on the same hardware/browser on 2 October 2026 at 23:05 IST. Its base source commit is `e83619f6180fa6adeefdd9f6af86a4f072881d65`. The original baseline report and measurements above remain unchanged.
+The optimized follow-up is preserved separately in [`local-synthetic-grouping-worker-2026-10-02.json`](../../docs/benchmarks/local-synthetic-grouping-worker-2026-10-02.json), collected on the same hardware/browser on 2 October 2026 at 23:05 IST. Its base source commit is `e83619f6180fa6adeefdd9f6af86a4f072881d65`. The original baseline report and measurements above remain unchanged.
 
 The grouping implementation now maintains cached line bounds while appending strokes and routes erase masks once instead of repeatedly rescanning line contents. Production `src/app/recognizer.ts` sends `GROUP` requests; `src/workers/recognition.worker.ts` calls `groupEquations`. The expensive grouping calculation has therefore moved off the UI thread. The measurements below still run the grouping function directly in Node; they measure algorithm cost, not browser worker messaging or the full application latency.
 
@@ -74,33 +74,33 @@ Run the development server, then measure the real on-device worker with 200 inde
 
 ```sh
 npm run dev
-node benchmark/incremental-recognition.mjs http://127.0.0.1:5173 benchmark-data/my-incremental-run.json
+node scripts/benchmark/incremental-recognition.mjs http://127.0.0.1:5173 benchmark-results/my-incremental-run.json
 ```
 
 Set `CALCINK_BROWSER_EXECUTABLE` to use an installed Chromium executable. The runner uses an isolated page with source imports and the production recognizer/worker; it does not mock inference.
 
-[`incremental-recognition-2026-10-06.json`](../benchmark-data/incremental-recognition-2026-10-06.json) records an Apple M5 (10 logical CPUs, 24 GiB), arm64 macOS and headless Chrome 155 run. After bootstrapping 200 equations, partial erasure of row 100 scheduled **one** recognition job, preserved **199** existing projection references and retained **200** valid answers. Candidate grouping transferred **18 strokes / 5,231 JSON bytes**, compared with **1,200 strokes / 329,904 JSON bytes** for the prior whole-document request. One edit took 326.6 ms including the quiet-period delay and recognition.
+[`incremental-recognition-2026-10-06.json`](../../docs/benchmarks/incremental-recognition-2026-10-06.json) records an Apple M5 (10 logical CPUs, 24 GiB), arm64 macOS and headless Chrome 155 run. After bootstrapping 200 equations, partial erasure of row 100 scheduled **one** recognition job, preserved **199** existing projection references and retained **200** valid answers. Candidate grouping transferred **18 strokes / 5,231 JSON bytes**, compared with **1,200 strokes / 329,904 JSON bytes** for the prior whole-document request. One edit took 326.6 ms including the quiet-period delay and recognition.
 
 For comparison, the runner replays the former invalidation algorithm against the identical rectangles: it invalidates all 200 rows and would schedule 200 recognition jobs. The current worker counts are observed; the legacy counts are an algorithm replay, not a second deployed application run. This synthetic regression is not a handwriting accuracy dataset, a frame-time measurement or a universal latency claim.
 
 ## Retained renderer and evaluator
 
 ```sh
-node benchmark/evaluation.mjs BASELINE_REF benchmark-data/my-evaluation.json
-CALCINK_BROWSER_EXECUTABLE=/path/to/chrome node benchmark/render-benchmark.mjs BASELINE_REF
+node scripts/benchmark/evaluation.mjs BASELINE_REF benchmark-results/my-evaluation.json
+CALCINK_BROWSER_EXECUTABLE=/path/to/chrome node scripts/benchmark/render-benchmark.mjs BASELINE_REF
 ```
 
 The published pre-fix baseline is `3a598928019d48737a6978cb602bf6ec532af8ab`; local measurements used `cb8ce08`, which has equivalent renderer/math source. Both commands accept another baseline ref. Fetch the selected ref before replaying a comparison.
 
-The [evaluator report](../benchmark-data/incremental-evaluation-2026-10-06.json) measures 200 recognized-result fixtures on Apple M5 / Node 26.3: one edit reduced 399 parses/evaluations to one of each, retaining 199 projection references. The [renderer report](../benchmark-data/render-retention.json) measures the same before/after 200-equation, 1,200-stroke drawing workload on Apple M5 / headless Chrome 155, DPR 2. Local edit stroke draw calls fell from 37,696 to 165, answer draw calls from 18,000 to 5, and renderer callback p95 from 6.4 ms to 0.6 ms. Frame interval p95 remained around 16.7 ms in both runs. Its 26 native pixel comparisons at DPR 1/2 match full replay exactly, including masks, alpha, pressure and fractional cameras.
+The [evaluator report](../../docs/benchmarks/incremental-evaluation-2026-10-06.json) measures 200 recognized-result fixtures on Apple M5 / Node 26.3: one edit reduced 399 parses/evaluations to one of each, retaining 199 projection references. The [renderer report](../../docs/benchmarks/render-retention.json) measures the same before/after 200-equation, 1,200-stroke drawing workload on Apple M5 / headless Chrome 155, DPR 2. Local edit stroke draw calls fell from 37,696 to 165, answer draw calls from 18,000 to 5, and renderer callback p95 from 6.4 ms to 0.6 ms. Frame interval p95 remained around 16.7 ms in both runs. Its 26 native pixel comparisons at DPR 1/2 match full replay exactly, including masks, alpha, pressure and fractional cameras.
 
 These later measurements supersede full replay as the normal local-edit rendering path. Dense intersecting damage may still expand to a large region, and camera/appearance changes rebuild visible content. The measurements exclude physical stylus certification and continuous model-load profiling; neither callback times nor synthetic vector checks establish universal frame rates or handwriting accuracy.
 
 ## Fullscreen pan regression
 
-Run `node benchmark/pan-compositing.mjs bdcd47c` from the repository root. `CALCINK_BROWSER_EXECUTABLE` can select an installed Chromium executable. Both renderer and shared geometry are bundled separately from the original Git snapshot and the working tree; comparing only renderer entrypoints would incorrectly link both variants to current geometry.
+Run `node scripts/benchmark/pan-compositing.mjs bdcd47c` from the repository root. `CALCINK_BROWSER_EXECUTABLE` can select an installed Chromium executable. Both renderer and shared geometry are bundled separately from the original Git snapshot and the working tree; comparing only renderer entrypoints would incorrectly link both variants to current geometry.
 
-The [pan report](../benchmark-data/pan-compositing.json) records Apple M5 / 24 GiB / macOS Darwin 25.6.0 / headless Chrome 155, DPR 2, with 200 synthetic equations and 1,200 mixed pressure, translucent and masked strokes. Preview is 1,220,800 backing pixels; fullscreen is 5,631,360. The 90-frame fullscreen pan comparison measured:
+The [pan report](../../docs/benchmarks/pan-compositing.json) records Apple M5 / 24 GiB / macOS Darwin 25.6.0 / headless Chrome 155, DPR 2, with 200 synthetic equations and 1,200 mixed pressure, translucent and masked strokes. Preview is 1,220,800 backing pixels; fullscreen is 5,631,360. The 90-frame fullscreen pan comparison measured:
 
 | Measurement                 |        Original |     Fixed |
 | --------------------------- | --------------: | --------: |
