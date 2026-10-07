@@ -35,7 +35,19 @@ class GridContext {
   globalCompositeOperation = 'source-over';
   private path: Point[] = [];
   private circle: { x: number; y: number; radius: number } | undefined;
-  private saved: { width: number; composite: string }[] = [];
+  private transform = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
+  private saved: {
+    width: number;
+    composite: string;
+    transform: {
+      a: number;
+      b: number;
+      c: number;
+      d: number;
+      e: number;
+      f: number;
+    };
+  }[] = [];
   constructor(public canvas: GridCanvas) {
     this.pixels = Array(canvas.width * canvas.height).fill(0);
   }
@@ -43,34 +55,62 @@ class GridContext {
     this.saved.push({
       width: this.lineWidth,
       composite: this.globalCompositeOperation,
+      transform: { ...this.transform },
     });
   }
   restore(): void {
     const value = this.saved.pop()!;
     this.lineWidth = value.width;
     this.globalCompositeOperation = value.composite;
+    this.transform = value.transform;
   }
-  setTransform(): void {
-    /* Identity coordinates in this geometry fixture. */
+  setTransform(
+    a: number,
+    b: number,
+    c: number,
+    d: number,
+    e: number,
+    f: number,
+  ): void {
+    this.transform = { a, b, c, d, e, f };
   }
-  getTransform(): object {
-    return {};
+  getTransform() {
+    return { ...this.transform };
   }
-  clearRect(): void {
-    this.pixels.fill(0);
+  clearRect(
+    x = 0,
+    y = 0,
+    width = this.canvas.width,
+    height = this.canvas.height,
+  ): void {
+    if (this.pixels.length !== this.canvas.width * this.canvas.height)
+      this.pixels = Array(this.canvas.width * this.canvas.height).fill(0);
+    for (let row = y; row < Math.min(y + height, this.canvas.height); row++)
+      this.pixels.fill(
+        0,
+        row * this.canvas.width + x,
+        row * this.canvas.width + Math.min(x + width, this.canvas.width),
+      );
+  }
+  private transformed(x: number, y: number): Point {
+    const t = this.transform;
+    return point(t.a * x + t.c * y + t.e, t.b * x + t.d * y + t.f);
   }
   beginPath(): void {
     this.path = [];
     this.circle = undefined;
   }
   moveTo(x: number, y: number): void {
-    this.path.push(point(x, y));
+    this.path.push(this.transformed(x, y));
   }
   lineTo(x: number, y: number): void {
-    this.path.push(point(x, y));
+    this.path.push(this.transformed(x, y));
   }
   arc(x: number, y: number, radius: number): void {
-    this.circle = { x, y, radius };
+    this.circle = {
+      ...this.transformed(x, y),
+      radius: radius * this.transform.a,
+    };
   }
   private paint(hit: (p: Point) => boolean): void {
     for (let y = 0; y < this.canvas.height; y++) {
@@ -93,14 +133,34 @@ class GridContext {
         .slice(1)
         .some(
           (end, index) =>
-            distanceToSegment(p, this.path[index], end) <= this.lineWidth / 2,
+            distanceToSegment(p, this.path[index], end) <=
+            (this.lineWidth * this.transform.a) / 2,
         ),
     );
   }
-  drawImage(source: GridCanvas): void {
-    source.ctx.pixels.forEach((value, index) => {
-      if (value) this.pixels[index] = value;
-    });
+  drawImage(
+    source: GridCanvas,
+    sx: number,
+    sy: number,
+    width: number,
+    height: number,
+    dx: number,
+    dy: number,
+    _dw: number,
+    _dh: number,
+  ): void {
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const value = source.ctx.pixels[(sy + y) * source.width + sx + x];
+        if (
+          value &&
+          dx + x >= 0 &&
+          dx + x < this.canvas.width &&
+          dy + y >= 0 &&
+          dy + y < this.canvas.height
+        )
+          this.pixels[(dy + y) * this.canvas.width + dx + x] = value;
+      }
   }
   at(x: number, y: number): number {
     return this.pixels[y * this.canvas.width + x];
@@ -112,6 +172,73 @@ class GridContext {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('shared drawing geometry', () => {
+  it('bounds scratch clearing and copying to stroke pixels independently of fullscreen size', () => {
+    vi.stubGlobal('OffscreenCanvas', GridCanvas);
+    const ctx = new GridCanvas(320, 200).ctx;
+    const copy = vi.spyOn(ctx, 'drawImage').mockImplementation(() => {});
+    const clear = vi.spyOn(GridContext.prototype, 'clearRect');
+    const ink = stroke('small', [point(20, 30), point(45, 35)], 4);
+    ink.opacity = 0.4;
+    // Even inaccurate stored bounds must not clip an active or worker-local path.
+    ink.bounds = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+    const areas: number[] = [];
+    for (const [width, height, offset] of [
+      [1280, 950, 0],
+      [2830, 1990, 200],
+    ]) {
+      ctx.canvas.width = width;
+      ctx.canvas.height = height;
+      ctx.setTransform(2, 0, 0, 2, offset + 0.25, 0.75);
+      drawStroke(ctx.asContext(), ink);
+      const [layer, sx, sy, w, h, x, y, dw, dh] = copy.mock.lastCall!;
+      expect([sx, sy, dw, dh]).toEqual([0, 0, w, h]);
+      expect(layer.width * layer.height).toBeLessThan(2000);
+      expect(x).toBe(34 + offset);
+      expect(y).toBe(54);
+      expect(clear.mock.lastCall).toEqual([0, 0, w, h]);
+      areas.push(w * h);
+    }
+    expect(areas[0]).toBe(areas[1]);
+    copy.mockRestore();
+    clear.mockRestore();
+  });
+
+  it('reuses a larger scratch buffer while clearing and copying only the next smaller stroke', () => {
+    vi.stubGlobal('OffscreenCanvas', GridCanvas);
+    const ctx = new GridCanvas(320, 200).ctx;
+    const copy = vi.spyOn(ctx, 'drawImage').mockImplementation(() => {});
+    const large = {
+      ...stroke('large', [point(20, 30), point(250, 100)]),
+      opacity: 0.4,
+    };
+    drawStroke(ctx.asContext(), large);
+    const first = copy.mock.lastCall![0];
+    drawStroke(ctx.asContext(), {
+      ...stroke('dot', [point(25, 45)]),
+      opacity: 0.4,
+    });
+    const [layer, , , width, height] = copy.mock.lastCall!;
+    expect(layer).toBe(first);
+    expect(width * height).toBeLessThan((layer.width * layer.height) / 100);
+    copy.mockRestore();
+  });
+
+  it('skips scratch work for empty and wholly offscreen translucent strokes', () => {
+    vi.stubGlobal('OffscreenCanvas', GridCanvas);
+    const ctx = new GridCanvas(32, 20).ctx;
+    const copy = vi.spyOn(ctx, 'drawImage');
+    const clear = vi.spyOn(GridContext.prototype, 'clearRect');
+    drawStroke(ctx.asContext(), { ...stroke('empty', []), opacity: 0.4 });
+    drawStroke(ctx.asContext(), {
+      ...stroke('offscreen', [point(-100, -100)]),
+      opacity: 0.4,
+    });
+    expect(copy).not.toHaveBeenCalled();
+    expect(clear).not.toHaveBeenCalled();
+    copy.mockRestore();
+    clear.mockRestore();
+  });
+
   it('cuts a partial hole, keeps both ends, and replays serialized masks identically', () => {
     vi.stubGlobal('OffscreenCanvas', GridCanvas);
     const document: InkDocument = {

@@ -2,6 +2,7 @@
 
 - Vector ink, scoped masks and immutable transactions remain authoritative; retained Canvas pixels are disposable caches. Damaged redraw clips in device pixels and queries using the same rounded world region so edge antialiasing is preserved.
 - Active previews retain bounded damage rectangles but replay complete gesture geometry: appending pressure/alpha segments changes caps and compositing. Native comparisons at DPR 1 and 2 cover pressure, pencil, highlighter and eraser previews.
+- Masked/translucent scratch work is bounded to current stroke geometry in device pixels. Pan-only camera movement shifts retained committed pixels by integer device deltas and replays exposed strips; canonical replay after 100 ms or invalidation restores exact subpixel positioning. Details and tradeoffs: [pan compositing](decisions/007-pan-compositing.md).
 - Autosave waits for the existing drawing/camera lock to clear; this adds no React state or persistence work to pointermove. Explicit notebook operations still flush the latest immutable snapshot.
 - Recognition status changes reuse unchanged projection arrays, while actual content/revision changes publish new arrays. Typed math follows immutable object identity; calculation history follows document/projection identity.
 - Equation identity is independent of its complete stroke set. Cached ownership and finite nearby rectangles replace cascading, horizontally unlimited invalidation. Reconciliation decides which candidate equations actually changed.
