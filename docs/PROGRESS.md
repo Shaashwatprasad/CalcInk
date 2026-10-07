@@ -29,3 +29,7 @@ General handwritten names, nested handwritten fractions, writer-diverse accuracy
 ## README publication — 7 October 2026
 
 DOC-README-PUBLISH: replaced the long README with a concise feature table, verified Node/npm setup and production commands, one Mermaid architecture diagram, technology table, recognition limits, documentation links, and license notices. The initial local draft was based on an obsolete specification-only checkout; it was corrected against remote main `a4e29aa944bac654e2f0f162fe46e646239004ce` before publication. Existing delivery evidence and source files are preserved. GitHub connector access is available; CLI HTTPS authentication is unavailable. Documentation changes only; no application or shared-contract changes. Markdown links, formatting, and independent factual review are checked; the PR runs the existing CI before integration. No deployment or new performance/accuracy claim is included.
+
+## README arithmetic scope — 7 October 2026
+
+Removed all variable-related descriptions and examples from README at the user’s request. Typed math is described as arithmetic expressions with parentheses. Documentation-only change committed to `codex/docs-professional-readme` (PR #10); application features and contracts remain unchanged. Verified no variable terminology or `total=3.5` example remains; formatting passes.
