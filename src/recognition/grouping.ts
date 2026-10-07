@@ -305,6 +305,8 @@ export function groupSymbols(strokes: Stroke[]): SymbolGroup[] {
 export interface GroupingCandidate {
   groups: SymbolGroup[];
   ambiguous: boolean;
+  /** Wide body geometry or omitted splits cannot be resolved within the budget. */
+  unresolved?: boolean;
 }
 /** At most four local hypotheses. Split only weak horizontal overlap between
  * distinct source strokes; never synthesize new ink or split an operator crossbar. */
@@ -313,16 +315,29 @@ export function symbolGroupingCandidates(
 ): GroupingCandidate[] {
   const groups = groupSymbols(strokes);
   const size = estimateBodySize(groups);
-  const candidates: GroupingCandidate[] = [{ groups, ambiguous: false }];
-  for (let i = 0; i < groups.length && candidates.length < 4; i++) {
+  // Scan every group before the bounded hypothesis loop: reaching four splits
+  // must not hide unsupported wide geometry later in the expression.
+  const unresolved = groups.some(
+    (group) =>
+      group.strokes.length === 1 &&
+      width(group.bounds) > size * 1.6 &&
+      width(group.bounds) >= height(group.bounds) * 2 &&
+      !isHorizontalBar(group.strokes[0], size),
+  );
+  const candidates: GroupingCandidate[] = [
+    {
+      groups,
+      ambiguous: unresolved,
+      ...(unresolved ? { unresolved: true } : {}),
+    },
+  ];
+  for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
     const sorted = [...group.strokes].sort(
       (a, b) => centerX(a.bounds) - centerX(b.bounds),
     );
-    if (sorted.length === 1 && width(group.bounds) > size * 1.6)
-      candidates[0].ambiguous = true;
     if (sorted.length < 2 || sorted.length > 8) continue;
-    for (let j = 1; j < sorted.length && candidates.length < 4; j++) {
+    for (let j = 1; j < sorted.length; j++) {
       const left = {
         strokes: sorted.slice(0, j),
         bounds: unionBounds(sorted.slice(0, j)),
@@ -340,10 +355,17 @@ export function symbolGroupingCandidates(
         height(right.bounds) >= size * 0.5
       ) {
         candidates[0].ambiguous = true;
-        candidates.push({
-          groups: [...groups.slice(0, i), left, right, ...groups.slice(i + 1)],
-          ambiguous: true,
-        });
+        if (candidates.length < 4)
+          candidates.push({
+            groups: [
+              ...groups.slice(0, i),
+              left,
+              right,
+              ...groups.slice(i + 1),
+            ],
+            ambiguous: true,
+          });
+        else candidates[0].unresolved = true;
       }
     }
   }

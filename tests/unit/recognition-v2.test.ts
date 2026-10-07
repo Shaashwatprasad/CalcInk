@@ -7,6 +7,7 @@ import {
   plausibleExpression,
   RecognitionCache,
   recognitionCacheKey,
+  resolveGroupingCandidates,
 } from '../../src/recognition/decode';
 import {
   estimateBodySize,
@@ -186,6 +187,63 @@ describe('local equation grouping', () => {
     ];
     expect(groupSymbols(division)).toHaveLength(1);
   });
+  it('keeps broad ordinary single-stroke digits eligible for confident recognition', () => {
+    const ink = [
+      stroke('two', 0, 0, 112, 62),
+      stroke('plus-h', 145, 30, 30, 0),
+      stroke('plus-v', 160, 14, 0, 32),
+      stroke('one', 205, 0, 2, 60),
+      stroke('eq-top', 250, 20, 35, 2),
+      stroke('eq-bottom', 250, 42, 35, 2),
+    ];
+    const candidates = symbolGroupingCandidates(ink);
+    expect(candidates).toHaveLength(1);
+    expect(candidates[0].ambiguous).toBe(false);
+    expect(candidates[0].unresolved).not.toBe(true);
+  });
+  it('does not flag a long model-supported minus as unresolved body geometry', () => {
+    const ink = [
+      stroke('two', 0, 0),
+      stroke('minus', 40, 19, 80, 2),
+      stroke('one', 140, 0, 2, 40),
+    ];
+    const candidates = symbolGroupingCandidates(ink);
+    expect(candidates[0].ambiguous).toBe(false);
+    expect(candidates[0].unresolved).not.toBe(true);
+    const clear = decodeSymbols([...'2−1='].map((label) => prediction(label)));
+    expect(resolveGroupingCandidates([clear], candidates[0].unresolved)).toBe(
+      clear,
+    );
+  });
+  it('keeps omitted eligible splits uncertain when several ambiguous groups exhaust the budget', () => {
+    const ink = [
+      stroke('a', 0, 0),
+      stroke('b', 18, 0),
+      stroke('c', 36, 0),
+      stroke('d', 54, 0),
+      stroke('e', 150, 0),
+      stroke('f', 168, 0),
+    ];
+    const candidates = symbolGroupingCandidates(ink);
+    expect(candidates).toHaveLength(4);
+    expect(candidates[0]).toMatchObject({ ambiguous: true, unresolved: true });
+    const clear = decodeSymbols([prediction('2'), prediction('=')]);
+    expect(
+      resolveGroupingCandidates([clear], candidates[0].unresolved).status,
+    ).toBe('uncertain');
+  });
+  it('retains later unresolved geometry after reaching the four-hypothesis limit', () => {
+    const ink = [
+      stroke('a', 0, 0),
+      stroke('b', 18, 0),
+      stroke('c', 36, 0),
+      stroke('d', 54, 0),
+      stroke('wide', 150, 0, 80, 40),
+    ];
+    const candidates = symbolGroupingCandidates(ink);
+    expect(candidates).toHaveLength(4);
+    expect(candidates[0]).toMatchObject({ ambiguous: true, unresolved: true });
+  });
   it('bounds touching-digit split alternatives and preserves exact source membership', () => {
     const ink = [
       stroke('one', 0, 0),
@@ -251,6 +309,63 @@ describe('bounded decoder and division geometry', () => {
     ).toBe('uncertain');
     expect(plausibleExpression('5++')).toBe(true);
     expect(plausibleExpression('5÷×2=')).toBe(false);
+  });
+  it.each(['2×3=', '2+1='])(
+    'accepts clear %s when speculative splits are implausible or low confidence',
+    (expression) => {
+      const primary = decodeSymbols(
+        [...expression].map((label) => prediction(label)),
+      );
+      const implausible = decodeSymbols([prediction('='), prediction('2')]);
+      const weak = decodeSymbols([
+        prediction('1', undefined, 0.5),
+        prediction('2'),
+        prediction('='),
+      ]);
+      expect(primary.status).toBe('recognized');
+      expect(weak.status).toBe('uncertain');
+      expect(resolveGroupingCandidates([primary, implausible, weak])).toBe(
+        primary,
+      );
+    },
+  );
+  it('retains uncertainty for distinct confident segmentation readings', () => {
+    const primary = decodeSymbols([
+      prediction('2'),
+      prediction('×'),
+      prediction('3'),
+      prediction('='),
+    ]);
+    const alternative = decodeSymbols([
+      prediction('1'),
+      prediction('2'),
+      prediction('×'),
+      prediction('3'),
+      prediction('='),
+    ]);
+    expect(resolveGroupingCandidates([primary, alternative])).toMatchObject({
+      expression: '2×3=',
+      status: 'uncertain',
+      uncertaintyReasons: ['segmentation'],
+    });
+  });
+  it('preserves low-evidence flags and unresolved geometry instead of promoting syntax', () => {
+    const weak = decodeSymbols([
+      prediction('2', undefined, 0.5),
+      prediction('+'),
+      prediction('1'),
+      prediction('='),
+    ]);
+    expect(resolveGroupingCandidates([weak])).toMatchObject({
+      status: 'uncertain',
+      uncertaintyReasons: ['confidence', 'segmentation'],
+    });
+    const clear = decodeSymbols([prediction('2'), prediction('=')]);
+    expect(resolveGroupingCandidates([clear], true)).toMatchObject({
+      status: 'uncertain',
+      uncertaintyReasons: ['segmentation'],
+    });
+    expect(resolveGroupingCandidates([clear, { ...clear }])).toBe(clear);
   });
   it('recognizes only a straight slash geometry, excluding one-like or curved strokes', () => {
     const slash = stroke('slash', 0, 0, 20, 40);

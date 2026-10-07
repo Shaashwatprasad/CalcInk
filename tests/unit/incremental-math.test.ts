@@ -230,6 +230,70 @@ describe('stable shared projections', () => {
     expect(store.metrics).toEqual({ parseCount: 0, evaluationCount: 0 });
   });
 
+  it('retains cached dependency hints when recognition of a known arithmetic row fails', () => {
+    const store = new ProjectionStore();
+    store.reset('doc', 0);
+    store.syncTyped([typed('definition', 'x=2', 0), typed('use', 'x+1=', 200)]);
+    const arithmetic = recognized('arithmetic', '2+2=', 100);
+    store.expect(arithmetic);
+    store.accept(arithmetic);
+    const consumer = store.get('use');
+    const edited = recognized('arithmetic', '2+3=', 100, 2);
+    store.expect(edited);
+    expect(store.get('use')).toBe(consumer);
+    store.accept({
+      ...edited,
+      expression: '',
+      symbols: [],
+      status: 'error',
+      error: 'Equation preprocessing failed',
+    });
+    expect(store.get('arithmetic')?.status).toBe('unavailable');
+    expect(store.get('arithmetic')?.answerText).toBeUndefined();
+    expect(store.get('use')).toBe(consumer);
+    expect(store.get('use')?.answerText).toBe('3');
+  });
+
+  it('keeps failed definition consumers blocked without blocking unrelated variable names', () => {
+    const store = new ProjectionStore();
+    store.reset('doc', 0);
+    store.syncTyped([
+      typed('other-definition', 'price=5', 0),
+      typed('other-use', 'price+1=', 300),
+    ]);
+    const definition = recognized('definition', 'x=2', 100);
+    const consumer = recognized('consumer', 'x+1=', 200);
+    store.expect(definition);
+    store.accept(definition);
+    store.expect(consumer);
+    store.accept(consumer);
+    const unrelated = store.get('other-use');
+    const edited = recognized('definition', 'x=3', 100, 2);
+    store.expect(edited);
+    store.accept({
+      ...edited,
+      expression: '',
+      symbols: [],
+      status: 'error',
+      error: 'Equation preprocessing failed',
+    });
+    expect(store.get('consumer')?.outcome).toEqual({
+      status: 'pending',
+      reason: 'definition-not-current',
+      definitionId: 'definition',
+    });
+    expect(store.get('other-use')).toBe(unrelated);
+    expect(store.get('other-use')?.answerText).toBe('6');
+    const unknown = recognized('unknown', '', 250);
+    store.expect(unknown);
+    store.accept({
+      ...unknown,
+      status: 'error',
+      error: 'Unknown new equation',
+    });
+    expect(store.get('other-use')?.status).toBe('pending');
+  });
+
   it('batches reconciliation and shows division diagnostics beside typed expressions', () => {
     const store = new ProjectionStore();
     store.reset('doc', 0);

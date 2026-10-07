@@ -14,6 +14,7 @@ import {
   plausibleExpression,
   RecognitionCache,
   recognitionCacheKey,
+  resolveGroupingCandidates,
 } from '../recognition/decode';
 import { MODEL_VERSION, validateManifest } from '../recognition/manifest';
 import type { ModelManifest } from '../recognition/manifest';
@@ -255,24 +256,20 @@ async function recognize(job: RecognitionJob): Promise<RecognitionResult> {
     );
   } else {
     const primary = candidates[0];
-    decoded = decodeSymbols(await classify(primary.groups), primary.ambiguous);
+    decoded = decodeSymbols(await classify(primary.groups));
+    if (primary.ambiguous || !plausibleExpression(decoded.expression)) {
+      // At most four hypotheses, sharing the effective-input prediction cache.
+      // Keep low-confidence or unexamined geometry uncertain; accept only a
+      // uniquely confident expression among the bounded supported splits.
+      const readings = [decoded];
+      for (const candidate of candidates.slice(1))
+        readings.push(decodeSymbols(await classify(candidate.groups)));
+      if (readings.length > 1 || primary.unresolved)
+        decoded = resolveGroupingCandidates(readings, primary.unresolved);
+    }
     if (layouts.length > 1) {
       decoded.status = 'uncertain';
       decoded.uncertaintyReasons.push('layout');
-    }
-    // Keep alternatives bounded. Syntax may change the uncertain preview, never
-    // promote competing segmentation into a confidently accepted calculation.
-    if (!plausibleExpression(decoded.expression)) {
-      for (const candidate of candidates.slice(1)) {
-        const alternative = decodeSymbols(
-          await classify(candidate.groups),
-          true,
-        );
-        if (plausibleExpression(alternative.expression)) {
-          decoded = alternative;
-          break;
-        }
-      }
     }
   }
   return {

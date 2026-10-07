@@ -22,7 +22,7 @@ npm run build
 npm run preview
 ```
 
-The pretrained model is committed at `public/models/symbols.onnx`, with its manifest, license and conversion evidence. The build copies matching ONNX Runtime Web 1.22.0 WASM/module files from the pinned dependency into `public/runtime/`; no separate model download or Python installation is needed to run CalcInk. Reconstructing the model is optional and documented in [scripts/model/README.md](scripts/model/README.md).
+The pretrained model is committed at `public/models/symbols.onnx`, with its manifest, license and conversion evidence. Development startup and the build copy matching ONNX Runtime Web 1.22.0 WASM/module files from the pinned dependency into `public/runtime/`; no separate model download or Python installation is needed to run CalcInk. Reconstructing the model is optional and documented in [scripts/model/README.md](scripts/model/README.md).
 
 Production builds generate a versioned same-origin offline cache. Serve over localhost or HTTPS, load once, and wait for **Offline ready** before disconnecting and reloading. That badge requires cached assets and a runnable model. Development does not install the service worker.
 
@@ -41,7 +41,7 @@ The bounded parser supports decimals, unary signs, parentheses and the four basi
 - `src/document` stores immutable vectors, targeted erasure masks, annotations and reversible transactions. Text marked as math is canonical source; computed answers are derived.
 - `src/render` owns committed ink, active ink, answer and annotation canvases. Drawing uses animation frames outside React’s render loop. Retained pixels, clipped damaged areas and viewport culling avoid replaying the entire page for a local edit.
 - `src/recognition` tracks stable equation identities, revisions and stroke ownership. Change events select cached nearby candidates; reconciliation preserves unchanged groups. Bootstrap groups the document once; later worker requests contain only candidate vectors and masks.
-- `src/workers` runs the verified classifier. Queued jobs coalesce per equation; identity, generation, revision, request and model/preprocessing versions reject stale replies. A bounded symbol cache includes vector, mask and model/preprocessing identity.
+- `src/workers` runs the verified classifier and compares up to four segmentation candidates. Queued jobs coalesce per equation; identity, generation, revision, request and model/preprocessing versions reject stale replies. A bounded symbol cache includes vector, mask and model/preprocessing identity. A failed equation does not clear other answers or stop later jobs.
 - `src/math` caches parsed ASTs and outcomes. Dependencies bind to specific preceding definitions. Changed expressions evaluate fully; consumers reuse their AST and reevaluate when their dependency context changes.
 - `src/projection` maintains stable answer objects, local pending states, diagnostics, corrections and calculation history.
 - `src/persistence`, `src/offline` and `src/viewport` handle serialized IndexedDB saves, offline assets and shared camera transforms. `src/app` supplies React controls; `src/metrics` supplies optional frame observations.
@@ -63,7 +63,7 @@ CALCINK_PRODUCT_REQUIRED=1 npx playwright test --config playwright.product.confi
 
 `npm run test:ml` and `npm run test:product` retain machine-readable reports under ignored `test-results/`. [Validation](docs/VALIDATION.md) distinguishes regression evidence from handwriting accuracy and physical-device measurements. Open `?debug=true` to inspect queue, revision, worker duration and frame interval observations.
 
-If recognition fails, **Retry** recreates the worker; drawing and typed math remain available. If no answer appears, check Current for recognized text and pending/uncertain/syntax feedback. Large separated symbols help; export failing ink with its intended expression to reproduce a recognition problem. If storage fails, export before closing. If offline reload fails, reconnect and wait for Offline ready; confirm the model and matching `.wasm`/`.mjs` assets are served from the same origin with correct MIME types.
+If the recognition worker fails, **Retry** recreates it; drawing and typed math remain available. An individual failed equation can be edited or rewritten. If no answer appears, check Current for recognized text and pending/uncertain/syntax feedback. Large separated symbols help; export failing ink with its intended expression to reproduce a recognition problem. If storage fails, export before closing. If offline reload fails, reconnect and wait for Offline ready; confirm the model and matching `.wasm`/`.mjs` assets are served from the same origin with correct MIME types.
 
 For GitHub Pages, the existing manual workflow builds with `CALCINK_BASE=/CalcInk/`. Other static hosts can serve `dist/` with the default relative base. Hosting must preserve worker/runtime paths and service-worker scope.
 

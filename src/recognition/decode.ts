@@ -138,6 +138,36 @@ export function decodeSymbols(
     uncertaintyReasons: [...new Set(uncertaintyReasons)],
   };
 }
+/** Geometry proposes alternatives, while model evidence decides whether they
+ * actually compete. A speculative split alone must not hide a clear reading. */
+export function resolveGroupingCandidates(
+  candidates: readonly DecodedExpression[],
+  unresolvedGeometry = false,
+): DecodedExpression {
+  const primary = candidates[0];
+  if (!primary) throw new Error('A grouping candidate is required');
+  const plausible = candidates.filter((candidate) =>
+    plausibleExpression(candidate.expression),
+  );
+  const confident = plausible.filter(
+    (candidate) => candidate.status === 'recognized',
+  );
+  const readings = new Set(confident.map((candidate) => candidate.expression));
+  if (!unresolvedGeometry && readings.size === 1) return confident[0];
+  const preview = plausibleExpression(primary.expression)
+    ? primary
+    : (plausible[0] ?? primary);
+  return {
+    ...preview,
+    status: 'uncertain',
+    uncertaintyReasons: [
+      ...new Set<UncertaintyReason>([
+        ...preview.uncertaintyReasons,
+        'segmentation',
+      ]),
+    ],
+  };
+}
 /** Straight rising-right diagonal between operands is a geometric slash candidate.
  * Steep 1-like lines and arbitrary diagonals do not qualify. Masks disable this
  * rule in the worker because remaining pixels can contradict original geometry. */

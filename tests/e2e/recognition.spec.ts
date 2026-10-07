@@ -125,3 +125,66 @@ test('actual pretrained worker evaluates synthetic vector arithmetic and reloads
   await expect(page.locator('.recognized-lines')).not.toContainText('12');
   expect(external).toEqual([]);
 });
+
+test('actual pretrained worker solves three rows, preserves other answers on edit, and reloads them', async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  await page.goto('/');
+  await expect(page.getByText('Ready for handwriting')).toBeVisible({
+    timeout: 60000,
+  });
+  for (const offset of [0, 180, 360]) {
+    for (const shape of shapes)
+      await draw(
+        page,
+        shape.map(([x, y]): [number, number] => [x, y + offset]),
+      );
+    await expect(page.locator('.recognized-lines')).toHaveText('1+1= 2', {
+      timeout: 30000,
+    });
+  }
+  await page.getByRole('tab', { name: /History/ }).click();
+  const records = page
+    .getByRole('tabpanel', { name: 'Calculation history' })
+    .locator('[data-record-id]');
+  await expect(records).toHaveCount(3);
+  await expect(records).toHaveText(['1+1= 2', '1+1= 2', '1+1= 2']);
+  const unchanged = await records.evaluateAll((rows) =>
+    [rows[0], rows[2]].map((row) => ({
+      id: row.getAttribute('data-record-id')!,
+      text: row.textContent,
+    })),
+  );
+
+  await page.getByRole('tab', { name: 'Current', exact: true }).click();
+  await draw(page, [
+    [125, 330],
+    [125, 380],
+  ]);
+  await expect(page.locator('.recognized-lines')).toHaveText('11+1= 12', {
+    timeout: 30000,
+  });
+  await page.getByRole('tab', { name: /History/ }).click();
+  await expect(records).toHaveCount(3);
+  await expect(records).toHaveText(['11+1= 12', '1+1= 2', '1+1= 2']);
+  for (const record of unchanged)
+    await expect(page.locator(`[data-record-id="${record.id}"]`)).toHaveText(
+      record.text!,
+    );
+
+  await expect(
+    page.getByText('Saved on this device', { exact: true }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('Ready for handwriting')).toBeVisible({
+    timeout: 60000,
+  });
+  await page.getByRole('tab', { name: /History/ }).click();
+  await expect(records).toHaveCount(3, { timeout: 30000 });
+  await expect(records.filter({ hasText: /^1\+1= 2$/ })).toHaveCount(2);
+  await expect(records.filter({ hasText: /^11\+1= 12$/ })).toHaveCount(1);
+  await page.screenshot({
+    path: test.info().outputPath('multiple-equations.png'),
+  });
+});

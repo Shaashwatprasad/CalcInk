@@ -249,13 +249,6 @@ export function startRecognizer(
           pump();
           return;
         }
-        if (data.status === 'error') {
-          fail(
-            data.error ??
-              'Recognition failed. Retry to restart the on-device model.',
-          );
-          return;
-        }
         projections.accept(data);
         state.inferenceMs = data.timings.totalMs;
         pump();
