@@ -426,6 +426,49 @@ describe('worker equation grouping scheduler', () => {
     expect(worker.recognition).toHaveLength(0);
   });
 
+  it('keeps solved rows and drains later equations after a single equation recognition error', () => {
+    const store = new InkStore();
+    store.addStroke(makeStroke('a', 0));
+    store.addStroke(makeStroke('b', 200));
+    store.addStroke(makeStroke('c', 400));
+    const { worker, latest } = setup(store);
+    finishGroups(worker);
+    finishRecognition(worker, '1+1=');
+    const solved = latest().projections.find(
+      (p) => p.equationId === 'equation-a',
+    );
+    const failedJob = worker.recognition.at(-1)!;
+    worker.reply({
+      ...recognized(failedJob, ''),
+      status: 'error',
+      symbols: [],
+      error: 'This equation could not be rasterized',
+    });
+    expect(worker.terminated).toBe(false);
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-a'),
+    ).toBe(solved);
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-b'),
+    ).toMatchObject({
+      status: 'unavailable',
+      outcome: { status: 'unavailable', reason: 'recognition-error' },
+    });
+    expect(worker.recognition).toHaveLength(3);
+    expect(worker.recognition.at(-1)?.equationId).toBe('equation-c');
+    finishRecognition(worker, '5+5=');
+    expect(latest().status).toBe('ready');
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-a')
+        ?.answerText,
+    ).toBe('2');
+    expect(
+      latest().projections.find((p) => p.equationId === 'equation-c')
+        ?.answerText,
+    ).toBe('10');
+    expect(store.getSnapshot().strokes).toHaveLength(3);
+  });
+
   it('reports grouping timeout while preserving ink and stops work when disposed', () => {
     const store = new InkStore();
     store.addStroke(makeStroke('a'));

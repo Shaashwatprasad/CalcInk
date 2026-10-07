@@ -1200,7 +1200,7 @@ export function App() {
                                   ? 'Recognizing…'
                                   : p.status === 'error' ||
                                       p.status === 'unavailable'
-                                    ? 'Recognition unavailable · retry'
+                                    ? 'Recognition unavailable · edit or rewrite this equation'
                                     : 'Incomplete · finish the expression with =')}
                   </span>
                   {(p.symbols ?? []).map(

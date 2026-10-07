@@ -225,7 +225,14 @@ export class ProjectionStore {
     if (!isRecognitionResult(value)) return undefined;
     const expected = this.expected.get(value.equationId);
     if (!expected || !sameJob(expected, value)) return undefined;
-    this.inputs.set(value.equationId, value);
+    // A failed job has no new transcription. Retain its previous source only as
+    // a dependency hint, exactly as during pending; never display its old answer.
+    const previousText = this.pending.get(value.equationId)?.text;
+    const source =
+      value.status === 'error' && !value.expression.trim() && previousText
+        ? { ...value, expression: previousText }
+        : value;
+    this.inputs.set(value.equationId, source);
     this.pending.delete(value.equationId);
     this.expected.delete(value.equationId);
     this.changed();
