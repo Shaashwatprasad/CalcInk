@@ -1,7 +1,7 @@
 name: CalcInk checks
 on:
   push:
-    branches: [main, 'codex/**']
+    branches: [main, final]
   pull_request:
     branches: [main]
 permissions:

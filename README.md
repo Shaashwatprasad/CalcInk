@@ -99,7 +99,7 @@ Vector ink is the source of truth; answers are derived. Recognition runs in a wo
 - **Recognized symbols:** `0–9`, `+`, `−`, `×`, `÷`, `.`, and `=`. Write separated symbols of similar size.
 - **Math:** decimals, negative numbers, normal precedence, and left associativity. Typed math also supports parentheses.
 - **Errors:** incomplete, malformed, or uncertain expressions withhold their answer; division by zero displays **Cannot divide by zero**.
-- **Limits:** handwritten parentheses, touching glyphs, and nested handwritten fractions remain unsupported or unreliable. No writer-diverse accuracy claim is made. Numbers use JavaScript floating point, displayed to twelve significant digits.
+- **Limits:** handwritten parentheses, touching glyphs, and nested handwritten fractions remain unsupported or unreliable. No writer-diverse accuracy claim is made. Numbers use JavaScript floating point, displayed to at most four decimal places.
 
 ## Documentation
 

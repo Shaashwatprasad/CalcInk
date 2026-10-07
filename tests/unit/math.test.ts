@@ -17,12 +17,17 @@ describe('deterministic arithmetic', () => {
     ['0.1+0.2=', '0.3'],
     ['.5+5.', '5.5'],
     ['(18+4)*3', '66'],
-    ['2/-(-3)', '0.666666666667'],
+    ['2/-(-3)', '0.6667'],
     ['3--2', '5'],
     ['-0', '0'],
     [' +12.5 \n / 2 = \t', '6.25'],
-    ['1/3', '0.333333333333'],
-    ['1234567890123', '1234567890120'],
+    ['1/3', '0.3333'],
+    ['1234567890123', '1234567890123'],
+    ['1/3*3', '1'],
+    ['1.23456', '1.2346'],
+    ['-1.23456', '-1.2346'],
+    ['1/100000', '0'],
+    ['-1/100000', '0'],
   ])('evaluates %s as %s', (input, display) => {
     expect(evaluateExpression(input)).toMatchObject({
       status: 'valid',
@@ -31,6 +36,11 @@ describe('deterministic arithmetic', () => {
   });
 
   it('retains the numeric value independently from its display rounding', () => {
+    expect(evaluateExpression('1/3')).toEqual({
+      status: 'valid',
+      value: 1 / 3,
+      display: '0.3333',
+    });
     expect(evaluateExpression('0.1+0.2')).toEqual({
       status: 'valid',
       value: 0.1 + 0.2,
