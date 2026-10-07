@@ -1,6 +1,9 @@
 # Design decisions
 
 - Vector ink, scoped masks and immutable transactions remain authoritative; retained Canvas pixels are disposable caches. Damaged redraw clips in device pixels and queries using the same rounded world region so edge antialiasing is preserved.
+- Active previews retain bounded damage rectangles but replay complete gesture geometry: appending pressure/alpha segments changes caps and compositing. Native comparisons at DPR 1 and 2 cover pressure, pencil, highlighter and eraser previews.
+- Autosave waits for the existing drawing/camera lock to clear; this adds no React state or persistence work to pointermove. Explicit notebook operations still flush the latest immutable snapshot.
+- Recognition status changes reuse unchanged projection arrays, while actual content/revision changes publish new arrays. Typed math follows immutable object identity; calculation history follows document/projection identity.
 - Equation identity is independent of its complete stroke set. Cached ownership and finite nearby rectangles replace cascading, horizontally unlimited invalidation. Reconciliation decides which candidate equations actually changed.
 - Model inference stays in a worker with a real audited checkpoint. Queue/revision guards apply per equation, rather than invalidating unrelated in-flight results.
 - Geometry proposes bounded segmentation alternatives; the classifier compares them before accepting a uniquely confident plausible reading. A wide digit alone is not evidence of joined symbols. An equation-level recognition error retains known dependency hints, withholds that row's answer and drains later jobs without clearing unrelated calculations.

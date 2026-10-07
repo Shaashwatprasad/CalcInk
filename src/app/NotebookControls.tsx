@@ -11,12 +11,14 @@ export function NotebookControls({
   onNotice,
   onReady,
   onBusy,
+  isDrawing,
 }: {
   store: InkStore;
   onStatus: (message: string) => void;
   onNotice: (message: string) => void;
   onReady: () => void;
   onBusy: (busy: boolean) => void;
+  isDrawing: () => boolean;
 }) {
   const library = useRef<NotebookLibrary | undefined>(undefined),
     current = useRef<NotebookRecord | undefined>(undefined);
@@ -29,15 +31,21 @@ export function NotebookControls({
     running = useRef<Promise<void> | undefined>(undefined);
   const alive = useRef(false),
     timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const callbacks = useRef({ onStatus, onNotice, onReady, onBusy });
-  callbacks.current = { onStatus, onNotice, onReady, onBusy };
-  const flush = async () => {
+  const callbacks = useRef({ onStatus, onNotice, onReady, onBusy, isDrawing });
+  callbacks.current = { onStatus, onNotice, onReady, onBusy, isDrawing };
+  const flush = async (automatic = false) => {
     clearTimeout(timer.current);
     if (running.current) await running.current;
     const lib = library.current;
     if (!lib) return;
     const work = (async () => {
       while (pending.current) {
+        // An earlier IndexedDB write may finish after the next gesture begins.
+        // Recheck before each snapshot, including after waiting for a running save.
+        if (automatic && callbacks.current.isDrawing()) {
+          if (alive.current) scheduleSave();
+          break;
+        }
         const row = pending.current;
         pending.current = undefined;
         await lib.save(row, true);
@@ -57,16 +65,24 @@ export function NotebookControls({
       if (running.current === work) running.current = undefined;
     }
   };
+  const scheduleSave = () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      // Validation and IndexedDB snapshot copying should wait for pen-up.
+      if (callbacks.current.isDrawing()) {
+        scheduleSave();
+        return;
+      }
+      void flush(true).catch(() =>
+        callbacks.current.onStatus('Save failed · export your ink'),
+      );
+    }, 120);
+  };
   const saveCurrent = () => {
     if (current.current) {
       pending.current = { ...current.current, document: store.getSnapshot() };
       callbacks.current.onStatus('Saving…');
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        void flush().catch(() =>
-          callbacks.current.onStatus('Save failed · export your ink'),
-        );
-      }, 120);
+      scheduleSave();
     }
   };
   useEffect(() => {

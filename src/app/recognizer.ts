@@ -46,7 +46,10 @@ export function startRecognizer(
     string,
     { object: Annotation; revision: number }
   >();
-  const syncTyped = () => {
+  let typedObjects: typeof current.objects;
+  const syncTyped = (force = false) => {
+    if (!force && typedObjects === current.objects) return;
+    typedObjects = current.objects;
     const entries = (current.objects ?? []).flatMap((object) => {
       if (object.kind !== 'text' || !object.math) return [];
       const previous = typedVersions.get(object.id);
@@ -86,13 +89,23 @@ export function startRecognizer(
   let debounce: ReturnType<typeof setTimeout> | undefined;
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let groupingTimeout: ReturnType<typeof setTimeout> | undefined;
+  let publishedProjections: EquationProjection[] = [];
   const emit = () => {
-    if (!disposed)
+    if (!disposed) {
+      const next = projections.all();
+      if (
+        next.length !== publishedProjections.length ||
+        next.some(
+          (projection, index) => projection !== publishedProjections[index],
+        )
+      )
+        publishedProjections = next;
       onState({
         ...state,
-        projections: projections.all(),
+        projections: publishedProjections,
         queued: queue.size + (groupingPending ? 1 : 0),
       });
+    }
   };
   const fail = (message: string) => {
     versions = undefined;
@@ -102,7 +115,7 @@ export function startRecognizer(
     tracker.reset(current);
     groupingPending = false;
     projections.reset(current.documentId, current.generation);
-    syncTyped();
+    syncTyped(true);
     state = { ...state, status: 'error', message };
     clearTimeout(timeout);
     clearTimeout(groupingTimeout);
@@ -201,6 +214,7 @@ export function startRecognizer(
       if (!sameGeneration) {
         projections.reset(document.documentId, document.generation);
         typedVersions.clear();
+        typedObjects = undefined;
         for (const id of known.keys()) queue.retire(id);
         known.clear();
         tracker.reset(document);
@@ -213,10 +227,10 @@ export function startRecognizer(
       }
       syncTyped();
     });
-    emit();
     // Annotation-only changes refresh an in-flight grouping revision guard, but
     // never retire ink answers or enqueue annotation recognition.
-    if (tracker.dirty || groupingPending) requestGrouping();
+    if ((tracker.dirty || groupingPending) && versions) requestGrouping();
+    else emit();
   });
   worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
     if (disposed) return;
@@ -236,7 +250,6 @@ export function startRecognizer(
       };
       state = { ...state, status: 'ready', message: 'Ready for handwriting' };
       requestGrouping();
-      emit();
     } else if (isGroupResult(data)) applyGroups(data);
     else if (isRecognitionResult(data)) {
       if (queue.complete(data)) {
