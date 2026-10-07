@@ -33,13 +33,19 @@ export function NotebookControls({
     timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const callbacks = useRef({ onStatus, onNotice, onReady, onBusy, isDrawing });
   callbacks.current = { onStatus, onNotice, onReady, onBusy, isDrawing };
-  const flush = async () => {
+  const flush = async (automatic = false) => {
     clearTimeout(timer.current);
     if (running.current) await running.current;
     const lib = library.current;
     if (!lib) return;
     const work = (async () => {
       while (pending.current) {
+        // An earlier IndexedDB write may finish after the next gesture begins.
+        // Recheck before each snapshot, including after waiting for a running save.
+        if (automatic && callbacks.current.isDrawing()) {
+          if (alive.current) scheduleSave();
+          break;
+        }
         const row = pending.current;
         pending.current = undefined;
         await lib.save(row, true);
@@ -67,7 +73,7 @@ export function NotebookControls({
         scheduleSave();
         return;
       }
-      void flush().catch(() =>
+      void flush(true).catch(() =>
         callbacks.current.onStatus('Save failed · export your ink'),
       );
     }, 120);

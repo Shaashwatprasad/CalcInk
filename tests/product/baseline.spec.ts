@@ -547,26 +547,83 @@ test('PROD-B15 @baseline autosave waits for pen-up and restores the latest strok
   page,
 }) => {
   await openNotebook(page);
+  await expect(
+    page.getByText('Ready for handwriting', { exact: true }),
+  ).toBeVisible({ timeout: 60000 });
+  // Test-only delayed transaction completion reproduces a pending snapshot
+  // arriving while an earlier save is in flight. UI input remains real mouse input.
+  await page.evaluate(() => {
+    const descriptor = Object.getOwnPropertyDescriptor(
+      IDBTransaction.prototype,
+      'oncomplete',
+    )!;
+    let delayed = false,
+      drawing = false,
+      copies = 0;
+    const canvas = document.querySelector(
+      'canvas[aria-label="Drawing canvas"]',
+    )!;
+    canvas.addEventListener('pointerdown', () => {
+      drawing = true;
+    });
+    canvas.addEventListener('pointerup', () => {
+      drawing = false;
+    });
+    const put = IDBObjectStore.prototype.put;
+    document.documentElement.dataset.savesDuringDrawing = '0';
+    IDBObjectStore.prototype.put = function (value, key) {
+      if (drawing && this.name === 'notebooks') {
+        copies++;
+        document.documentElement.dataset.savesDuringDrawing = String(copies);
+      }
+      return put.call(this, value, key);
+    };
+    Object.defineProperty(IDBTransaction.prototype, 'oncomplete', {
+      ...descriptor,
+      set(callback: (event: Event) => void) {
+        if (
+          !delayed &&
+          this.mode === 'readwrite' &&
+          this.objectStoreNames.contains('notebooks')
+        ) {
+          delayed = true;
+          descriptor.set!.call(this, (event: Event) =>
+            setTimeout(() => callback.call(this, event), 700),
+          );
+        } else descriptor.set!.call(this, callback);
+      },
+    });
+  });
   await draw(page, [
     [100, 150],
     [180, 150],
   ]);
+  await page.waitForTimeout(200); // First write started; completion is delayed.
+  await draw(page, [
+    [100, 200],
+    [180, 200],
+  ]); // New snapshot waits behind it.
   const bounds = (await page
     .getByLabel('Drawing canvas', { exact: true })
     .boundingBox())!;
-  await page.mouse.move(bounds.x + 100, bounds.y + 220);
+  await page.mouse.move(bounds.x + 100, bounds.y + 250);
   await page.mouse.down();
-  await page.mouse.move(bounds.x + 180, bounds.y + 220);
-  // The previous committed stroke is pending, but its save must not interrupt
-  // this active gesture. Holding the pen crosses several autosave intervals.
-  await page.waitForTimeout(400);
-  await expect(page.getByText('Saving…', { exact: true })).toBeVisible();
+  await page.mouse.move(bounds.x + 180, bounds.y + 250);
+  await page.waitForTimeout(900); // Earlier save completes during this gesture.
+  const pendingDuringStroke = await page
+    .getByText('Saving…', { exact: true })
+    .isVisible();
+  const copiesDuringStroke = await page
+    .locator('html')
+    .getAttribute('data-saves-during-drawing');
   await page.mouse.up();
+  expect(copiesDuringStroke).toBe('0');
+  expect(pendingDuringStroke).toBe(true);
   await expect(
     page.getByText('Saved on this device', { exact: true }),
   ).toBeVisible();
   const original = await exportNotebook(page);
-  expect(original.strokes).toHaveLength(2);
+  expect(original.strokes).toHaveLength(3);
   await page.reload();
   await expect(
     page.getByText('Saved on this device', { exact: true }),
