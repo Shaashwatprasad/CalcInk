@@ -542,3 +542,34 @@ test('PROD-B14 @baseline projection renderer failure keeps ink export and useful
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   expect((await exportNotebook(page)).strokes).toHaveLength(0);
 });
+
+test('PROD-B15 @baseline autosave waits for pen-up and restores the latest strokes', async ({
+  page,
+}) => {
+  await openNotebook(page);
+  await draw(page, [
+    [100, 150],
+    [180, 150],
+  ]);
+  const bounds = (await page
+    .getByLabel('Drawing canvas', { exact: true })
+    .boundingBox())!;
+  await page.mouse.move(bounds.x + 100, bounds.y + 220);
+  await page.mouse.down();
+  await page.mouse.move(bounds.x + 180, bounds.y + 220);
+  // The previous committed stroke is pending, but its save must not interrupt
+  // this active gesture. Holding the pen crosses several autosave intervals.
+  await page.waitForTimeout(400);
+  await expect(page.getByText('Saving…', { exact: true })).toBeVisible();
+  await page.mouse.up();
+  await expect(
+    page.getByText('Saved on this device', { exact: true }),
+  ).toBeVisible();
+  const original = await exportNotebook(page);
+  expect(original.strokes).toHaveLength(2);
+  await page.reload();
+  await expect(
+    page.getByText('Saved on this device', { exact: true }),
+  ).toBeVisible();
+  expect(geometry(await exportNotebook(page))).toEqual(geometry(original));
+});

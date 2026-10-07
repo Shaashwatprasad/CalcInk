@@ -19,7 +19,7 @@ try {
   for (const variant of ['baseline', 'candidate']) {
     await build({
       stdin: {
-        contents: `${modules.map((name) => `export { ${name} } from "renderer-${name}";`).join('\n')}\nexport { InkStore } from ${JSON.stringify(resolve(root, 'src/document/InkStore.ts'))};\nexport { ViewportStore } from ${JSON.stringify(resolve(root, 'src/viewport/index.ts'))};`,
+        contents: `${modules.map((name) => `export { ${name} } from "renderer-${name}";`).join('\n')}\nexport { drawStroke } from ${JSON.stringify(resolve(root, 'src/ink/geometry.ts'))};\nexport { InkStore } from ${JSON.stringify(resolve(root, 'src/document/InkStore.ts'))};\nexport { ViewportStore } from ${JSON.stringify(resolve(root, 'src/viewport/index.ts'))};`,
         resolveDir: root,
         loader: 'ts',
       },
@@ -113,12 +113,15 @@ try {
             lineTo: 0,
             fillText: 0,
             clearRect: 0,
+            clearedPixels: 0,
             fullClear: 0,
           };
           for (const method of ['stroke', 'lineTo', 'fillText', 'clearRect']) {
             const original = ctx[method].bind(ctx);
             ctx[method] = (...args) => {
               counts[label][method]++;
+              if (method === 'clearRect')
+                counts[label].clearedPixels += args[2] * args[3];
               if (
                 method === 'clearRect' &&
                 args[0] === 0 &&
@@ -269,9 +272,8 @@ try {
       await page.goto(`http://127.0.0.1:${server.address().port}`);
       parity.push(
         await page.evaluate(async (dpr) => {
-          const { mountInk, InkStore, ViewportStore } = await import(
-            '/candidate.js'
-          );
+          const { mountInk, InkStore, ViewportStore, drawStroke } =
+            await import('/candidate.js');
           const c = document.createElement('canvas'),
             active = document.createElement('canvas');
           document.body.append(c, active);
@@ -411,7 +413,130 @@ try {
           store.undo();
           await verify('clear undo');
           dispose();
-          return { dpr, zoom: 1.75, cases };
+          // Compare every active frame with a fresh canonical replay. This catches
+          // missed edge pixels, alpha buildup, pressure caps and old preview trails.
+          const reference = document.createElement('canvas');
+          reference.width = active.width;
+          reference.height = active.height;
+          const ref = reference.getContext('2d');
+          active.setPointerCapture = () => {};
+          active.hasPointerCapture = () => false;
+          const tool = {
+            mode: 'pen',
+            width: 10,
+            color: '#335577',
+            eraserRadius: 12,
+          };
+          const freshStore = new InkStore();
+          const stop = mountInk(c, active, freshStore, () => tool, {
+            viewport,
+            getPanMode: () => 'free',
+          });
+          const activeCases = [];
+          const rect = active.getBoundingClientRect();
+          const camera = viewport.getSnapshot();
+          const event = (type, p) =>
+            active.dispatchEvent(
+              new PointerEvent(type, {
+                clientX: rect.x + p.x * camera.zoom + camera.offsetX,
+                clientY: rect.y + p.y * camera.zoom + camera.offsetY,
+                pressure: p.pressure,
+                pointerId: 1,
+                pointerType: 'pen',
+                isPrimary: true,
+                button: 0,
+              }),
+            );
+          await flush();
+          for (const [name, settings] of [
+            [
+              'pressure',
+              { kind: 'pen', pressureEnabled: true, opacity: 1, mode: 'pen' },
+            ],
+            [
+              'pencil',
+              {
+                kind: 'pencil',
+                pressureEnabled: true,
+                opacity: 0.42,
+                mode: 'pen',
+              },
+            ],
+            [
+              'highlighter',
+              {
+                kind: 'highlighter',
+                pressureEnabled: false,
+                opacity: 0.3,
+                mode: 'pen',
+              },
+            ],
+            ['eraser preview', { mode: 'pixel-eraser' }],
+          ]) {
+            Object.assign(tool, settings);
+            const points = [];
+            let differingChannels = 0;
+            for (let i = 0; i < 14; i++) {
+              const p = {
+                x: 1.3 + i * 9.1,
+                y: 20.7 + Math.sin(i / 2) * 18,
+                pressure: i / 14,
+                timestamp: i,
+              };
+              points.push(p);
+              event(i === 0 ? 'pointerdown' : 'pointermove', p);
+              await flush();
+              ref.setTransform(1, 0, 0, 1, 0, 0);
+              ref.clearRect(0, 0, reference.width, reference.height);
+              ref.setTransform(
+                dpr * camera.zoom,
+                0,
+                0,
+                dpr * camera.zoom,
+                dpr * camera.offsetX,
+                dpr * camera.offsetY,
+              );
+              ref.save();
+              if (tool.mode !== 'pen') ref.globalAlpha = 0.25;
+              drawStroke(ref, {
+                id: 'reference',
+                points,
+                bounds: { minX: 0, minY: 0, maxX: 0, maxY: 0 },
+                ...tool,
+                ...(tool.mode !== 'pen'
+                  ? {
+                      width: (tool.eraserRadius * 2) / camera.zoom,
+                      color: '#818cf8',
+                      opacity: 1,
+                      kind: 'pen',
+                      pressureEnabled: false,
+                    }
+                  : {}),
+              });
+              ref.restore();
+              const actual = active
+                .getContext('2d')
+                .getImageData(0, 0, active.width, active.height).data;
+              const expected = ref.getImageData(
+                0,
+                0,
+                reference.width,
+                reference.height,
+              ).data;
+              for (let n = 0; n < actual.length; n++)
+                if (Math.abs(actual[n] - expected[n]) > 2) differingChannels++;
+            }
+            event('pointerup', points.at(-1));
+            await flush();
+            const remainingAlpha = active
+              .getContext('2d')
+              .getImageData(0, 0, active.width, active.height)
+              .data.filter((_, i) => i % 4 === 3)
+              .some((value) => value !== 0);
+            activeCases.push({ name, differingChannels, remainingAlpha });
+          }
+          stop();
+          return { dpr, zoom: 1.75, cases, activeCases };
         }, dpr),
       );
       await page.close();
@@ -450,6 +575,14 @@ try {
       throw new Error(
         `Native benchmark browser errors: ${browserErrors.join('; ')}`,
       );
+    if (
+      parity.some((entry) =>
+        entry.activeCases.some(
+          (test) => test.differingChannels || test.remainingAlpha,
+        ),
+      )
+    )
+      throw new Error('Active preview differs from canonical replay');
     if (
       parity.some((entry) =>
         entry.cases.some(

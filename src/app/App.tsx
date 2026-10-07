@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { mountObjects } from '../render/mountObjects';
 import type { ObjectsTool, ObjectsRenderer } from '../render/mountObjects';
 import type { Annotation, Selection, XY } from '../shared/types';
@@ -266,9 +272,10 @@ export function App() {
   const [saveStatus, setSaveStatus] = useState('Opening notebook…');
   const [recognition, setRecognition] = useState(initialState);
   const [calculationHistory] = useState(() => new CalculationHistory());
-  const calculations = calculationHistory.update(
-    document.documentId,
-    recognition.projections,
+  const calculations = useMemo(
+    () =>
+      calculationHistory.update(document.documentId, recognition.projections),
+    [calculationHistory, document.documentId, recognition.projections],
   );
   const [feedbackTab, setFeedbackTab] = useState<'current' | 'history'>(
     'current',
@@ -601,6 +608,7 @@ export function App() {
           CalcInk<span className="brand-tag">THINK ON PAPER</span>
         </a>
         <NotebookControls
+          isDrawing={viewport.isCameraLocked}
           store={store}
           onStatus={setSaveStatus}
           onNotice={setNotice}

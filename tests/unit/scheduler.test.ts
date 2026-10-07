@@ -122,6 +122,32 @@ afterEach(() => {
 });
 
 describe('worker equation grouping scheduler', () => {
+  it('publishes each edit once and reuses the answer array for status-only changes', () => {
+    const store = new InkStore();
+    store.addStroke(makeStroke('a'));
+    const { worker, latest, states } = setup(store);
+    expect(states).toHaveLength(2); // loading, then ready with grouping queued
+    finishGroups(worker);
+    finishRecognition(worker);
+    const answers = latest().projections;
+    const count = states.length;
+    store.addStroke({
+      ...makeStroke('highlight'),
+      kind: 'highlighter',
+      recognitionEligible: false,
+    });
+    expect(states).toHaveLength(count + 1);
+    expect(latest().projections).toBe(answers);
+    store.addStroke(makeStroke('separate', 500));
+    expect(states).toHaveLength(count + 2);
+    expect(latest().queued).toBe(1);
+    expect(latest().projections).toBe(answers);
+    finishGroups(worker);
+    expect(latest().projections).not.toBe(answers);
+    finishRecognition(worker, '2+2=');
+    expect(latest().projections.map((p) => p.answerText)).toEqual(['2', '4']);
+  });
+
   it('debounces edits into the latest document and ignores earlier grouping revisions', () => {
     const { store, worker, latest } = setup();
     store.addStroke(makeStroke('a'));

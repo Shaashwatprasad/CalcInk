@@ -57,6 +57,7 @@ export function mountInk(
   let disposed = false;
   let rect = activeCanvas.getBoundingClientRect();
   let currentDpr = 0;
+  let activePixels: Bounds | undefined;
   let spaceHeld = false;
   let pan: { pointerId: number; x: number; y: number } | undefined;
   const touches = new Map<number, { x: number; y: number }>();
@@ -100,11 +101,50 @@ export function mountInk(
     if (!frameId && !disposed) frameId = requestAnimationFrame(render);
   }
 
-  function clear(ctx: CanvasRenderingContext2D): void {
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.restore();
+  function clearActive(): void {
+    if (!activePixels) return;
+    active!.save();
+    active!.setTransform(1, 0, 0, 1, 0, 0);
+    active!.clearRect(
+      activePixels.minX,
+      activePixels.minY,
+      activePixels.maxX - activePixels.minX,
+      activePixels.maxY - activePixels.minY,
+    );
+    active!.restore();
+    activePixels = undefined;
+  }
+
+  function rememberActivePixels(stroke: Stroke, width: number): void {
+    const camera = navigation?.viewport.getSnapshot();
+    const zoom = camera?.zoom ?? 1;
+    const scale = currentDpr * zoom;
+    const offsetX = (camera?.offsetX ?? 0) * currentDpr;
+    const offsetY = (camera?.offsetY ?? 0) * currentDpr;
+    const padding = (width / 2) * scale + 2;
+    activePixels = {
+      minX: Math.max(
+        0,
+        Math.floor(stroke.bounds.minX * scale + offsetX - padding),
+      ),
+      minY: Math.max(
+        0,
+        Math.floor(stroke.bounds.minY * scale + offsetY - padding),
+      ),
+      maxX: Math.min(
+        activeCanvas.width,
+        Math.ceil(stroke.bounds.maxX * scale + offsetX + padding),
+      ),
+      maxY: Math.min(
+        activeCanvas.height,
+        Math.ceil(stroke.bounds.maxY * scale + offsetY + padding),
+      ),
+    };
+    if (
+      activePixels.maxX <= activePixels.minX ||
+      activePixels.maxY <= activePixels.minY
+    )
+      activePixels = undefined;
   }
 
   function resize(): void {
@@ -118,6 +158,7 @@ export function mountInk(
         canvas.width = width;
         canvas.height = height;
         changed = true;
+        if (canvas === activeCanvas) activePixels = undefined;
       }
     }
     currentDpr = dpr;
@@ -246,7 +287,7 @@ export function mountInk(
       committedDirty = false;
     }
     if (!gesture) {
-      clear(active!);
+      clearActive();
       return;
     }
     if (gesture.drawnPoints >= gesture.stroke.points.length) return;
@@ -254,11 +295,12 @@ export function mountInk(
       // Replay only this active gesture as one joined path. Appending separately
       // capped segments changes antialiasing (and compounds translucent ink).
       // This never replays the committed notebook on the pointer drawing path.
-      clear(active!);
+      clearActive();
       drawStroke(active!, gesture.stroke, 0, navigation?.getInkColor);
+      rememberActivePixels(gesture.stroke, gesture.stroke.width);
     } else {
       // Preview the gesture; the persistent erasure is one transaction at pen-up.
-      clear(active!);
+      clearActive();
       active!.save();
       active!.globalAlpha = 0.25;
       drawStroke(active!, {
@@ -271,6 +313,7 @@ export function mountInk(
         pressureEnabled: false,
       });
       active!.restore();
+      rememberActivePixels(gesture.stroke, gesture.tool.eraserRadius * 2);
     }
     gesture.drawnPoints = gesture.stroke.points.length;
   }
@@ -361,6 +404,20 @@ export function mountInk(
         continue;
       }
       gesture.stroke.points.push(point);
+      const bounds = gesture.stroke.bounds;
+      if (gesture.stroke.points.length === 1)
+        Object.assign(bounds, {
+          minX: point.x,
+          minY: point.y,
+          maxX: point.x,
+          maxY: point.y,
+        });
+      else {
+        bounds.minX = Math.min(bounds.minX, point.x);
+        bounds.minY = Math.min(bounds.minY, point.y);
+        bounds.maxX = Math.max(bounds.maxX, point.x);
+        bounds.maxY = Math.max(bounds.maxY, point.y);
+      }
       if (gesture.pageEnded) break;
     }
     schedule();

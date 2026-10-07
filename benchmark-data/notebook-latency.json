@@ -1,0 +1,95 @@
+{
+  "baselineCommit": "30eea47",
+  "baselineTree": "74b6f70f1f5fecb9234b08910f0e0518265f6840",
+  "candidateSourceSha256": {
+    "src/app/App.tsx": "8a34b2700649dc6ca8b32a508f6434e84d8dea2aafa5ebd77766ca2839a2914d",
+    "src/app/recognizer.ts": "6193656b4771cffd9924c634adc499ecf7f00396d3e385525a40dea4e7931637",
+    "src/app/NotebookControls.tsx": "9d89d150be694b9d56f4fa0117d952a82fe680dd1e0cbb4c8217d74aa98cbded",
+    "src/render/mountInk.ts": "c6ce9f16af3d648273b8f10f0ce165bb9f84e4492041c87462aa2b572b989244"
+  },
+  "modelSha256": "2fdae454d72c885e12718cc810c3a40513f0338c933fc19dc1bd6fe3ad108786",
+  "baseline": {
+    "capturedAt": "2026-10-07T12:15:35.044Z",
+    "hardware": {
+      "cpu": "Apple M5",
+      "platform": "darwin"
+    },
+    "browserVersion": "155.0.8059.40",
+    "workload": "Synthetic 20 equations, 120 strokes, 128 points/stroke, DPR2, 10 further 18-frame strokes; real on-device model and autosave enabled. Isolated browser context; not physical-stylus or writer accuracy evidence.",
+    "measurements": {
+      "frameIntervalsMs": {
+        "count": 190,
+        "p50": 16.699999999999818,
+        "p95": 16.800000000000182,
+        "max": 16.800000000000182
+      },
+      "rafCallbacksMs": {
+        "count": 225,
+        "p50": 0,
+        "p95": 0.19999992847442627,
+        "max": 0.5
+      },
+      "inputHandlersMs": {
+        "count": 190,
+        "p50": 0,
+        "p95": 0.20000004768371582,
+        "max": 0.8000000715255737
+      },
+      "penUpMs": {
+        "count": 10,
+        "p50": 0.20000004768371582,
+        "p95": 2.100000023841858,
+        "max": 2.100000023841858
+      },
+      "longTasksMs": [],
+      "savesDuringDrawing": 18,
+      "activeClearedPixels": 843864480,
+      "activeCanvasPixels": 4441392,
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+    },
+    "errors": [],
+    "solvedEquationsAtStart": 20
+  },
+  "candidate": {
+    "capturedAt": "2026-10-07T12:14:07.422Z",
+    "hardware": {
+      "cpu": "Apple M5",
+      "platform": "darwin"
+    },
+    "browserVersion": "155.0.8059.40",
+    "workload": "Synthetic 20 equations, 120 strokes, 128 points/stroke, DPR2, 10 further 18-frame strokes; real on-device model and autosave enabled. Isolated browser context; not physical-stylus or writer accuracy evidence.",
+    "measurements": {
+      "frameIntervalsMs": {
+        "count": 190,
+        "p50": 16.699999999999818,
+        "p95": 16.799999999999727,
+        "max": 16.800000000000182
+      },
+      "rafCallbacksMs": {
+        "count": 218,
+        "p50": 0,
+        "p95": 0.19999992847442627,
+        "max": 0.6999999284744263
+      },
+      "inputHandlersMs": {
+        "count": 190,
+        "p50": 0,
+        "p95": 0.10000002384185791,
+        "max": 0.5
+      },
+      "penUpMs": {
+        "count": 10,
+        "p50": 0.20000004768371582,
+        "p95": 0.40000009536743164,
+        "max": 0.40000009536743164
+      },
+      "longTasksMs": [],
+      "savesDuringDrawing": 0,
+      "activeClearedPixels": 190580,
+      "activeCanvasPixels": 4441392,
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+    },
+    "errors": [],
+    "solvedEquationsAtStart": 20
+  }
+}

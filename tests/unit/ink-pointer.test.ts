@@ -104,6 +104,30 @@ function setup(navigation = false) {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('pointer input and rendering lifecycle', () => {
+  it('clears only the previous active preview and removes it completely on pen-up', () => {
+    const s = setup(true);
+    s.flush();
+    expect(s.active.ctx.clearRect).not.toHaveBeenCalled();
+    s.active.pointer('pointerdown', { clientX: 70, clientY: 100 });
+    s.flush();
+    s.active.pointer('pointermove', { clientX: 100, clientY: 110 });
+    s.flush();
+    const [x, y, width, height] = s.active.ctx.clearRect.mock.calls[0];
+    expect(x).toBeGreaterThan(0);
+    expect(y).toBeGreaterThan(0);
+    expect(width * height).toBeLessThan(
+      (s.active.width * s.active.height) / 10,
+    );
+    s.active.pointer('pointerup', { clientX: 100, clientY: 110 });
+    s.flush();
+    expect(s.active.ctx.clearRect).toHaveBeenCalledTimes(2);
+    const calls = s.active.ctx.clearRect.mock.calls.length;
+    s.viewport.panBy({ x: 2, y: 3 });
+    s.flush();
+    expect(s.active.ctx.clearRect).toHaveBeenCalledTimes(calls);
+    s.cleanup();
+  });
+
   it('retains committed pixels, culls a large offscreen notebook, and repaints local damage only', () => {
     const s = setup(true);
     for (let i = 0; i < 300; i++)
