@@ -17,3 +17,5 @@
 Technical rationale: [vector layers and erasure](decisions/002-ink.md), [safe math](decisions/003-math.md), [model/runtime](decisions/004-model.md), [incremental updates](decisions/006-incremental.md).
 
 Repository organization: [layout and distribution](decisions/008-repository-layout.md).
+
+Calculated answers display at most four decimal places, with trailing zeros removed and negative zero normalized. Evaluation and dependent expressions retain unrounded values; values smaller than 0.00005 can display as zero. This replaces the earlier twelve-significant-digit display policy.

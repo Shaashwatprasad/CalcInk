@@ -9,3 +9,5 @@ The reorganized tree passes typecheck, lint, formatting, all 304 deterministic t
 The [pan report](benchmarks/pan-compositing.json) records 274 native pixel comparisons at DPR 1/2 and synthetic fullscreen measurements on Apple M5 / 24 GiB / headless Chrome 155. Frame-interval p95 changed from 233.4 ms to 16.8 ms for the recorded workload. See [validation](VALIDATION.md) for scope and the [layout decision](decisions/008-repository-layout.md) for distribution policy.
 
 Writer-diverse accuracy, physical stylus/touch certification, general handwritten names, nested fractions, dense idle/zoom replay cost and old-cache reclamation remain limitations. Public deployment eligibility and a public demo URL remain unverified. No universal 60 FPS or human handwriting accuracy claim is made.
+
+Calculated answers now display at most four decimal places while preserving full internal precision. Rounding, negative zero, large integers and chained arithmetic are covered by deterministic math tests.

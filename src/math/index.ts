@@ -122,9 +122,9 @@ function tokenize(text: string, variables: boolean): Token[] {
   }
   return tokens;
 }
-/** JavaScript binary numbers, rendered to twelve significant digits. */
+/** Round answers to four decimal places; evaluation retains the original value. */
 export function formatNumber(value: number): string {
-  return Number(value.toPrecision(12)).toString();
+  return Number(value.toFixed(4)).toString();
 }
 
 /** One parser for V1 numeric compatibility and V2 notebook arithmetic/assignment. */
