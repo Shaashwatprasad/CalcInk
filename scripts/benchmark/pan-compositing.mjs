@@ -1,5 +1,5 @@
 /** Native browser regression + synthetic pan workload. Run from repo root:
- * node scripts/benchmark/pan-compositing.mjs [original-ref, default bdcd47c]
+ * node scripts/benchmark/pan-compositing.mjs [original-ref, default published drawing baseline]
  * CALCINK_BROWSER_EXECUTABLE optionally selects a local Chromium executable.
  * Timing is descriptive; pixel parity and scratch pixel budgets are assertions.
  */
@@ -15,7 +15,7 @@ import { createHash } from 'node:crypto';
 const root = process.cwd();
 const baselineRef = execFileSync(
   'git',
-  ['rev-parse', process.argv[2] ?? 'bdcd47c'],
+  ['rev-parse', process.argv[2] ?? '98a5e65883a39393bb290ac814ad1c17f522a5e4'],
   { encoding: 'utf8' },
 ).trim();
 const originalGeometry = execFileSync(

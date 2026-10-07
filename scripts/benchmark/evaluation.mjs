@@ -12,7 +12,9 @@ const root = path.resolve(
   '../..',
 );
 const baselineRef =
-  process.argv[2] ?? process.env.CALCINK_BASELINE_REF ?? 'cb8ce08';
+  process.argv[2] ??
+  process.env.CALCINK_BASELINE_REF ??
+  '3a598928019d48737a6978cb602bf6ec532af8ab';
 const temporary = await mkdtemp(path.join(os.tmpdir(), 'calcink-evaluation-'));
 
 function result(index, revision = 1) {

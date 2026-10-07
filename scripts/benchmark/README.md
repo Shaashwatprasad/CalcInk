@@ -90,7 +90,7 @@ node scripts/benchmark/evaluation.mjs BASELINE_REF benchmark-results/my-evaluati
 CALCINK_BROWSER_EXECUTABLE=/path/to/chrome node scripts/benchmark/render-benchmark.mjs BASELINE_REF
 ```
 
-The published pre-fix baseline is `3a598928019d48737a6978cb602bf6ec532af8ab`; local measurements used `cb8ce08`, which has equivalent renderer/math source. Both commands accept another baseline ref. Fetch the selected ref before replaying a comparison.
+The published pre-fix baseline is `3a598928019d48737a6978cb602bf6ec532af8ab`; local measurements used `cb8ce08`, which has equivalent renderer/math source. Both commands accept another baseline ref. The evaluator defaults to the published baseline; the renderer defaults to HEAD unless a baseline is supplied. Fetch full history before replaying a comparison. In an offline development checkout, pass the locally available equivalent ref explicitly.
 
 The [evaluator report](../../docs/benchmarks/incremental-evaluation-2026-10-06.json) measures 200 recognized-result fixtures on Apple M5 / Node 26.3: one edit reduced 399 parses/evaluations to one of each, retaining 199 projection references. The [renderer report](../../docs/benchmarks/render-retention.json) measures the same before/after 200-equation, 1,200-stroke drawing workload on Apple M5 / headless Chrome 155, DPR 2. Local edit stroke draw calls fell from 37,696 to 165, answer draw calls from 18,000 to 5, and renderer callback p95 from 6.4 ms to 0.6 ms. Frame interval p95 remained around 16.7 ms in both runs. Its 26 native pixel comparisons at DPR 1/2 match full replay exactly, including masks, alpha, pressure and fractional cameras.
 
@@ -98,7 +98,7 @@ These later measurements supersede full replay as the normal local-edit renderin
 
 ## Fullscreen pan regression
 
-Run `node scripts/benchmark/pan-compositing.mjs bdcd47c` from the repository root. `CALCINK_BROWSER_EXECUTABLE` can select an installed Chromium executable. Both renderer and shared geometry are bundled separately from the original Git snapshot and the working tree; comparing only renderer entrypoints would incorrectly link both variants to current geometry.
+Run `node scripts/benchmark/pan-compositing.mjs` from the repository root. `CALCINK_BROWSER_EXECUTABLE` can select an installed Chromium executable. The default baseline is published commit `98a5e65883a39393bb290ac814ad1c17f522a5e4`; its renderer and geometry match the original local `bdcd47c` measurement. Both renderer and shared geometry are bundled separately from the original Git snapshot and the working tree; comparing only renderer entrypoints would incorrectly link both variants to current geometry.
 
 The [pan report](../../docs/benchmarks/pan-compositing.json) records Apple M5 / 24 GiB / macOS Darwin 25.6.0 / headless Chrome 155, DPR 2, with 200 synthetic equations and 1,200 mixed pressure, translucent and masked strokes. Preview is 1,220,800 backing pixels; fullscreen is 5,631,360. The 90-frame fullscreen pan comparison measured:
 
