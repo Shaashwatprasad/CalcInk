@@ -25,3 +25,7 @@ The full-app synthetic workload verifies 20 solved equations before continued dr
 Production launch: `npm ci`, `npm run build`, `npm run preview`. Public deployment still requires an authenticated user to configure Pages with GitHub Actions if prompted and dispatch [Prepare and deploy GitHub Pages](https://github.com/Shaashwatprasad/CalcInk/actions/workflows/pages.yml) on `main`. The connector cannot dispatch it; hosting eligibility and a public URL remain unverified. Repository visibility and access must stay unchanged.
 
 General handwritten names, nested handwritten fractions, writer-diverse accuracy, physical-device validation and automatic old-cache reclamation remain documented limitations.
+
+## README publication — 7 October 2026
+
+DOC-README-PUBLISH: replaced the long README with a concise feature table, verified Node/npm setup and production commands, one Mermaid architecture diagram, technology table, recognition limits, documentation links, and license notices. The initial local draft was based on an obsolete specification-only checkout; it was corrected against remote main `a4e29aa944bac654e2f0f162fe46e646239004ce` before publication. Existing delivery evidence and source files are preserved. GitHub connector access is available; CLI HTTPS authentication is unavailable. Documentation changes only; no application or shared-contract changes. Markdown links, formatting, and independent factual review are checked; the PR runs the existing CI before integration. No deployment or new performance/accuracy claim is included.

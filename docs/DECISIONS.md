@@ -15,3 +15,7 @@
 - Source/model/runtime/font licenses, conversion evidence and reusable tests/benchmarks remain in the repository. Obsolete implementation handoffs and raw task logs are removed; prior versions remain in Git.
 
 Technical rationale: [vector layers and erasure](decisions/002-ink.md), [safe math](decisions/003-math.md), [model/runtime](decisions/004-model.md), [incremental updates](decisions/006-incremental.md).
+
+## README presentation — 7 October 2026
+
+Use a compact project overview: feature table, reproducible setup commands, one architecture diagram, a short model/limitations section, and license links. Keep detailed evidence in existing documentation. Verify the current remote branch before publication when a chat opens an older worktree; a specification-only checkout does not establish the current repository implementation state. No application architecture changed.
