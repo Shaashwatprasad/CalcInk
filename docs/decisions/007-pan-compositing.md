@@ -1,0 +1,13 @@
+# ADR 007: Bounded stroke compositing and retained pan pixels
+
+Status: implemented; native regression and workload-specific measurements recorded.
+
+Fullscreen pan replay multiplied the viewport-sized scratch clear/copy by every masked or translucent stroke. Pressure geometry also rebuilt unchanged paths on each camera update. CPU command-submission timings did not establish completed browser frames.
+
+Scratch compositing now derives conservative bounds from current stroke points and width, transforms them into device pixels, includes an antialias fringe, and intersects the viewport. A reusable scratch buffer grows to accommodate strokes; only its used rectangle is cleared and copied. Integer origin translation preserves the destination's fractional raster phase. Masks remain isolated to their target stroke and alpha applies once. A per-replay mask index avoids scanning the entire mask collection for each stroke. No vector, persistence, worker or undo contract changes.
+
+For unchanged zoom, document, appearance and backing size, panning copies committed pixels by integer device-pixel displacement using replacement compositing. Only exposed strips replay geometry. Displacement is rounded relative to the camera actually painted, so fractional input accumulates instead of disappearing. Temporary displacement error is bounded by half a backing pixel; repeated shifts never resample or progressively blur existing pixels. After 100 ms without camera updates, the renderer replays at the exact requested camera. Drawing, ink edits, clear/recovery, appearance, resize, DPR and zoom invalidate this shortcut. Jumps spanning the viewport use full replay. Disposal cancels settlement.
+
+Alternatives: fractional self-copy would accumulate filtering blur; per-stroke bitmap caches require bounded invalidation and subpixel-phase variants; overscan scene caches retain extra large buffers. Integer retained pan uses the existing canvas and canonical idle replay with a small temporary position error. The exposed strip painter clears each region before replay, preserving translucent overlaps even where antialias margins meet. Document damage expansion does not apply to pan exposure.
+
+Evidence: unit geometry, operation-budget and pointer/timer lifecycle checks; independent native review; reproducible native pixel and rAF measurements in `benchmark/pan-compositing.mjs` and `benchmark-data/pan-compositing.json`. Comparisons allow small native edge-coverage differences rather than claiming byte identity. Headless timing is workload-specific and does not certify every GPU, stylus, touchscreen or arbitrary-size notebook. Idle full replay can still cost a long frame on dense documents.

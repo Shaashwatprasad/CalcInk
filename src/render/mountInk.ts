@@ -58,6 +58,12 @@ export function mountInk(
   let rect = activeCanvas.getBoundingClientRect();
   let currentDpr = 0;
   let activePixels: Bounds | undefined;
+  let paintedCamera:
+    | { zoom: number; offsetX: number; offsetY: number }
+    | undefined;
+  let panOnly = false;
+  let exactReplayRequired = true;
+  let settleTimer: ReturnType<typeof setTimeout> | undefined;
   let spaceHeld = false;
   let pan: { pointerId: number; x: number; y: number } | undefined;
   const touches = new Map<number, { x: number; y: number }>();
@@ -66,9 +72,14 @@ export function mountInk(
   const previousTouchAction = activeCanvas.style.touchAction;
   activeCanvas.style.touchAction = 'none';
 
-  function transform(): void {
-    const camera = navigation?.viewport.getSnapshot();
-    for (const ctx of [committed!, active!])
+  function transform(
+    committedCamera = navigation?.viewport.getSnapshot(),
+  ): void {
+    for (const ctx of [committed!, active!]) {
+      const camera =
+        ctx === committed
+          ? committedCamera
+          : navigation?.viewport.getSnapshot();
       ctx.setTransform(
         currentDpr * (camera?.zoom ?? 1),
         0,
@@ -77,6 +88,14 @@ export function mountInk(
         currentDpr * (camera?.offsetX ?? 0),
         currentDpr * (camera?.offsetY ?? 0),
       );
+    }
+  }
+
+  function requireExactReplay(): void {
+    panOnly = false;
+    exactReplayRequired = true;
+    if (settleTimer !== undefined) clearTimeout(settleTimer);
+    settleTimer = undefined;
   }
   const local = (event: PointerEvent) => ({
     x: event.clientX - rect.left,
@@ -164,6 +183,7 @@ export function mountInk(
     currentDpr = dpr;
     transform();
     if (changed) {
+      requireExactReplay();
       committedDirty = true;
       damage = [];
       if (gesture) gesture.drawnPoints = 0;
@@ -178,30 +198,89 @@ export function mountInk(
     if (committedDirty) {
       // The canvas retains unchanged pixels. Repaint only damaged device-pixel
       // rectangles, clipping every intersecting stroke (including alpha/masks).
-      const camera = navigation?.viewport.getSnapshot();
+      const requestedCamera = navigation?.viewport.getSnapshot();
+      let camera = requestedCamera;
+      let exposed: Bounds[] | undefined;
+      if (
+        panOnly &&
+        !exactReplayRequired &&
+        paintedCamera &&
+        requestedCamera &&
+        paintedCamera.zoom === requestedCamera.zoom
+      ) {
+        const dx = Math.round(
+          (requestedCamera.offsetX - paintedCamera.offsetX) * currentDpr,
+        );
+        const dy = Math.round(
+          (requestedCamera.offsetY - paintedCamera.offsetY) * currentDpr,
+        );
+        const width = committedCanvas.width,
+          height = committedCanvas.height;
+        if (Math.abs(dx) < width && Math.abs(dy) < height) {
+          camera = {
+            ...requestedCamera,
+            offsetX: paintedCamera.offsetX + dx / currentDpr,
+            offsetY: paintedCamera.offsetY + dy / currentDpr,
+          };
+          exposed = [];
+          if (dx || dy) {
+            // Canvas self-copy snapshots its source before painting. 'copy'
+            // replaces transparent pixels too, preventing old-ink ghosts.
+            committed!.save();
+            committed!.setTransform(1, 0, 0, 1, 0, 0);
+            committed!.globalCompositeOperation = 'copy';
+            committed!.drawImage(committedCanvas, dx, dy);
+            committed!.restore();
+            const pixelRegions: Bounds[] = [];
+            if (dx)
+              pixelRegions.push({
+                minX: dx > 0 ? 0 : width + dx,
+                minY: 0,
+                maxX: dx > 0 ? dx : width,
+                maxY: height,
+              });
+            // Exclude the horizontal strip's corner from the vertical strip.
+            if (dy)
+              pixelRegions.push({
+                minX: dx > 0 ? dx : 0,
+                minY: dy > 0 ? 0 : height + dy,
+                maxX: dx < 0 ? width + dx : width,
+                maxY: dy > 0 ? dy : height,
+              });
+            exposed = pixelRegions.map((b) => ({
+              minX: (b.minX / currentDpr - camera!.offsetX) / camera!.zoom,
+              minY: (b.minY / currentDpr - camera!.offsetY) / camera!.zoom,
+              maxX: (b.maxX / currentDpr - camera!.offsetX) / camera!.zoom,
+              maxY: (b.maxY / currentDpr - camera!.offsetY) / camera!.zoom,
+            }));
+          }
+        }
+      }
       const zoom = camera?.zoom ?? 1;
       const offsetX = camera?.offsetX ?? 0,
         offsetY = camera?.offsetY ?? 0;
-      const regions = damage.length
-        ? [
-            damage.reduce(
-              (region, b) => ({
-                minX: Math.min(region.minX, b.minX),
-                minY: Math.min(region.minY, b.minY),
-                maxX: Math.max(region.maxX, b.maxX),
-                maxY: Math.max(region.maxY, b.maxY),
-              }),
-              { ...damage[0] },
-            ),
-          ]
-        : [
-            {
-              minX: -offsetX / zoom,
-              minY: -offsetY / zoom,
-              maxX: (rect.width - offsetX) / zoom,
-              maxY: (rect.height - offsetY) / zoom,
-            },
-          ];
+      const regions =
+        exposed ??
+        (damage.length
+          ? [
+              damage.reduce(
+                (region, b) => ({
+                  minX: Math.min(region.minX, b.minX),
+                  minY: Math.min(region.minY, b.minY),
+                  maxX: Math.max(region.maxX, b.maxX),
+                  maxY: Math.max(region.maxY, b.maxY),
+                }),
+                { ...damage[0] },
+              ),
+            ]
+          : [
+              {
+                minX: -offsetX / zoom,
+                minY: -offsetY / zoom,
+                maxX: (rect.width - offsetX) / zoom,
+                maxY: (rect.height - offsetY) / zoom,
+              },
+            ]);
       const doc = store.getSnapshot();
       if (damage.length) {
         // Canvas stroke antialiasing can differ when a round capsule is cut by
@@ -264,7 +343,7 @@ export function mountInk(
         committed!.beginPath();
         committed!.rect(x, y, right - x, bottom - y);
         committed!.clip();
-        transform();
+        transform(camera);
         const visible = {
           minX: (x / currentDpr - offsetX) / zoom - padding,
           minY: (y / currentDpr - offsetY) / zoom - padding,
@@ -285,6 +364,13 @@ export function mountInk(
       }
       damage = [];
       committedDirty = false;
+      paintedCamera = camera && {
+        zoom: camera.zoom,
+        offsetX: camera.offsetX,
+        offsetY: camera.offsetY,
+      };
+      exactReplayRequired = false;
+      panOnly = false;
     }
     if (!gesture) {
       clearActive();
@@ -474,6 +560,12 @@ export function mountInk(
       }
     }
     if (navigation) tool.eraserRadius /= navigation.viewport.getSnapshot().zoom;
+    if (settleTimer !== undefined) {
+      requireExactReplay();
+      committedDirty = true;
+      damage = [];
+      schedule();
+    }
     gesture = {
       pointerId: event.pointerId,
       pointerType: event.pointerType,
@@ -619,10 +711,14 @@ export function mountInk(
       );
   };
   const resized = (): void => {
+    requireExactReplay();
+    committedDirty = true;
+    damage = [];
     sizeDirty = true;
     schedule();
   };
   const appearanceChanged = (): void => {
+    requireExactReplay();
     committedDirty = true;
     damage = [];
     if (gesture) gesture.drawnPoints = 0;
@@ -647,6 +743,25 @@ export function mountInk(
   }
   const stopCamera = navigation?.viewport.subscribe(() => {
     transform();
+    const requested = navigation.viewport.getSnapshot();
+    panOnly =
+      !exactReplayRequired &&
+      !gesture &&
+      !sizeDirty &&
+      !damage.length &&
+      !!paintedCamera &&
+      paintedCamera.zoom === requested.zoom;
+    if (!panOnly) requireExactReplay();
+    else {
+      if (settleTimer !== undefined) clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        settleTimer = undefined;
+        requireExactReplay();
+        committedDirty = true;
+        damage = [];
+        schedule();
+      }, 100);
+    }
     committedDirty = true;
     damage = [];
     if (gesture) gesture.drawnPoints = 0;
@@ -666,12 +781,19 @@ export function mountInk(
         activeCanvas.releasePointerCapture(pointerId);
     }
     if (change.reason === 'clear' || change.reason === 'replace') {
+      requireExactReplay();
       committedDirty = true;
       damage = [];
     } else if (
       change.changedStrokeIds.length ||
       change.deletedStrokeIds.length
     ) {
+      // If panning used a snapped camera, edits must start from an exact replay.
+      if (settleTimer !== undefined) {
+        requireExactReplay();
+        committedDirty = true;
+        damage = [];
+      }
       // Keep a pending full repaint full; combine successive document changes.
       if (!committedDirty || damage.length)
         damage = damage.concat(change.oldBounds, change.newBounds);
@@ -683,6 +805,7 @@ export function mountInk(
 
   return () => {
     disposed = true;
+    requireExactReplay();
     cancelAnimationFrame(frameId);
     observer?.disconnect();
     unsubscribe();

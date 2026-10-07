@@ -13,6 +13,7 @@ class TestCanvas extends EventTarget {
     canvas: this,
     setTransform: vi.fn(),
     clearRect: vi.fn(),
+    drawImage: vi.fn(),
     save: vi.fn(),
     restore: vi.fn(),
     beginPath: vi.fn(),
@@ -101,9 +102,80 @@ function setup(navigation = false) {
     viewport,
   };
 }
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 describe('pointer input and rendering lifecycle', () => {
+  it('shifts pan pixels without replaying interior ink, accumulates subpixels and settles exactly', () => {
+    vi.useFakeTimers();
+    const s = setup(true);
+    s.store.addStroke({
+      id: 'center',
+      points: [{ x: 100, y: 50, timestamp: 1 }],
+      width: 2,
+      color: '#000',
+      bounds: { minX: 99, minY: 49, maxX: 101, maxY: 51 },
+    });
+    s.flush();
+    s.committed.ctx.arc.mockClear();
+    s.committed.ctx.clearRect.mockClear();
+    s.viewport.panBy({ x: 0.2, y: 0 });
+    s.flush();
+    expect(s.committed.ctx.drawImage).not.toHaveBeenCalled();
+    s.viewport.panBy({ x: 0.2, y: 0 });
+    s.flush();
+    expect(s.committed.ctx.drawImage).toHaveBeenCalledWith(s.committed, 1, 0);
+    expect(s.committed.ctx.arc).not.toHaveBeenCalled();
+    const [, , width, height] = s.committed.ctx.clearRect.mock.lastCall!;
+    expect(width * height).toBeLessThan(
+      (s.committed.width * s.committed.height) / 20,
+    );
+    vi.advanceTimersByTime(99);
+    expect(s.frames.size).toBe(0);
+    vi.advanceTimersByTime(1);
+    s.flush();
+    expect(s.committed.ctx.arc).toHaveBeenCalledTimes(1);
+    expect(s.committed.ctx.setTransform).toHaveBeenCalledWith(
+      2,
+      0,
+      0,
+      2,
+      0.8,
+      0,
+    );
+    s.cleanup();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('cancels pan settlement and restores canonical pixels before drawing, edits and disposal', () => {
+    vi.useFakeTimers();
+    const s = setup(true);
+    s.flush();
+    s.viewport.panBy({ x: 1.2, y: 0.2 });
+    s.flush();
+    expect(vi.getTimerCount()).toBe(1);
+    s.active.pointer('pointerdown');
+    s.flush();
+    expect(vi.getTimerCount()).toBe(0);
+    expect(s.committed.ctx.clearRect.mock.lastCall).toEqual([0, 0, 400, 200]);
+    s.active.pointer('pointerup');
+    s.flush();
+    s.viewport.panBy({ x: -2.3, y: 1.2 });
+    s.flush();
+    s.store.clear();
+    s.flush();
+    expect(vi.getTimerCount()).toBe(0);
+    expect(s.committed.ctx.clearRect.mock.lastCall).toEqual([0, 0, 400, 200]);
+    s.viewport.panBy({ x: 1.2, y: 0.2 });
+    s.flush();
+    s.cleanup();
+    expect(vi.getTimerCount()).toBe(0);
+    vi.advanceTimersByTime(200);
+    expect(s.frames.size).toBe(0);
+  });
+
   it('clears only the previous active preview and removes it completely on pen-up', () => {
     const s = setup(true);
     s.flush();

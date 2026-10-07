@@ -1,0 +1,2289 @@
+{
+  "capturedAt": "2026-10-07T14:27:20.094Z",
+  "baselineRef": "bdcd47c2926553bc0e35066d410d2cf93ddf051d",
+  "sourceHashes": {
+    "baselineGeometry": "ed06b0ebd0e2e07878941ac97099fee49ca4a3353ae1ce9e6d3a5526ea46f975",
+    "candidateGeometry": "8b19540fdff8e63aa69dcdef9af1d639dec29a97ba0dfcdb0edd1a4b3c49b3a4",
+    "baselineRenderer": "c6ce9f16af3d648273b8f10f0ce165bb9f84e4492041c87462aa2b572b989244",
+    "candidateRenderer": "bda0047772eefcfdda6653d7bc2080b4180793145028f6ec39cb96d345c4215c"
+  },
+  "browserVersion": "155.0.8059.40",
+  "browserExecutable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "headless": true,
+  "hardware": {
+    "cpu": "Apple M5",
+    "logicalCpus": 10,
+    "memoryBytes": 25769803776,
+    "platform": "darwin",
+    "release": "25.6.0"
+  },
+  "workload": "Synthetic 200 equations / 1200 strokes, mixed opaque pressure pen, translucent pressure pencil, highlighter and target-scoped erasure. 20 points per stroke; 90 viewport pan frames after 8 warmup frames. Baseline snapshots both mountInk and geometry from baselineRef; candidate snapshots working source. Native motion tests compare to independently computed snapped camera and exact replay after 140ms settlement. No ML or human-input validation. rAF intervals include browser scheduling; headless timing does not establish interactive fullscreen FPS. Cleared/copied pixels count native API rectangle areas, not measured GPU work. exposedRepaintPixels counts partial clear rectangle areas including antialias padding; nativeStrokeCalls counts Canvas stroke calls, not logical stroke objects.",
+  "parity": [
+    {
+      "dpr": 1,
+      "tolerance": {
+        "alpha": 2,
+        "premultipliedColor": 2
+      },
+      "cases": [
+        {
+          "name": "initial empty: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "initial empty: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure touching left edge: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure touching left edge: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent pressure overlap: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent pressure overlap: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "later highlighter below math: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "later highlighter below math: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "target-scoped mask preserves overlap: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "target-scoped mask preserves overlap: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask undo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask redo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask redo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent dot at bottom right: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent dot at bottom right: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "edge crossing geometry: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "edge crossing geometry: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 0 0.35,0.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 1 1.7,0 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 2 -2.4,0 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 3 0,2.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 4 0,-3.6 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 5 2.7,1.7 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 6 -2.7,-1.7 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 7 16.3,-11.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 8 -16.3,11.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 9 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 10 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 11 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 12 400,280 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 13 -400,-280 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 14 15.7,18.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 15 -31.4,-36.6 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 16 15.7,18.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion exact fractional settlement: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion exact fractional settlement: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate edit cancels pan cache: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate edit cancels pan cache: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate appearance change cancels pan cache: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate appearance change cancels pan cache: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 0.25: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 0.25: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 1.75: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 1.75: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dark theme auto color: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0.9647058823529449,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dark theme auto color: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "masked selection transform: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "masked selection transform: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase undo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "resize with masks: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 1.7411764705882433,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "resize with masks: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear undo: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 1.7411764705882433,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dispose fixture: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dispose fixture: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "empty and all viewport edges 1,0,0,1,0.35,-0.45",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "empty and all viewport edges 1.75,0,0,1.75,-103.65,-21.85",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "dpr": 2,
+      "tolerance": {
+        "alpha": 2,
+        "premultipliedColor": 2
+      },
+      "cases": [
+        {
+          "name": "initial empty: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "initial empty: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure touching left edge: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure touching left edge: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent pressure overlap: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0.8941176470588239,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent pressure overlap: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "later highlighter below math: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "later highlighter below math: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "target-scoped mask preserves overlap: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "target-scoped mask preserves overlap: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask undo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask redo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "mask redo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent dot at bottom right: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent dot at bottom right: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "edge crossing geometry: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "edge crossing geometry: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 0 0.35,0.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 1 1.7,0 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 2 -2.4,0 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 3 0,2.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 4 0,-3.6 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 5 2.7,1.7 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 6 -2.7,-1.7 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 7 16.3,-11.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 1.0196078431372513,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 8 -16.3,11.2 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 9 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 10 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 11 0.1,0.1 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 12 400,280 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 13 -400,-280 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 14 15.7,18.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 15 -31.4,-36.6 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion 16 15.7,18.3 against independently snapped canonical",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion exact fractional settlement: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "motion exact fractional settlement: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate edit cancels pan cache: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 0.6235294117647072,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate edit cancels pan cache: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate appearance change cancels pan cache: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "immediate appearance change cancels pan cache: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 0.25: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 0.25: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 1.75: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 1.75: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "fractional pan zoom 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dark theme auto color: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 0.12156862745098351,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dark theme auto color: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "masked selection transform: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "masked selection transform: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase undo: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "whole erase undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "resize with masks: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 1.8509803921568562,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "resize with masks: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear undo: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 1.8509803921568562,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "clear undo: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "pressure preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview completed: committed",
+          "maxAlphaDifference": 1,
+          "maxPremultipliedDifference": 1.168627450980395,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "translucent preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "highlighter preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview committed background: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview committed background: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 0: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 0: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 1: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 1: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 2: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 2: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 3: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 3: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 4: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 4: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 5: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 5: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 6: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview point 6: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview completed: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "eraser preview completed: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dispose fixture: committed",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "dispose fixture: active",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "empty and all viewport edges 2,0,0,2,0.35,-0.45",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        },
+        {
+          "name": "empty and all viewport edges 3.5,0,0,3.5,-103.65,-21.85",
+          "maxAlphaDifference": 0,
+          "maxPremultipliedDifference": 0,
+          "differingPixels": 0,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "reports": {
+    "preview": {
+      "baseline": {
+        "dpr": 2,
+        "cssViewport": {
+          "width": 700,
+          "height": 436
+        },
+        "devicePixels": 1220800,
+        "counts": {
+          "scratchClearCalls": 7373,
+          "scratchClearedPixels": 9000958400,
+          "scratchCopyCalls": 7373,
+          "scratchCopiedPixels": 9000958400,
+          "maxScratchClearPixels": 1220800,
+          "maxScratchCopyPixels": 1220800,
+          "sceneCopyCalls": 0,
+          "sceneCopiedPixels": 0,
+          "mainFullClearCalls": 90,
+          "mainFullClearedPixels": 109872000,
+          "exposedRepaintClearCalls": 0,
+          "exposedRepaintPixels": 0,
+          "nativeStrokeCalls": 104530,
+          "nativeFillCalls": 0
+        },
+        "frameIntervalsMs": {
+          "count": 90,
+          "p50": 16.69999999999999,
+          "p95": 16.700000000000045,
+          "max": 16.800000000000182,
+          "intervalsOver25ms": 0
+        },
+        "raw": {
+          "frameIntervalsMs": [
+            16.69999999999999, 16.599999999999994, 16.700000000000017,
+            16.599999999999994, 16.69999999999999, 16.600000000000023,
+            16.80000000000001, 16.599999999999966, 16.600000000000023,
+            16.80000000000001, 16.599999999999966, 16.69999999999999,
+            16.700000000000045, 16.599999999999966, 16.600000000000023,
+            16.69999999999999, 16.69999999999999, 16.69999999999999,
+            16.700000000000045, 16.600000000000023, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.59999999999991,
+            16.800000000000068, 16.600000000000023, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.700000000000045,
+            16.59999999999991, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.800000000000182
+          ],
+          "inputIssuingMs": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0.10000002384185791, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0.09999990463256836, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10000002384185791,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10000002384185791, 0, 0, 0, 0,
+            0, 0.10000002384185791, 0.10000002384185791, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10000002384185791, 0, 0
+          ]
+        },
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      },
+      "candidate": {
+        "dpr": 2,
+        "cssViewport": {
+          "width": 700,
+          "height": 436
+        },
+        "devicePixels": 1220800,
+        "counts": {
+          "scratchClearCalls": 725,
+          "scratchClearedPixels": 1259997,
+          "scratchCopyCalls": 725,
+          "scratchCopiedPixels": 1259997,
+          "maxScratchClearPixels": 4928,
+          "maxScratchCopyPixels": 4928,
+          "sceneCopyCalls": 90,
+          "sceneCopiedPixels": 109872000,
+          "mainFullClearCalls": 0,
+          "mainFullClearedPixels": 0,
+          "exposedRepaintClearCalls": 169,
+          "exposedRepaintPixels": 873720,
+          "nativeStrokeCalls": 8850,
+          "nativeFillCalls": 0
+        },
+        "frameIntervalsMs": {
+          "count": 90,
+          "p50": 16.699999999999932,
+          "p95": 16.700000000000045,
+          "max": 16.800000000000068,
+          "intervalsOver25ms": 0
+        },
+        "raw": {
+          "frameIntervalsMs": [
+            16.599999999999994, 16.69999999999999, 16.700000000000017,
+            16.599999999999994, 16.600000000000023, 16.69999999999999,
+            16.69999999999999, 16.69999999999999, 16.600000000000023,
+            16.69999999999999, 16.600000000000023, 16.69999999999999,
+            16.69999999999999, 16.69999999999999, 16.600000000000023,
+            16.69999999999999, 16.600000000000023, 16.69999999999999,
+            16.599999999999966, 16.800000000000068, 16.59999999999991,
+            16.700000000000045, 16.600000000000023, 16.699999999999932,
+            16.700000000000045, 16.600000000000023, 16.699999999999932,
+            16.700000000000045, 16.600000000000023, 16.699999999999932,
+            16.700000000000045, 16.600000000000023, 16.699999999999932,
+            16.700000000000045, 16.600000000000023, 16.799999999999955,
+            16.600000000000023, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.600000000000023, 16.699999999999932,
+            16.600000000000023, 16.700000000000045, 16.699999999999932,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.600000000000136, 16.699999999999818, 16.700000000000045,
+            16.600000000000136, 16.699999999999818, 16.700000000000045,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.600000000000136, 16.699999999999818, 16.700000000000045,
+            16.600000000000136, 16.699999999999818, 16.700000000000045,
+            16.600000000000136, 16.799999999999955, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.600000000000136,
+            16.700000000000045, 16.699999999999818, 16.700000000000045,
+            16.600000000000136, 16.699999999999818, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.600000000000136
+          ],
+          "inputIssuingMs": [
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0, 0, 0, 0, 0, 0, 0,
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0,
+            0.10000002384185791, 0.10000002384185791, 0, 0.10000002384185791, 0,
+            0, 0, 0.10000002384185791, 0, 0.10000002384185791,
+            0.10000002384185791, 0, 0, 0, 0, 0.10000002384185791,
+            0.20000004768371582, 0, 0, 0, 0, 0, 0, 0.10000002384185791,
+            0.19999992847442627, 0.10000002384185791, 0.10000002384185791,
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0,
+            0.10000002384185791, 0, 0.10000002384185791, 0.09999990463256836, 0,
+            0, 0, 0.10000002384185791, 0.09999990463256836, 0.10000002384185791,
+            0, 0, 0.10000002384185791, 0.10000002384185791, 0, 0,
+            0.10000002384185791, 0, 0.10000002384185791, 0, 0.10000002384185791,
+            0.10000002384185791, 0.09999990463256836, 0, 0, 0, 0, 0,
+            0.09999990463256836, 0, 0.09999990463256836, 0.10000002384185791,
+            0.10000002384185791, 0.10000002384185791, 0, 0, 0, 0, 0, 0, 0, 0
+          ]
+        },
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      }
+    },
+    "fullscreen": {
+      "baseline": {
+        "dpr": 2,
+        "cssViewport": {
+          "width": 1680,
+          "height": 838
+        },
+        "devicePixels": 5631360,
+        "counts": {
+          "scratchClearCalls": 26120,
+          "scratchClearedPixels": 147091123200,
+          "scratchCopyCalls": 26120,
+          "scratchCopiedPixels": 147091123200,
+          "maxScratchClearPixels": 5631360,
+          "maxScratchCopyPixels": 5631360,
+          "sceneCopyCalls": 0,
+          "sceneCopiedPixels": 0,
+          "mainFullClearCalls": 90,
+          "mainFullClearedPixels": 506822400,
+          "exposedRepaintClearCalls": 0,
+          "exposedRepaintPixels": 0,
+          "nativeStrokeCalls": 381344,
+          "nativeFillCalls": 0
+        },
+        "frameIntervalsMs": {
+          "count": 90,
+          "p50": 216.70000000000073,
+          "p95": 233.39999999999782,
+          "max": 249.89999999999964,
+          "intervalsOver25ms": 87
+        },
+        "raw": {
+          "frameIntervalsMs": [
+            16.59999999999991, 16.700000000000045, 166.70000000000005,
+            16.700000000000045, 199.89999999999986, 233.30000000000018,
+            216.69999999999982, 216.70000000000027, 216.5999999999999,
+            216.69999999999982, 233.30000000000018, 216.5999999999999,
+            216.69999999999982, 216.69999999999982, 216.70000000000073,
+            216.59999999999945, 216.69999999999982, 216.60000000000036,
+            216.60000000000036, 233.29999999999927, 216.80000000000018,
+            216.60000000000036, 216.59999999999945, 216.70000000000073,
+            233.29999999999927, 216.70000000000073, 233.29999999999927,
+            216.70000000000073, 249.89999999999964, 216.69999999999982,
+            233.30000000000018, 216.69999999999982, 233.30000000000018,
+            216.70000000000073, 216.6999999999989, 216.60000000000036,
+            216.70000000000073, 216.59999999999854, 233.3000000000011,
+            216.6999999999989, 233.3000000000011, 216.6999999999989,
+            233.3000000000011, 233.39999999999964, 233.29999999999927,
+            216.60000000000036, 216.60000000000036, 216.70000000000073,
+            233.29999999999927, 216.70000000000073, 216.6999999999989,
+            216.60000000000036, 216.70000000000073, 216.6999999999989,
+            216.70000000000073, 233.1999999999989, 216.70000000000073,
+            216.70000000000073, 216.59999999999854, 216.60000000000036,
+            216.70000000000073, 216.6999999999989, 216.60000000000036,
+            216.70000000000073, 233.29999999999927, 216.70000000000073,
+            216.6999999999989, 216.60000000000036, 216.60000000000036,
+            216.70000000000073, 216.70000000000073, 233.29999999999927, 200,
+            233.29999999999927, 216.70000000000073, 216.59999999999854,
+            216.70000000000073, 216.59999999999854, 216.70000000000073,
+            216.70000000000073, 216.59999999999854, 216.60000000000218,
+            233.39999999999782, 233.3000000000029, 233.39999999999782,
+            233.29999999999927, 233.3000000000029, 233.39999999999782,
+            216.60000000000218, 233.29999999999927
+          ],
+          "inputIssuingMs": [
+            0, 0, 0.10000002384185791, 0, 0, 0, 0, 0, 0.10000002384185791,
+            0.10000002384185791, 0, 0, 0, 0, 0.09999990463256836, 0, 0,
+            0.10000002384185791, 0, 0, 0, 0, 0.09999990463256836,
+            0.10000002384185791, 0, 0, 0, 0, 0, 0, 0, 0.10000002384185791, 0, 0,
+            0.10000002384185791, 0.09999990463256836, 0, 0.10000002384185791,
+            0.10000002384185791, 0, 0.09999990463256836, 0.09999990463256836, 0,
+            0, 0.20000004768371582, 0.10000002384185791, 0.10000002384185791, 0,
+            0.09999990463256836, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0.09999990463256836, 0, 0, 0, 0.09999990463256836, 0, 0,
+            0.10000002384185791, 0, 0, 0, 0, 0, 0, 0.10000002384185791,
+            0.10000002384185791, 0.10000002384185791, 0, 0, 0.10000002384185791,
+            0.10000002384185791, 0, 0.10000002384185791, 0.10000002384185791, 0,
+            0, 0.10000002384185791, 0.09999990463256836
+          ]
+        },
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      },
+      "candidate": {
+        "dpr": 2,
+        "cssViewport": {
+          "width": 1680,
+          "height": 838
+        },
+        "devicePixels": 5631360,
+        "counts": {
+          "scratchClearCalls": 888,
+          "scratchClearedPixels": 1365120,
+          "scratchCopyCalls": 888,
+          "scratchCopiedPixels": 1365120,
+          "maxScratchClearPixels": 4928,
+          "maxScratchCopyPixels": 4928,
+          "sceneCopyCalls": 90,
+          "sceneCopiedPixels": 506822400,
+          "mainFullClearCalls": 0,
+          "mainFullClearedPixels": 0,
+          "exposedRepaintClearCalls": 169,
+          "exposedRepaintPixels": 1950528,
+          "nativeStrokeCalls": 11712,
+          "nativeFillCalls": 0
+        },
+        "frameIntervalsMs": {
+          "count": 90,
+          "p50": 16.699999999999932,
+          "p95": 16.799999999999955,
+          "max": 16.800000000000068,
+          "intervalsOver25ms": 0
+        },
+        "raw": {
+          "frameIntervalsMs": [
+            16.599999999999994, 16.69999999999999, 16.69999999999999,
+            16.600000000000023, 16.80000000000001, 16.599999999999966,
+            16.700000000000045, 16.69999999999999, 16.5, 16.80000000000001,
+            16.599999999999966, 16.600000000000023, 16.80000000000001,
+            16.599999999999966, 16.69999999999999, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.700000000000045,
+            16.600000000000023, 16.699999999999932, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.700000000000045,
+            16.600000000000023, 16.699999999999932, 16.600000000000023,
+            16.700000000000045, 16.699999999999932, 16.700000000000045,
+            16.600000000000023, 16.59999999999991, 16.800000000000068,
+            16.600000000000023, 16.699999999999932, 16.700000000000045,
+            16.600000000000023, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.700000000000045, 16.699999999999818,
+            16.600000000000136, 16.59999999999991, 16.799999999999955,
+            16.600000000000136, 16.700000000000045, 16.699999999999818,
+            16.600000000000136, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.59999999999991, 16.700000000000045, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.799999999999955,
+            16.600000000000136, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.700000000000045, 16.59999999999991,
+            16.700000000000045, 16.59999999999991, 16.700000000000045,
+            16.700000000000045, 16.59999999999991
+          ],
+          "inputIssuingMs": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0.10000002384185791, 0, 0, 0, 0, 0, 0, 0, 0,
+            0.10000002384185791, 0.09999990463256836, 0, 0.09999990463256836, 0,
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0,
+            0.10000002384185791, 0, 0.10000002384185791, 0.10000002384185791,
+            0.10000002384185791, 0.10000002384185791, 0.10000002384185791,
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0,
+            0.10000002384185791, 0, 0, 0.10000002384185791, 0.10000002384185791,
+            0.10000002384185791, 0, 0.10000002384185791, 0, 0.10000002384185791,
+            0, 0.10000002384185791, 0.10000002384185791, 0, 0,
+            0.09999990463256836, 0, 0, 0, 0, 0, 0, 0.10000002384185791,
+            0.10000002384185791, 0.10000002384185791, 0.09999990463256836,
+            0.20000004768371582, 0, 0, 0, 0.10000002384185791,
+            0.10000002384185791, 0, 0.09999990463256836, 0, 0.10000002384185791,
+            0.19999992847442627, 0, 0.10000002384185791, 0, 0,
+            0.10000002384185791, 0.09999990463256836, 0.10000002384185791,
+            0.20000004768371582, 0.10000002384185791, 0, 0.10000002384185791,
+            0.10000002384185791, 0.10000002384185791, 0.09999990463256836
+          ]
+        },
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      }
+    }
+  },
+  "browserErrors": []
+}

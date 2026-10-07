@@ -95,3 +95,25 @@ The published pre-fix baseline is `3a598928019d48737a6978cb602bf6ec532af8ab`; lo
 The [evaluator report](../benchmark-data/incremental-evaluation-2026-10-06.json) measures 200 recognized-result fixtures on Apple M5 / Node 26.3: one edit reduced 399 parses/evaluations to one of each, retaining 199 projection references. The [renderer report](../benchmark-data/render-retention.json) measures the same before/after 200-equation, 1,200-stroke drawing workload on Apple M5 / headless Chrome 155, DPR 2. Local edit stroke draw calls fell from 37,696 to 165, answer draw calls from 18,000 to 5, and renderer callback p95 from 6.4 ms to 0.6 ms. Frame interval p95 remained around 16.7 ms in both runs. Its 26 native pixel comparisons at DPR 1/2 match full replay exactly, including masks, alpha, pressure and fractional cameras.
 
 These later measurements supersede full replay as the normal local-edit rendering path. Dense intersecting damage may still expand to a large region, and camera/appearance changes rebuild visible content. The measurements exclude physical stylus certification and continuous model-load profiling; neither callback times nor synthetic vector checks establish universal frame rates or handwriting accuracy.
+
+## Fullscreen pan regression
+
+Run `node benchmark/pan-compositing.mjs bdcd47c` from the repository root. `CALCINK_BROWSER_EXECUTABLE` can select an installed Chromium executable. Both renderer and shared geometry are bundled separately from the original Git snapshot and the working tree; comparing only renderer entrypoints would incorrectly link both variants to current geometry.
+
+The [pan report](../benchmark-data/pan-compositing.json) records Apple M5 / 24 GiB / macOS Darwin 25.6.0 / headless Chrome 155, DPR 2, with 200 synthetic equations and 1,200 mixed pressure, translucent and masked strokes. Preview is 1,220,800 backing pixels; fullscreen is 5,631,360. The 90-frame fullscreen pan comparison measured:
+
+| Measurement                 |        Original |     Fixed |
+| --------------------------- | --------------: | --------: |
+| rAF frame interval p95      |          250 ms |   16.8 ms |
+| Intervals over 25 ms        |              87 |         0 |
+| Scratch cleared pixels      | 147,091,123,200 | 1,365,120 |
+| Scratch copied pixels       | 147,091,123,200 | 1,365,120 |
+| Geometry stroke calls       |         381,344 |    11,712 |
+| Main full clears during pan |              90 |         0 |
+| Exposed-strip clear pixels  |               — | 1,950,528 |
+
+The candidate makes one retained scene self-copy per pan frame (506,822,400 source pixels total), replacing thousands of viewport-sized per-stroke copies. Counts describe native API rectangle areas, not GPU execution measurements. Preview p95 was approximately 16.8 ms in both variants.
+
+274 native pixel comparisons passed with alpha/premultiplied color tolerance of 2/255 at DPR 1/2. Checks cover independently computed snapped camera positions during movement, exact idle settlement, fractional zoom/pan, all pan directions, reversal, large displacement, edge strokes, scoped masks, pressure and transparency, undo/redo, immediate edits/appearance/drawing, resize and disposal. Integer shifts avoid accumulated resampling blur; while moving, ink may differ from the exact camera by at most half a backing pixel. Exact replay follows 100 ms of inactivity. Tests assert operation/pixel budgets, not machine-specific timing thresholds.
+
+This deliberately dense synthetic headless test is different from the user's interactive 50–67 ms observation. It validates the rendering fix on the recorded machine; it does not establish universal FPS, physical-device behavior, handwriting accuracy or continuous inference performance. A full canonical replay still occurs after movement, and dense idle/zoom replays can remain expensive.

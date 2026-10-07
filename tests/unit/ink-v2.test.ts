@@ -69,7 +69,7 @@ class AlphaContext {
   fillStyle = '#000000';
   lineCap = 'round';
   lineJoin = 'round';
-  private transform = { a: 1, d: 1, e: 0, f: 0 };
+  private transform = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
   private path: Point[] = [];
   private circle?: { x: number; y: number; radius: number };
   private states: {
@@ -78,7 +78,14 @@ class AlphaContext {
     composite: string;
     stroke: string;
     fill: string;
-    transform: { a: number; d: number; e: number; f: number };
+    transform: {
+      a: number;
+      b: number;
+      c: number;
+      d: number;
+      e: number;
+      f: number;
+    };
   }[] = [];
   constructor(public canvas: AlphaCanvas) {
     this.pixels = Array(canvas.width * canvas.height * 4).fill(0);
@@ -107,20 +114,34 @@ class AlphaContext {
   }
   setTransform(
     a: number | typeof this.transform,
-    _b?: number,
-    _c?: number,
+    b?: number,
+    c?: number,
     d?: number,
     e?: number,
     f?: number,
   ) {
     this.transform =
-      typeof a === 'object' ? { ...a } : { a, d: d!, e: e!, f: f! };
+      typeof a === 'object'
+        ? { ...a }
+        : { a, b: b!, c: c!, d: d!, e: e!, f: f! };
   }
   getTransform() {
     return { ...this.transform };
   }
-  clearRect() {
-    this.pixels.fill(0);
+  clearRect(
+    x = 0,
+    y = 0,
+    width = this.canvas.width,
+    height = this.canvas.height,
+  ) {
+    if (this.pixels.length !== this.canvas.width * this.canvas.height * 4)
+      this.pixels = Array(this.canvas.width * this.canvas.height * 4).fill(0);
+    for (let row = y; row < Math.min(y + height, this.canvas.height); row++)
+      this.pixels.fill(
+        0,
+        (row * this.canvas.width + x) * 4,
+        (row * this.canvas.width + Math.min(x + width, this.canvas.width)) * 4,
+      );
   }
   beginPath() {
     this.path = [];
@@ -128,7 +149,7 @@ class AlphaContext {
   }
   private transformed(x: number, y: number) {
     const t = this.transform;
-    return point(x * t.a + t.e, y * t.d + t.f);
+    return point(x * t.a + y * t.c + t.e, x * t.b + y * t.d + t.f);
   }
   moveTo(x: number, y: number) {
     this.path.push(this.transformed(x, y));
@@ -197,13 +218,31 @@ class AlphaContext {
       this.strokeStyle,
     );
   }
-  drawImage(source: AlphaCanvas) {
-    for (let i = 0; i < this.pixels.length; i += 4)
-      this.blend(
-        i,
-        source.ctx.pixels.slice(i, i + 3),
-        source.ctx.pixels[i + 3] * this.globalAlpha,
-      );
+  drawImage(
+    source: AlphaCanvas,
+    sx: number,
+    sy: number,
+    width: number,
+    height: number,
+    dx: number,
+    dy: number,
+  ) {
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        if (
+          dx + x < 0 ||
+          dx + x >= this.canvas.width ||
+          dy + y < 0 ||
+          dy + y >= this.canvas.height
+        )
+          continue;
+        const sourceIndex = ((sy + y) * source.width + sx + x) * 4;
+        this.blend(
+          ((dy + y) * this.canvas.width + dx + x) * 4,
+          source.ctx.pixels.slice(sourceIndex, sourceIndex + 3),
+          source.ctx.pixels[sourceIndex + 3] * this.globalAlpha,
+        );
+      }
   }
   getImageData() {
     return { data: new Uint8ClampedArray(this.pixels.map((p) => p * 255)) };

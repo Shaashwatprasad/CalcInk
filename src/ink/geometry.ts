@@ -222,9 +222,11 @@ export function drawStroke(
   ctx.save();
   const opacity = stroke.opacity ?? 1;
   if (opacity < 1 || stroke.kind === 'highlighter') {
-    const layer = prepareLayer(ctx);
-    drawOpaqueStroke(layer, stroke, colorResolver);
-    compositeLayer(ctx, layer, opacity);
+    const layer = prepareLayer(ctx, stroke);
+    if (layer) {
+      drawOpaqueStroke(layer.context, stroke, colorResolver);
+      compositeLayer(ctx, layer, opacity);
+    }
   } else {
     ctx.strokeStyle = colorResolver(stroke);
     ctx.fillStyle = ctx.strokeStyle;
@@ -242,8 +244,10 @@ export function drawErasure(ctx: InkContext, erasure: Erasure): void {
   ctx.restore();
 }
 
-function createLayer(ctx: InkContext): InkContext {
-  const { width, height } = ctx.canvas;
+function createLayer(): InkContext {
+  // Grow only as needed for isolated stroke pixels, never to the viewport.
+  const width = 1,
+    height = 1;
   if (typeof OffscreenCanvas !== 'undefined') {
     const layer = new OffscreenCanvas(width, height).getContext('2d');
     if (layer) return layer;
@@ -262,22 +266,62 @@ function createLayer(ctx: InkContext): InkContext {
 
 // One scratch canvas per target context; reused across strokes and replays.
 const scratchLayers = new WeakMap<InkContext, InkContext>();
-function prepareLayer(ctx: InkContext): InkContext {
+interface StrokeLayer {
+  context: InkContext;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+function prepareLayer(
+  ctx: InkContext,
+  stroke: Stroke,
+): StrokeLayer | undefined {
+  if (!stroke.points.length) return undefined;
+  // Derive bounds from geometry: active previews and worker-local strokes may
+  // carry bounds from a different coordinate space. Width bounds pressure caps.
+  const bounds = pointBounds(stroke.points, stroke.width / 2);
+  const t = ctx.getTransform();
+  const corners = [
+    [bounds.minX, bounds.minY],
+    [bounds.maxX, bounds.minY],
+    [bounds.minX, bounds.maxY],
+    [bounds.maxX, bounds.maxY],
+  ].map(([x, y]) => ({
+    x: t.a * x + t.c * y + t.e,
+    y: t.b * x + t.d * y + t.f,
+  }));
+  // Round in backing pixels with an antialias fringe. Integer translation of
+  // the scratch origin preserves the original transform's subpixel phase.
+  const x = Math.max(0, Math.floor(Math.min(...corners.map((p) => p.x)) - 2));
+  const y = Math.max(0, Math.floor(Math.min(...corners.map((p) => p.y)) - 2));
+  const right = Math.min(
+    ctx.canvas.width,
+    Math.ceil(Math.max(...corners.map((p) => p.x)) + 2),
+  );
+  const bottom = Math.min(
+    ctx.canvas.height,
+    Math.ceil(Math.max(...corners.map((p) => p.y)) + 2),
+  );
+  const width = right - x,
+    height = bottom - y;
+  if (width <= 0 || height <= 0) return undefined;
   let layer = scratchLayers.get(ctx);
   if (!layer) {
-    layer = createLayer(ctx);
+    layer = createLayer();
     scratchLayers.set(ctx, layer);
   }
-  if (layer.canvas.width !== ctx.canvas.width)
-    layer.canvas.width = ctx.canvas.width;
-  if (layer.canvas.height !== ctx.canvas.height)
-    layer.canvas.height = ctx.canvas.height;
+  // Retain capacity across strokes; changing canvas dimensions discards its
+  // backing store. Only the used rectangle is cleared and copied, even if a
+  // previous stroke needed a larger buffer.
+  if (layer.canvas.width < width) layer.canvas.width = width;
+  if (layer.canvas.height < height) layer.canvas.height = height;
   layer.setTransform(1, 0, 0, 1, 0, 0);
   layer.globalAlpha = 1;
   layer.globalCompositeOperation = 'source-over';
-  layer.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
-  layer.setTransform(ctx.getTransform());
-  return layer;
+  layer.clearRect(0, 0, width, height);
+  layer.setTransform(t.a, t.b, t.c, t.d, t.e - x, t.f - y);
+  return { context: layer, x, y, width, height };
 }
 function drawOpaqueStroke(
   ctx: InkContext,
@@ -293,13 +337,23 @@ function drawOpaqueStroke(
 }
 function compositeLayer(
   ctx: InkContext,
-  layer: InkContext,
+  layer: StrokeLayer,
   opacity: number,
 ): void {
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha *= opacity;
-  ctx.drawImage(layer.canvas, 0, 0);
+  ctx.drawImage(
+    layer.context.canvas,
+    0,
+    0,
+    layer.width,
+    layer.height,
+    layer.x,
+    layer.y,
+    layer.width,
+    layer.height,
+  );
   ctx.restore();
 }
 
@@ -314,10 +368,15 @@ export function drawDocument(
     ...document.strokes.filter((s) => s.kind === 'highlighter'),
     ...document.strokes.filter((s) => s.kind !== 'highlighter'),
   ];
+  const masksByStroke = new Map<string, Erasure[]>();
+  for (const mask of document.erasures)
+    for (const id of new Set(mask.targetStrokeIds)) {
+      const masks = masksByStroke.get(id);
+      if (masks) masks.push(mask);
+      else masksByStroke.set(id, [mask]);
+    }
   for (const stroke of strokes) {
-    const erasures = document.erasures.filter((mask) =>
-      mask.targetStrokeIds.includes(stroke.id),
-    );
+    const erasures = masksByStroke.get(stroke.id) ?? [];
     if (
       !erasures.length &&
       stroke.kind !== 'highlighter' &&
@@ -326,9 +385,10 @@ export function drawDocument(
       drawStroke(ctx, stroke, 0, colorResolver);
       continue;
     }
-    const layer = prepareLayer(ctx);
-    drawOpaqueStroke(layer, stroke, colorResolver);
-    for (const mask of erasures) drawErasure(layer, mask);
+    const layer = prepareLayer(ctx, stroke);
+    if (!layer) continue;
+    drawOpaqueStroke(layer.context, stroke, colorResolver);
+    for (const mask of erasures) drawErasure(layer.context, mask);
     compositeLayer(ctx, layer, stroke.opacity ?? 1);
   }
 }
