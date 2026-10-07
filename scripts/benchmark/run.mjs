@@ -1,7 +1,7 @@
 import { build } from 'esbuild';
 import { chromium } from '@playwright/test';
 import { cpus, platform, release, totalmem, arch } from 'node:os';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 
 const startedAt = new Date().toISOString();
@@ -12,7 +12,7 @@ const branch = execFileSync('git', ['branch', '--show-current'], {
   encoding: 'utf8',
 }).trim();
 const nodeBuild = await build({
-  entryPoints: ['benchmark/node.ts'],
+  entryPoints: ['scripts/benchmark/node.ts'],
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -24,7 +24,7 @@ const { nodeBenchmark } = await import(
 console.log('Measuring Node store, geometry, serialization and grouping...');
 const node = nodeBenchmark();
 const browserBuild = await build({
-  entryPoints: ['benchmark/browser.ts'],
+  entryPoints: ['scripts/benchmark/browser.ts'],
   bundle: true,
   platform: 'browser',
   format: 'iife',
@@ -97,8 +97,8 @@ const report = {
   node,
   browser,
 };
-const output =
-  process.argv[2] ?? 'benchmark-data/local-synthetic-2026-10-02.json';
+const output = process.argv[2] ?? 'benchmark-results/scalability.json';
+await mkdir('benchmark-results', { recursive: true });
 await writeFile(output, `${JSON.stringify(report, null, 2)}\n`);
 console.log(`Saved actual measurements: ${output}`);
 for (const row of node)

@@ -10,4 +10,4 @@ Cache recognized sources, expression text, parsed ASTs, results and definition-s
 
 Typed math extends case-sensitive variable identifiers without pretending the sixteen-class checkpoint recognizes letters. Ordinary annotations stay excluded. The user’s exact zero-division diagnostic takes precedence over the old blanket Undefined display. Repository cleanup removes superseded handoff material while preserving technical provenance and tests.
 
-The controlled 200-equation evaluator workload reduced a local edit from 399 parses/evaluations to one of each while preserving 199 projection references. Measurements and environment details are retained under benchmark-data; synthetic tests do not establish human handwriting accuracy or universal frame rates.
+The controlled 200-equation evaluator workload reduced a local edit from 399 parses/evaluations to one of each while preserving 199 projection references. Measurements and environment details are retained under docs/benchmarks; synthetic tests do not establish human handwriting accuracy or universal frame rates.

@@ -1,8 +1,8 @@
-/** Synthetic native-Canvas workload. Run: node benchmark/render-benchmark.mjs [baseline-ref]. */
+/** Synthetic native-Canvas workload. Run: node scripts/benchmark/render-benchmark.mjs [baseline-ref]. */
 import { build } from 'esbuild';
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir, cpus, platform, release } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -567,8 +567,9 @@ try {
         'Synthetic 200 equations / 1200 opaque pen strokes; 20 points per stroke; 1000×650 CSS canvas at DPR2; 90 input frames, 30 local stroke additions, 6 changed answers; unchanged projection emissions every frame. No model running; not human/device recognition evidence.',
       reports,
     };
+    await mkdir(resolve(root, 'benchmark-results'), { recursive: true });
     await writeFile(
-      resolve(root, 'benchmark-data/render-retention.json'),
+      resolve(root, 'benchmark-results/render-retention.json'),
       `${JSON.stringify(report, null, 2)}\n`,
     );
     if (browserErrors.length)
@@ -592,12 +593,12 @@ try {
       )
     )
       throw new Error(
-        'Retained pixels differ from full replay; inspect benchmark-data/render-retention.json',
+        'Retained pixels differ from full replay; inspect benchmark-results/render-retention.json',
       );
     console.log(
       JSON.stringify(
         {
-          file: 'benchmark-data/render-retention.json',
+          file: 'benchmark-results/render-retention.json',
           reports: Object.fromEntries(
             Object.entries(reports).map(([key, value]) => [
               key,

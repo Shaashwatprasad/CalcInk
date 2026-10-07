@@ -3,12 +3,12 @@ import { readFile, writeFile } from 'node:fs/promises';
 const [capturePath, annotationPath, outputPath] = process.argv.slice(2);
 if (!outputPath)
   throw new Error(
-    'Usage: node benchmark/capture/import.mjs CAPTURE_OR_NOTEBOOK ANNOTATION NEW_CORPUS',
+    'Usage: node scripts/benchmark/capture/import.mjs CAPTURE_OR_NOTEBOOK ANNOTATION NEW_CORPUS',
   );
 const capture = JSON.parse(await readFile(capturePath, 'utf8'));
 const annotation = JSON.parse(await readFile(annotationPath, 'utf8'));
 const bundle = await build({
-  entryPoints: ['benchmark/corpus/schema.ts'],
+  entryPoints: ['scripts/benchmark/corpus/schema.ts'],
   bundle: true,
   platform: 'node',
   format: 'esm',

@@ -1,6 +1,6 @@
-import { InkStore } from '../src/document/InkStore';
-import { pointBounds, strokeIntersectsPath } from '../src/ink/geometry';
-import { groupEquations, groupSymbols } from '../src/recognition/grouping';
+import { InkStore } from '../../src/document/InkStore';
+import { pointBounds, strokeIntersectsPath } from '../../src/ink/geometry';
+import { groupEquations, groupSymbols } from '../../src/recognition/grouping';
 import { syntheticDocument, measure } from './fixtures';
 
 export function nodeBenchmark() {

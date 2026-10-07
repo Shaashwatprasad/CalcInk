@@ -158,11 +158,11 @@ if (track === 'ml' || track === 'release')
       'exec',
       '--',
       'node',
-      'benchmark/corpus/preprocess-browser.mjs',
+      'scripts/benchmark/corpus/preprocess-browser.mjs',
       resolve(output, 'canonical-browser.json'),
     ],
     'probe',
-    canonicalCaseInventory('benchmark/corpus/browser-probe.ts'),
+    canonicalCaseInventory('scripts/benchmark/corpus/browser-probe.ts'),
   );
 run('registry-contract', [
   'exec',

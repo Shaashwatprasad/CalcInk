@@ -2,7 +2,7 @@ import { build } from 'esbuild';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 const bundle = await build({
-  entryPoints: ['benchmark/corpus/schema.ts'],
+  entryPoints: ['scripts/benchmark/corpus/schema.ts'],
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -18,7 +18,7 @@ if (
   (command === 'freeze' && !outputPath)
 )
   throw new Error(
-    'Usage: node benchmark/corpus/cli.mjs validate CORPUS | freeze CORPUS NEW_LOCK | verify LOCK',
+    'Usage: node scripts/benchmark/corpus/cli.mjs validate CORPUS | freeze CORPUS NEW_LOCK | verify LOCK',
   );
 const digest = (value) => createHash('sha256').update(value).digest('hex');
 const input = JSON.parse(await readFile(inputPath, 'utf8'));

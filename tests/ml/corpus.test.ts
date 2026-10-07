@@ -4,13 +4,13 @@ import {
   canonicalJson,
   corpusCounts,
   type LabelledCorpus,
-} from '../../benchmark/corpus/schema';
+} from '../../scripts/benchmark/corpus/schema';
 import {
   classifierMetrics,
   expressionMetrics,
   groupingMetrics,
   ratio,
-} from '../../benchmark/corpus/metrics';
+} from '../../scripts/benchmark/corpus/metrics';
 
 /** Fabricated metadata here tests validators only. Never export as a human accuracy corpus. */
 function validatorFixture(): LabelledCorpus {

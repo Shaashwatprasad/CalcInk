@@ -20,7 +20,7 @@ An on-device math notebook with live calculations, editable ink, and offline sup
 | **Draw naturally**      | Use mouse, touch, or stylus with pen, pencil, highlighter, colour, width, and optional pressure               |
 | **Edit your page**      | Undo/redo, clear, whole-stroke and partial erasers; select, move, resize, duplicate, or delete with the lasso |
 | **Add annotations**     | Insert text, shapes, arrows, and dashed regions                                                               |
-| **Use typed math**      | Calculate expressions and define named variables such as `total=3.5`                                          |
+| **Use typed math**      | Calculate typed arithmetic expressions                                                                        |
 | **Organize notebooks**  | Name and switch notebooks, import/export JSON, change themes and paper patterns                               |
 | **Navigate freely**     | Pan and zoom ink, annotations, and answers together                                                           |
 | **Keep data local**     | Save notebooks on your device; recognition and calculation run entirely in the browser                        |
@@ -58,7 +58,7 @@ npm test
 npm run build
 ```
 
-Browser test setup and measurement procedures are in [Validation](docs/VALIDATION.md).
+Browser test setup and measurement procedures are in [Validation](docs/VALIDATION.md). Repository layout and benchmark commands are described in [the layout decision](docs/decisions/008-repository-layout.md) and [measurement guide](scripts/benchmark/README.md).
 
 ## Architecture
 
@@ -97,9 +97,9 @@ Vector ink is the source of truth; answers are derived. Recognition runs in a wo
 
 - **Model:** Rafi Ibn Sultan’s Dataset II CNN, converted to FP32 ONNX. Provenance, preprocessing, and artifact checks are in the [model audit](docs/MODEL-AUDIT.md).
 - **Recognized symbols:** `0–9`, `+`, `−`, `×`, `÷`, `.`, and `=`. Write separated symbols of similar size.
-- **Math:** decimals, negative numbers, normal precedence, and left associativity. Typed math also supports parentheses and case-sensitive named variables.
+- **Math:** decimals, negative numbers, normal precedence, and left associativity. Typed math also supports parentheses.
 - **Errors:** incomplete, malformed, or uncertain expressions withhold their answer; division by zero displays **Cannot divide by zero**.
-- **Limits:** general handwritten names, handwritten parentheses, touching glyphs, and nested handwritten fractions remain unsupported or unreliable. No writer-diverse accuracy claim is made. Numbers use JavaScript floating point, displayed to twelve significant digits.
+- **Limits:** handwritten parentheses, touching glyphs, and nested handwritten fractions remain unsupported or unreliable. No writer-diverse accuracy claim is made. Numbers use JavaScript floating point, displayed to twelve significant digits.
 
 ## Documentation
 

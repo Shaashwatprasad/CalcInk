@@ -1,5 +1,5 @@
-import { validateDocument } from '../../src/persistence/document';
-import type { InkDocument } from '../../src/shared/types';
+import { validateDocument } from '../../../src/persistence/document';
+import type { InkDocument } from '../../../src/shared/types';
 
 /** Corpus v1 stores only attested human vector ink. Synthetic tests live outside it. */
 export const CORPUS_VERSION = 1;
